@@ -1,0 +1,8 @@
+<loginTicketRequest version="1.0">
+    <header>
+      <uniqueId>1769428504</uniqueId>
+      <generationTime>2026-01-26T08:54:04-03:00</generationTime>
+      <expirationTime>2026-01-26T09:05:04-03:00</expirationTime>
+    </header>
+    <service>undefined</service>
+    </loginTicketRequest>
