@@ -7,8 +7,8 @@ public class Camion {
      private String marca;
      private String modelo;
      private String anio;
-     private int idEmpresa;
-     private String empresa;
+     private int    idEmptpte;
+     private String emptpte;
 
      public Camion(){}
 
@@ -52,20 +52,20 @@ public class Camion {
          this.anio = anio;
      }
 
-     public String getEmpresa() {
-         return empresa;
+     public String getEmptpte() {
+         return emptpte;
      }
 
-     public void setEmpresa(String empresa) {
-         this.empresa = empresa;
+     public void setEmptpte(String empresa) {
+         this.emptpte = empresa;
      }
 
      public int getIdEmpresa() {
-         return idEmpresa;
+         return idEmptpte;
      }
 
      public void setIdEmpresa(int idEmpresa) {
-         this.idEmpresa = idEmpresa;
+         this.idEmptpte = idEmpresa;
      }
 
      public String getDomAcoplado() {

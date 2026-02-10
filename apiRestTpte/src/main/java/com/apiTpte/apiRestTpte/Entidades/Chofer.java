@@ -2,6 +2,8 @@ package com.apiTpte.apiRestTpte.Entidades;
 
 public class Chofer {
     private int    idChofer;
+    private int    idEmpresa;
+    private String empresa;
     private String nombre;
     private String domicilio;
     private String localidad;
@@ -9,8 +11,7 @@ public class Chofer {
     private String nrodoc;
     private String telefono;
     private String notas;
-    private int    idEmpresa;
-    private String empresa;
+  
 
     public String getEmpresa() {
         return empresa;

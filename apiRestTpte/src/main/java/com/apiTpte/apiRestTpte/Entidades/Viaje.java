@@ -6,6 +6,7 @@ public class Viaje {
     private int      idViaje;
     private Date     fecha;
     private int      idEmpTpte;
+    private String   nometpte;
     private int      idChofer;
     private int      idCliente;
     private String   nomcliente;
@@ -14,6 +15,8 @@ public class Viaje {
     private int      idCamion;
     private String   domChasis;
     private String   domAcop;
+    private String   origen;
+    private String   destino;
     private String   ctg;
     private String   titctg;
     private float    cantkm;
@@ -167,6 +170,24 @@ public class Viaje {
 
     public void setImpviaje(double impviaje) {
         this.impviaje = impviaje;
+    }
+    public String getNometpte() {
+        return nometpte;
+    }
+    public void setNometpte(String nometpte) {
+        this.nometpte = nometpte;
+    }
+    public String getOrigen() {
+        return origen;
+    }
+    public void setOrigen(String origen) {
+        this.origen = origen;
+    }
+    public String getDestino() {
+        return destino;
+    }
+    public void setDestino(String destino) {
+        this.destino = destino;
     }
 
  
