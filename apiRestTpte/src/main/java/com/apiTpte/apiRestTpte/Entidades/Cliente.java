@@ -3,7 +3,10 @@ package com.apiTpte.apiRestTpte.Entidades;
 public class Cliente {
    private int idCliente;
    private String nombre;
+   private String domicilio;
+   private String localidad;
    private String telefono;
+   private String email;
    private String contacto;
    private String cuit;
    private String notas; 
@@ -24,6 +27,7 @@ public String getNombre() {
 public void setNombre(String nombre) {
     this.nombre = nombre;
 }
+
 public String getTelefono() {
     return telefono;
 }
@@ -60,4 +64,23 @@ public double getSaldoini() {
 public void setSaldoini(double saldoini) {
     this.saldoini = saldoini;
 }
+public String getDomicilio() {
+    return domicilio;
+}
+public void setDomicilio(String domicilio) {
+    this.domicilio = domicilio;
+}
+public String getLocalidad() {
+    return localidad;
+}
+public void setLocalidad(String localidad) {
+    this.localidad = localidad;
+}
+public String getEmail() {
+    return email;
+}
+public void setEmail(String email) {
+    this.email = email;
+}
+
 }

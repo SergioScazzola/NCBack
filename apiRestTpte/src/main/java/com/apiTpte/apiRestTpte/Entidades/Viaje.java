@@ -8,9 +8,9 @@ public class Viaje {
     private int      idEmpTpte;
     private String   nometpte;
     private int      idChofer;
-    private int      idCliente;
-    private String   nomcliente;
     private String   nomchofer;
+    private int      idCliente;
+    private String   nomcliente;   
     private String   cuitchofer;
     private int      idCamion;
     private String   domChasis;

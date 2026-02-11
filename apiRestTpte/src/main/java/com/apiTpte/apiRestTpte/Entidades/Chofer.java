@@ -11,7 +11,7 @@ public class Chofer {
     private String nrodoc;
     private String telefono;
     private String notas;
-  
+   
 
     public String getEmpresa() {
         return empresa;
@@ -96,6 +96,8 @@ public class Chofer {
     public void setCuit(String cuit) {
         this.cuit = cuit;
     }
+
+  
    
         
 }

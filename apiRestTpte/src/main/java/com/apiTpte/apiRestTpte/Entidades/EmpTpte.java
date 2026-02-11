@@ -11,6 +11,7 @@ public class EmpTpte {
     private String telefono;
     private String contacto;
     private String notas;
+    private double saldoini;
 
     public EmpTpte(){}
 
@@ -84,6 +85,14 @@ public class EmpTpte {
 
     public void setCuit(String cuit) {
         this.cuit = cuit;
+    }
+
+    public double getSaldoini() {
+        return saldoini;
+    }
+
+    public void setSaldoini(double saldoini) {
+        this.saldoini = saldoini;
     };
 
     
