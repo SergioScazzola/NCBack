@@ -5,6 +5,7 @@ import java.util.Date;
 public class FactCli {
      private int    idFactura;
      private String nrofactura;
+     private String facndc;
      private Date   fecha;   
      private int    cantit;
      private int    idCliente;
@@ -34,6 +35,7 @@ public class FactCli {
          this.nrofactura = nrofactura;
      }
 
+     
      public Date getFecha() {
          return fecha;
      }
@@ -96,6 +98,14 @@ public class FactCli {
 
      public void setTotalfac(double totalfac) {
          this.totalfac = totalfac;
+     }
+
+     public String getFacndc() {
+         return facndc;
+     }
+
+     public void setFacndc(String facndc) {
+         this.facndc = facndc;
      }
     
      

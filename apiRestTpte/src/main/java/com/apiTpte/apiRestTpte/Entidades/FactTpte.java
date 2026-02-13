@@ -5,6 +5,7 @@ import java.util.Date;
 public class FactTpte {
      private int    idFactura;
      private String nrofactura;
+     private String facndc;
      private Date   fecha;
      private int    idEmptpte;
      private String nomempresa;
@@ -97,6 +98,14 @@ public class FactTpte {
 
      public void setTotalfac(double totalfac) {
          this.totalfac = totalfac;
+     }
+
+     public String getFacndc() {
+         return facndc;
+     }
+
+     public void setFacndc(String facndc) {
+         this.facndc = facndc;
      }
       
      

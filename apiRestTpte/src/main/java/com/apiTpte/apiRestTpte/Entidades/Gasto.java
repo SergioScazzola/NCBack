@@ -8,6 +8,10 @@ public class Gasto {
      private int    idViaje;
      private String compGasto;   
      private String provGasto;
+     private float  cantgasto;
+     private String unidGasto;
+     private double preGasto;
+     private String descGasto;
      private double impgasto;
 
      public Gasto(){}
@@ -58,6 +62,38 @@ public class Gasto {
 
      public void setImpgasto(double impgasto) {
          this.impgasto = impgasto;
+     }
+
+     public float getCantgasto() {
+         return cantgasto;
+     }
+
+     public void setCantgasto(float cantgasto) {
+         this.cantgasto = cantgasto;
+     }
+
+     public String getUnidGasto() {
+         return unidGasto;
+     }
+
+     public void setUnidGasto(String unidGasto) {
+         this.unidGasto = unidGasto;
+     }
+
+     public double getPreGasto() {
+         return preGasto;
+     }
+
+     public void setPreGasto(double preGasto) {
+         this.preGasto = preGasto;
+     }
+
+     public String getDescGasto() {
+         return descGasto;
+     }
+
+     public void setDescGasto(String descGasto) {
+         this.descGasto = descGasto;
      }
 
           

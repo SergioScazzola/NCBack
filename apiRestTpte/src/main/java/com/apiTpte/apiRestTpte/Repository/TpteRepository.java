@@ -11,6 +11,7 @@ import com.apiTpte.apiRestTpte.Entidades.Cobro;
 import com.apiTpte.apiRestTpte.Entidades.EmpTpte;
 import com.apiTpte.apiRestTpte.Entidades.FactCli;
 import com.apiTpte.apiRestTpte.Entidades.FactTpte;
+import com.apiTpte.apiRestTpte.Entidades.Gasto;
 import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
@@ -98,5 +99,14 @@ public interface TpteRepository {
     int saveCobro(Cobro cobro);
     int actualizarCobro(int idcobro, Cobro cobro);    
     int deleteCobro(int idcobro); 
+
+    // GASTOS DE VIAJES Y GASTOS GENERALES
+
+    List<Gasto> AllGastos();
+    int getMaxGastos();
+    Gasto findGastoById(int idgasto);
+    int saveGasto(Gasto gasto);
+    int actualizarGasto(int idgasto, Gasto gasto);    
+    int deleteGasto(int idgasto); 
 
 }

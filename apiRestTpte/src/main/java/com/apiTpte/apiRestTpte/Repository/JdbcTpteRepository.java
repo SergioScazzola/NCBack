@@ -15,6 +15,7 @@ import com.apiTpte.apiRestTpte.Entidades.Cobro;
 import com.apiTpte.apiRestTpte.Entidades.EmpTpte;
 import com.apiTpte.apiRestTpte.Entidades.FactCli;
 import com.apiTpte.apiRestTpte.Entidades.FactTpte;
+import com.apiTpte.apiRestTpte.Entidades.Gasto;
 import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
@@ -428,10 +429,10 @@ public class JdbcTpteRepository implements TpteRepository {
       public int actualizarFactp(int nrof, FactTpte fac){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE facstp SET nrofactura=?,fecha=?,"+
+          resu = jdbcTemplate.update("UPDATE facstp SET nrofactura=?,facndc=?,fecha=?,"+
                                     "idEmptpte=?,nomemptpte=?,cantit=?,impneto=?,tasaiva=?,"+
                                     "impiva=?,totalfac=? WHERE idFactura=?",
-                    new Object[] {fac.getNrofactura(),fac.getFecha(),
+                    new Object[] {fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
                                   fac.getIdEmptpte(),fac.getNomempresa(),fac.getCantit(),fac.getImpneto(),
                                   fac.getTasaiva(),fac.getImpiva(),fac.getTotalfac(),fac.getIdFactura()
                                 });
@@ -446,10 +447,10 @@ public class JdbcTpteRepository implements TpteRepository {
       // Graba nueva Factura del Transporte 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT facstp(idFactura,nrofactura,fecha,"+
+          resu = jdbcTemplate.update("INSERT facstp(idFactura,nrofactura,facndc,fecha,"+
                                     "idEmptpte,nomemptpte,cantit,impneto,tasaiva,"+
-                                    "impiva,totalfac VALUES(?,?,?,?,?,?,?,?,?,?) ",
-                    new Object[] {fac.getIdFactura(),fac.getNrofactura(),fac.getFecha(),
+                                    "impiva,totalfac VALUES(?,?,?,?,?,?,?,?,?,?,?) ",
+                    new Object[] {fac.getIdFactura(),fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
                                   fac.getIdEmptpte(),fac.getNomempresa(),fac.getCantit(),
                                   fac.getImpneto(),fac.getTasaiva(),fac.getImpiva(),fac.getTotalfac()
                                 });
@@ -555,10 +556,10 @@ public class JdbcTpteRepository implements TpteRepository {
       public int actualizarFaccl(int nrof, FactCli fac){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE facscl SET nrofactura=?,fecha=?,cantit=?,"+
+          resu = jdbcTemplate.update("UPDATE facscl SET nrofactura=?,facndc=?,fecha=?,cantit=?,"+
                                     "idCliente=?,nomcliente=?,impneto=?,tasaiva=?,"+
                                     "impiva=?,totalfac=? WHERE idFactura=?",
-                    new Object[] {fac.getNrofactura(),fac.getFecha(),fac.getCantit(),
+                    new Object[] {fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),fac.getCantit(),
                                   fac.getIdCliente(),fac.getNomcliente(),fac.getImpneto(),
                                   fac.getTasaiva(),fac.getImpiva(),fac.getTotalfac(),fac.getIdFactura()
                                 });
@@ -573,10 +574,10 @@ public class JdbcTpteRepository implements TpteRepository {
       // Graba nueva Factura al Cliente 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT facscl(idfactura,nrofactura,fecha,cantit,"+
+          resu = jdbcTemplate.update("INSERT facscl(idfactura,nrofactura,facndc,fecha,cantit,"+
                                      "idCliente,nomcliente,impneto,tasaiva,"+
-                                     "impiva=?,totalfac VALUES(?,?,?,?,?,?,?,?,?,?) ",
-                    new Object[] {fac.getIdFactura(),fac.getNrofactura(),fac.getFecha(),
+                                     "impiva=?,totalfac VALUES(?,?,?,?,?,?,?,?,?,?,?) ",
+                    new Object[] {fac.getIdFactura(),fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
                                   fac.getCantit(),fac.getIdCliente(),fac.getNomcliente(),
                                   fac.getImpneto(),fac.getTasaiva(),fac.getImpiva(),fac.getTotalfac()
                                 });
@@ -809,6 +810,80 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {
         resu = jdbcTemplate.update("DELETE FROM pagos WHERE idPago="+nropago);
+      } catch (DataAccessException dae){
+        resu = -5;   
+      }
+      return resu;
+    }   
+
+    // GASTOS DE VIAJES Y GENERALES //
+
+      @Override
+      public List<Gasto> AllGastos() {   
+        String selec = "SELECT * FROM gastos ORDER BY fecha";
+        return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Gasto.class));
+      }
+      @Override
+      public int getMaxGastos(){
+        String consulta = "SELECT MAX(idGasto) FROM gastos";
+     
+        Object obj = jdbcTemplate.queryForObject(consulta,Integer.class);    
+        if (obj==null){
+          return 0;
+        } else {
+          return ((int)obj);
+        }         
+      }   
+      @Override
+      public Gasto findGastoById(int id) {
+        String q = "SELECT * FROM gastos WHERE idGasto=?";
+        try {
+          Gasto gasto = jdbcTemplate.queryForObject(q,
+              BeanPropertyRowMapper.newInstance(Gasto.class), id);          
+          return gasto;
+        } catch (IncorrectResultSizeDataAccessException e) {
+          return null;
+        }
+      }  
+
+      @Override
+      public int actualizarGasto(int nrog, Gasto gasto){      
+      int resu = 0;
+      try {                   
+          resu = jdbcTemplate.update("UPDATE gastos SET fecha=?,idViaje=?,compGasto=?,provGasto=?,"+
+                                    "cantGasto=?,unidGasto=?,preGasto=?,descGasto=?,impgasto=? "+
+                                    "WHERE idGasto=?",
+                    new Object[] { gasto.getFecha(),gasto.getIdViaje(),gasto.getCompGasto(),gasto.getProvGasto(),
+                                   gasto.getCantgasto(),gasto.getUnidGasto(),gasto.getPreGasto(),
+                                   gasto.getDescGasto(),gasto.getImpgasto(),gasto.getIdGasto()                                                                      
+                                });
+        } catch (IncorrectResultSizeDataAccessException e) {
+          return -3;
+      }
+      return resu; 
+    }
+    @Override
+      public int saveGasto(Gasto gasto){     
+      // Graba nuevo Gasto 
+      int resu = 0;
+      try {                   
+          resu = jdbcTemplate.update("INSERT gastos(idGasto,fecha,idViaje,compGasto,provGasto,"+               
+                                     "cantGasto,unidGasto,preGasto,descGasto,impgasto) " + 
+                                     "VALUES(?,?,?,?,?,?,?,?,?,?)",
+                    new Object[] { gasto.getIdGasto(),gasto.getFecha(),gasto.getIdViaje(),gasto.getCompGasto(),gasto.getProvGasto(),
+                                   gasto.getCantgasto(),gasto.getUnidGasto(),gasto.getPreGasto(),
+                                   gasto.getDescGasto(),gasto.getImpgasto()
+                                });
+        } catch (IncorrectResultSizeDataAccessException e) {
+          return -3;
+      }
+      return resu; 
+    }
+    @Override
+    public int deleteGasto(int nrogasto){
+      int resu = 0;
+      try {
+        resu = jdbcTemplate.update("DELETE FROM gastos WHERE idGasto="+nrogasto);
       } catch (DataAccessException dae){
         resu = -5;   
       }
