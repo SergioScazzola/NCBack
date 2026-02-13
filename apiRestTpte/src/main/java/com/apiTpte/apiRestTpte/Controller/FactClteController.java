@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.apiTpte.apiRestTpte.Entidades.FactTpte;
-import com.apiTpte.apiRestTpte.Entidades.ItfactT;
+import com.apiTpte.apiRestTpte.Entidades.FactCli;
+import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Repository.TpteRepository;
-
 
 
 
@@ -28,17 +27,17 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 @RestController
 @RequestMapping("/api/")
  
-public class FactTpteController {
+public class FactClteController {
     @Autowired
     TpteRepository tpteRepository;
    
     @SuppressWarnings("null")
-    @GetMapping("/facstp")
-    public ResponseEntity<List<FactTpte>> getAllFacstp() {
+    @GetMapping("/facscl")
+    public ResponseEntity<List<FactCli>> getAllFacscl() {
     try {
-      List<FactTpte> facs = null;
+      List<FactCli> facs = null;
             
-      facs = tpteRepository.AllFacstp();
+      facs = tpteRepository.AllFacscl();
     
       if (facs.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -50,44 +49,44 @@ public class FactTpteController {
     }
   }
 
-  @RequestMapping(value="/facstp/max")
-  public int getCantFacstp(){
-     int cantf = tpteRepository.getMaxFacstp();
+  @RequestMapping(value="/facscl/max")
+  public int getCantFacscl(){
+     int cantf = tpteRepository.getMaxFacscl();
      return cantf;
   }
   
-  @RequestMapping(value ="/factp" , params={"id"} )
-  public ResponseEntity<FactTpte> getClienteById(@RequestParam("id") Integer idfac) {
-    FactTpte fac = tpteRepository.findFactpById(idfac);
+  @RequestMapping(value ="/faccl" , params={"id"} )
+  public ResponseEntity<FactCli> getFacClienteById(@RequestParam("id") Integer idfac) {
+    FactCli fac = tpteRepository.findFacclById(idfac);
     if (fac != null){
       return new ResponseEntity<>(fac, HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
-    @PostMapping(value="/factp/nuevo")
-    // Graba una nueva Factura de Transporte
-    public ResponseEntity<String> crearFactp(@RequestBody FactTpte fac) {
+    @PostMapping(value="/faccl/nuevo")
+    // Graba una nueva Factura al Cliente
+    public ResponseEntity<String> crearFaccl(@RequestBody FactCli fac) {
        try {
-        int nrof = tpteRepository.saveFactp(fac);
+        int nrof = tpteRepository.saveFaccl(fac);
         return new ResponseEntity<>(Integer.toString(nrof), HttpStatus.CREATED);
        } catch (Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
 
-    @PutMapping(value="/factp/actualizar", params={"id"})
+    @PutMapping(value="/faccl/actualizar", params={"id"})
     public ResponseEntity<String> updateFactp(@RequestParam("id") Integer idfactura,
-                                                @RequestBody FactTpte fac){
+                                                @RequestBody FactCli fac){
       try {
-        int resultado = tpteRepository.actualizarFactp(idfactura,fac);    
+        int resultado = tpteRepository.actualizarFaccl(idfactura,fac);    
         return new ResponseEntity<>(Integer.toString(resultado), HttpStatus.OK);
       } catch (Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
      
       } 
     }
-     @DeleteMapping(value="/factp", params={"id"})    
+     @DeleteMapping(value="/faccl", params={"id"})    
     public ResponseEntity<String> borrarFactp(@RequestParam("id") Integer idfac){
       try {
         int nrofac = tpteRepository.deleteFactp(idfac);
@@ -98,14 +97,14 @@ public class FactTpteController {
 
     }
     
-    // DETALLE de la Factura de la Empresa de Trasporte
+    // DETALLE de la Factura al Cliente
     @SuppressWarnings("null")
-    @GetMapping(value="/factp/detalle",params={"idfac"})
-    public ResponseEntity<List<ItfactT>> getInfoDetalleFactp(@RequestParam("idfac") Integer idfactura) {
+    @GetMapping(value="/faccl/detalle",params={"idfac"})
+    public ResponseEntity<List<ItfactC>> getInfoDetalleFaccl(@RequestParam("idfac") Integer idfactura) {
     try {
-      List<ItfactT> items = null;
+      List<ItfactC> items = null;
             
-      items = tpteRepository.getDetalleFactp(idfactura);
+      items = tpteRepository.getDetalleFaccl(idfactura);
     
       if (items.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -117,24 +116,23 @@ public class FactTpteController {
     }
   }
   @PostMapping(value="/factp/detalle/nuevo")
-    // Graba un nuevo Item de Factura de Transporte
-    public ResponseEntity<String> crearItemFactp(@RequestBody ItfactT itfac) {
+    // Graba un nuevo Item de Factura al Cliente
+    public ResponseEntity<String> crearItemFaccl(@RequestBody ItfactC itfac) {
        try {
-        int nroit = tpteRepository.saveItemFactp(itfac);
+        int nroit = tpteRepository.saveItemFaccl(itfac);
         return new ResponseEntity<>(Integer.toString(nroit), HttpStatus.CREATED);
        } catch (Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
 
-    @PutMapping(value="/factp/detalle/actualizar")
-    public ResponseEntity<String> updateItemFactp(@RequestBody ItfactT itfac){
+    @PutMapping(value="/faccl/detalle/actualizar")
+    public ResponseEntity<String> updateItemFaccl(@RequestBody ItfactC itfac){
       try {
-        int resultado = tpteRepository.actualizarItemFactp(itfac);    
+        int resultado = tpteRepository.actualizarItemFaccl(itfac);    
         return new ResponseEntity<>(Integer.toString(resultado), HttpStatus.OK);
       } catch (Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-     
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);     
       } 
     }
      @DeleteMapping(value="/factp/detalle/borrar", params={"idfac","nroitem"})    
@@ -142,7 +140,7 @@ public class FactTpteController {
                                                   @RequestParam("nroitem") Integer nroit){
                                                
       try {
-        int nroi = tpteRepository.deleteItemFactp(nrofac,nroit);
+        int nroi = tpteRepository.deleteItemFaccl(nrofac,nroit);
         return new ResponseEntity<>(Integer.toString(nroi),HttpStatus.OK);
       } catch (Exception e) {
         return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR );

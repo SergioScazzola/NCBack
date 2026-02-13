@@ -1,21 +1,20 @@
 package com.apiTpte.apiRestTpte.Entidades;
 
 import java.util.Date;
-// Factura emitida por una Empresa de Transporte a NC Logistica
-public class FactTpte {
+// Factura que NC Logistica le emite a un Cliente por 1 o mas viajes
+public class FactCli {
      private int    idFactura;
      private String nrofactura;
-     private Date   fecha;
-     private int    idEmptpte;
-     private String nomempresa;
+     private Date   fecha;   
      private int    cantit;
-        
+     private int    idCliente;
+     private String nomcliente;
      private double impneto;
      private float  tasaiva;
      private double impiva;
      private double totalfac;
 
-     public FactTpte(){
+     public FactCli(){
         
      }
 
@@ -43,28 +42,28 @@ public class FactTpte {
          this.fecha = fecha;
      }
 
-     public int getIdEmptpte() {
-         return idEmptpte;
-     }
-
-     public void setIdEmptpte(int idEmptpte) {
-         this.idEmptpte = idEmptpte;
-     }
-
-     public String getNomempresa() {
-         return nomempresa;
-     }
-
-     public void setNomempresa(String nomempresa) {
-         this.nomempresa = nomempresa;
-     }
-
      public int getCantit() {
          return cantit;
      }
 
      public void setCantit(int cantit) {
          this.cantit = cantit;
+     }
+
+     public int getIdCliente() {
+         return idCliente;
+     }
+
+     public void setIdCliente(int idCliente) {
+         this.idCliente = idCliente;
+     }
+
+     public String getNomcliente() {
+         return nomcliente;
+     }
+
+     public void setNomcliente(String nomcliente) {
+         this.nomcliente = nomcliente;
      }
 
      public double getImpneto() {
@@ -98,6 +97,7 @@ public class FactTpte {
      public void setTotalfac(double totalfac) {
          this.totalfac = totalfac;
      }
-      
+    
+     
      
 }

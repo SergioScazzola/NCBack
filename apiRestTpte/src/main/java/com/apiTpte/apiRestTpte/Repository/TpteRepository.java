@@ -7,8 +7,13 @@ import java.util.List;
 import com.apiTpte.apiRestTpte.Entidades.Camion;
 import com.apiTpte.apiRestTpte.Entidades.Chofer;
 import com.apiTpte.apiRestTpte.Entidades.Cliente;
+import com.apiTpte.apiRestTpte.Entidades.Cobro;
 import com.apiTpte.apiRestTpte.Entidades.EmpTpte;
+import com.apiTpte.apiRestTpte.Entidades.FactCli;
 import com.apiTpte.apiRestTpte.Entidades.FactTpte;
+import com.apiTpte.apiRestTpte.Entidades.ItfactC;
+import com.apiTpte.apiRestTpte.Entidades.ItfactT;
+import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
 
 public interface TpteRepository {
@@ -48,6 +53,8 @@ public interface TpteRepository {
     int actualizarViaje(int idviaje, Viaje viaje);    
     int deleteViaje(int idviaje);
 
+    // FACTURA DEL TRANSPORTE
+
     List<FactTpte> AllFacstp();
     int getMaxFacstp();
     FactTpte findFactpById(int idfac);
@@ -55,5 +62,41 @@ public interface TpteRepository {
     int actualizarFactp(int idfac, FactTpte factp);    
     int deleteFactp(int idfac);
 
+    List<ItfactT> getDetalleFactp(int nrofac);
+    int saveItemFactp(ItfactT itfac);
+    int actualizarItemFactp(ItfactT itfac);   
+    int deleteItemFactp(int nrofac, int nroit);
+
+    // FACTURA AL CLIENTE
+          
+    List<FactCli> AllFacscl();
+    int getMaxFacscl();
+    FactCli findFacclById(int idfac);
+    int saveFaccl(FactCli fac);
+    int actualizarFaccl(int idfac, FactCli faccl);    
+    int deleteFaccl(int idfac);
+
+    List<ItfactC> getDetalleFaccl(int nrofac);
+    int saveItemFaccl(ItfactC itfac);
+    int actualizarItemFaccl(ItfactC itfac);   
+    int deleteItemFaccl(int nrofac, int nroit);
+
+    // PAGOS A LA EMPRESA DE TPTE. //
+
+    List<Pago> AllPagos();
+    int getMaxPagos();
+    Pago findPagoById(int idpago);
+    int savePago(Pago pago);
+    int actualizarPago(int idpago, Pago pago);    
+    int deletePago(int idpago);     
+
+    // COBROS AL CLIENTE //
+
+    List<Cobro> AllCobros();
+    int getMaxCobros();
+    Cobro findCobroById(int idcobro);
+    int saveCobro(Cobro cobro);
+    int actualizarCobro(int idcobro, Cobro cobro);    
+    int deleteCobro(int idcobro); 
 
 }
