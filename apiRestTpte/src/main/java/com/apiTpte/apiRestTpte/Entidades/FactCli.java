@@ -5,7 +5,7 @@ import java.util.Date;
 public class FactCli {
      private int    idFactura;
      private String nrofactura;
-     private String facndc;
+     private String facndc; // fac : suma, ndc : resta
      private Date   fecha;   
      private int    cantit;
      private int    idCliente;

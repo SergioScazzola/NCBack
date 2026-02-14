@@ -1,7 +1,7 @@
 package com.apiTpte.apiRestTpte.Entidades;
 
 public class Camion {
-     private int idCamion;
+     private int    idCamion;
      private String domChasis;   
      private String domAcoplado;
      private String marca;
