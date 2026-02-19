@@ -18,9 +18,7 @@ private final AfipService afipService;
 
     @GetMapping("/ultcomp")
     public ultimoComprobanteDTO UltimoComprobante() {
-        /*ultimoComprobanteDTO pp = new ultimoComprobanteDTO();
-        pp.setUltimo(1520L);      
-        return pp;*/
+       
         return afipService.obtenerUltimoComprobante();
     }
 }

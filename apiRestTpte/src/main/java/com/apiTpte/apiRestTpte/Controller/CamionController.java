@@ -21,9 +21,9 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 
 
-@CrossOrigin(origins = "${FRONTEND_URL}")
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api")
  
 public class CamionController {
     @Autowired
@@ -35,10 +35,16 @@ public class CamionController {
     try {
       List<Camion> camiones = null;
             
-      camiones = tpteRepository.AllCamiones();
+      //camiones = tpteRepository.AllCamiones();
     
-      if (camiones.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      if (camiones==null || camiones.isEmpty()) {
+        Camion camion = new Camion();
+        camion.setIdCamion(1);
+        camion.setDomChasis("AAAAAA");
+        camion.setDomAcoplado("BBBBB");
+        camiones.add(camion);
+         return new ResponseEntity<>(camiones, HttpStatus.OK);
+        //return new ResponseEntity<>(HttpStatus.NO_CONTENT);
       } else {
          return new ResponseEntity<>(camiones, HttpStatus.OK);
       }

@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 public class WebClientConfig {
-    @Value("${afip.Url}")
+    @Value("${afip.url}")
     private String afipurl;
 
     @SuppressWarnings("null")

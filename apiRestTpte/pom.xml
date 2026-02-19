@@ -55,7 +55,12 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
+        <!-- Para que tome el .env en "resources" -->
+        <dependency>
+           <groupId>me.paulschwarz</groupId>
+           <artifactId>spring-dotenv</artifactId>
+           <version>3.0.0</version>
+        </dependency>
         <!-- Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

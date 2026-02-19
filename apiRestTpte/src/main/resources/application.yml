@@ -1,5 +1,20 @@
+spring:
+  application:
+    name: apiRestTpte
+  datasource:
+    url: jdbc:mysql://${HOST_DB}:${PORT_DB}/lognc?useSSL=false
+    username: ${USER_DB}
+    password: ${PASSWORD_DB}
+
+server:
+  port: ${PORT_SERVER:5000}
+
+app:
+  frontend-url: ${FRONTEND_URL}
 
 afip:
-   Url: "http://localhost:3001"
+  url: ${AFIP_URL:http://localhost:3001}
+  node-script-path: C:/LogisticaNC/Afip-Service/src/app.js
+
 
 

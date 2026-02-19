@@ -60,7 +60,7 @@ public interface TpteRepository {
     int getMaxFacstp();
     FactTpte findFactpById(int idfac);
     int saveFactp(FactTpte fac);
-    int actualizarFactp(int idfac, FactTpte factp);    
+    int actualizarFactp(int idfac, FactTpte factp);        
     int deleteFactp(int idfac);
 
     List<ItfactT> getDetalleFactp(int nrofac);
