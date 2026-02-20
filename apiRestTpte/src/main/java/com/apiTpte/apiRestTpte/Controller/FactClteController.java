@@ -25,7 +25,7 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/faccl/")
  
 public class FactClteController {
     @Autowired
@@ -49,7 +49,7 @@ public class FactClteController {
     }
   }
 
-  @RequestMapping(value="/facscl/max")
+  @RequestMapping(value="/max")
   public int getCantFacscl(){
      int cantf = tpteRepository.getMaxFacscl();
      return cantf;

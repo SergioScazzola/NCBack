@@ -17,45 +17,41 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apiTpte.apiRestTpte.Entidades.Camion;
-import com.apiTpte.apiRestTpte.Repository.TpteRepository;
+import com.apiTpte.apiRestTpte.Repository.JdbcTpteRepository;
 
 
 
-@CrossOrigin(origins = "*")
+
+@CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/camion")
  
 public class CamionController {
     @Autowired
-    TpteRepository tpteRepository;
+    JdbcTpteRepository tpteRepository;
    
-    @SuppressWarnings("null")
-    @GetMapping("/camiones")
+    //@SuppressWarnings("null")
+    @GetMapping(value="/camiones")
     public ResponseEntity<List<Camion>> getAllCamiones() {
-    try {
+       return ResponseEntity.ok(tpteRepository.AllCamiones());
+    /*try {
       List<Camion> camiones = null;
             
-      //camiones = tpteRepository.AllCamiones();
-    
-      if (camiones==null || camiones.isEmpty()) {
-        Camion camion = new Camion();
-        camion.setIdCamion(1);
-        camion.setDomChasis("AAAAAA");
-        camion.setDomAcoplado("BBBBB");
-        camiones.add(camion);
-         return new ResponseEntity<>(camiones, HttpStatus.OK);
-        //return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      camiones = tpteRepository.AllCamiones();
+      
+      if (camiones==null || camiones.isEmpty()) {                         
+         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
       } else {
          return new ResponseEntity<>(camiones, HttpStatus.OK);
       }
     } catch (Exception e) {
        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
   }
 
-  @RequestMapping(value="/camiones/max")
+  @RequestMapping(value="/max")
   public int getCantCamiones(){
-     int cantc = tpteRepository.getMaxCamiones();
+     int cantc = tpteRepository.getMaxCamiones();     
      return cantc;
   }
   
@@ -68,7 +64,7 @@ public class CamionController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
-    @PostMapping(value="/camion/nuevo")
+  @PostMapping(value="/camion/nuevo")
     // Graba un nuevo campo
     public ResponseEntity<String> crearCamion(@RequestBody Camion camion) {
        try {

@@ -104,7 +104,7 @@ public class JdbcTpteRepository implements TpteRepository {
     // *** CAMIONES *** //
       @Override
       public List<Camion> AllCamiones() {   
-        String selec = "SELECT * FROM camiones ORDER BY tipo ASC,marca ASC,modelo ASC,anio DES";
+        String selec = "SELECT * FROM camiones ORDER BY marca ASC,modelo ASC,anio DESC";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Camion.class));
       }
       @Override

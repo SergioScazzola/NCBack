@@ -24,7 +24,7 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/viaje/")
  
 public class ViajeController {
     @Autowired
@@ -48,7 +48,7 @@ public class ViajeController {
     }
   }
 
-  @RequestMapping(value="/viajes/max")
+  @RequestMapping(value="/max")
   public int getCantViajes(){
      int cantv = tpteRepository.getMaxViajes();
      return cantv;

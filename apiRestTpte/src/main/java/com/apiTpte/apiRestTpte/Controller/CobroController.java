@@ -23,7 +23,7 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/cobro/")
  
 public class CobroController {
     @Autowired
@@ -47,7 +47,7 @@ public class CobroController {
     }
   }
 
-  @RequestMapping(value="/cobros/max")
+  @RequestMapping(value="/max")
   public int getCantCobros(){
      int cantc = tpteRepository.getMaxCobros();
      return cantc;

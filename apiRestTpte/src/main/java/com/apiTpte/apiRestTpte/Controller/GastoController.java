@@ -23,7 +23,7 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/gasto/")
  
 public class GastoController {
     @Autowired
@@ -47,7 +47,7 @@ public class GastoController {
     }
   }
 
-  @RequestMapping(value="/gastos/max")
+  @RequestMapping(value="/max")
   public int getCantGastos(){
      int cantg = tpteRepository.getMaxGastos();
      return cantg;

@@ -10,7 +10,7 @@ public class Camion {
      private int    idEmptpte;
      private String emptpte;
 
-     public Camion(){}
+     public Camion(int ncam,String dchasis,String dacop){}
 
      public int getIdCamion() {
          return idCamion;

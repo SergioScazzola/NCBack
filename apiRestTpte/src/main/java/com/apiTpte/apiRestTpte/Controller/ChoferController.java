@@ -17,22 +17,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apiTpte.apiRestTpte.Entidades.Chofer;
-import com.apiTpte.apiRestTpte.Repository.TpteRepository;
+import com.apiTpte.apiRestTpte.Repository.JdbcTpteRepository;
+
 
 
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/chofer")
  
 public class ChoferController {
     @Autowired
-    TpteRepository tpteRepository;
+    JdbcTpteRepository tpteRepository;
    
     @SuppressWarnings("null")
     @GetMapping("/choferes")
     public ResponseEntity<List<Chofer>> getAllChoferes() {
-    try {
+        return ResponseEntity.ok(tpteRepository.AllChoferes());
+    /*try {
       List<Chofer> choferes = null;
             
       choferes = tpteRepository.AllChoferes();
@@ -44,10 +46,10 @@ public class ChoferController {
       }
     } catch (Exception e) {
        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
   }
 
-  @RequestMapping(value="/choferes/max")
+  @RequestMapping(value="/max")
   public int getCantChoferes(){
      int cantc = tpteRepository.getMaxChoferes();
      return cantc;

@@ -24,7 +24,7 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/empt/")
  
 public class EmpTpteController {
     @Autowired
@@ -48,13 +48,13 @@ public class EmpTpteController {
     }
   }
 
-  @RequestMapping(value="/emps/max")
+  @RequestMapping(value="/max")
   public int getCantEmpresas(){
      int cante = tpteRepository.getMaxEmpresas();
      return cante;
   }
   
-  @RequestMapping(value ="/emptpte" , params={"id"} )
+  @RequestMapping(value ="/empt" , params={"id"} )
   public ResponseEntity<EmpTpte> getEmpresaById(@RequestParam("id") Integer idempresa) {
     EmpTpte emptpte = tpteRepository.findEmpresaById(idempresa);
     if (emptpte != null){
@@ -63,7 +63,7 @@ public class EmpTpteController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
-    @PostMapping(value="/emptpte/nuevo")
+    @PostMapping(value="/empt/nuevo")
     // Graba un nuevo chofer
     public ResponseEntity<String> crearEmpresa(@RequestBody EmpTpte emptpte) {
        try {
@@ -73,7 +73,7 @@ public class EmpTpteController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
-    @PutMapping(value="/emptpte/actualizar", params={"id"})
+    @PutMapping(value="/empt/actualizar", params={"id"})
     public ResponseEntity<String> updateEmpresa(@RequestParam("id") Integer idempresa,
                                                 @RequestBody EmpTpte emptpte){
       try {
@@ -84,7 +84,7 @@ public class EmpTpteController {
      
       } 
     }
-     @DeleteMapping(value="/emptpte", params={"id"})    
+     @DeleteMapping(value="/empt", params={"id"})    
     public ResponseEntity<String> borrarEmpresa(@RequestParam("id") Integer idempresa){
       try {
         int nroempresa = tpteRepository.deleteEmpresa(idempresa);
