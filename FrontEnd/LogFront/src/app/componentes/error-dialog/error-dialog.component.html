@@ -48,12 +48,12 @@
           <div            
             class="error-message"
           >
-            @if (f['newPassword'].errors?.['required']){
+            @if (f['newPassword']?.errors?.['required']){
             <span>
               La contraseña es obligatoria
             </span>
             }
-            @if (f['newPassword'].errors?.['minlength']){
+            @if (f['newPassword']?.errors?.['minlength']){
             <span>
               La contraseña debe tener al menos 8 caracteres
             </span>
@@ -83,11 +83,11 @@
           <div            
             class="error-message"
           >
-            @if (f['confirmPassword'].errors?.['required']){
+            @if (f['confirmPassword']?.errors?.['required']){
             <span>
               Confirmar la contraseña es obligatorio
             </span>
-            @if (f['confirmPassword'].errors?.['mustMatch']){
+            @if (f['confirmPassword']?.errors?.['mustMatch']){
             <span >
               Las contraseñas no coinciden
             </span>

@@ -8,7 +8,7 @@ import { ChangePasswordComponent } from './componentes/change-password/change-pa
 
 export const routes: Routes = [
   // Rutas para invitados (no autenticados)
-  {
+  /*{
     path: '',
     component: GuestLayoutComponent,
     children: [
@@ -16,15 +16,16 @@ export const routes: Routes = [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: '', pathMatch: 'full', redirectTo: 'login' },
     ],
-  },
+  },*/
 
   // Rutas protegidas (autenticadas)
   {
-    path: '',
-    component: AuthenticatedLayoutComponent,
-    canActivate: [authGuard],
+    path: '',  
     children: [
-      { path: 'ppal', component: NavegadorComponent },
-    ]
-}
+      { path: 'ppal', component: NavegadorComponent },               
+    ],
+  },
+
+  // Ruta de fallback
+  { path: '**', redirectTo: 'login' },
 ]

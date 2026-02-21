@@ -1,12 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable,Inject } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ErrorDialogComponent } from '../componentes/error-dialog/error-dialog.component';
 
 @Injectable({
   providedIn: 'root',
 })
+
+
 export class DialogService {
-  constructor(private dialog: MatDialog) {}
+  constructor(@Inject(MatDialog) private dialog: MatDialog) {}
 
   /**
    * Muestra un diálogo de error simple
