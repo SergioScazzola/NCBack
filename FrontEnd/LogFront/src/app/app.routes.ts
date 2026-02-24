@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { NavegadorComponent } from './componentes/navegador/navegador';
+import { ChoferesComponent }  from './componentes/choferes/choferes.component';
 import { GuestLayoutComponent } from './layouts/guest-layout/guest-layout.component';
 import { AuthenticatedLayoutComponent } from './layouts/authenticated-layout/authenticated-layout.component';
 import { authGuard } from './guards/auth.guard';
@@ -22,10 +23,11 @@ export const routes: Routes = [
   {
     path: '',  
     children: [
-      { path: 'ppal', component: NavegadorComponent },               
+      { path: 'ppal', component: NavegadorComponent },     
+      { path: 'choferes', component: ChoferesComponent },             
     ],
   },
 
   // Ruta de fallback
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'ppal' },
 ]

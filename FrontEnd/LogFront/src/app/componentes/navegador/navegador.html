@@ -25,60 +25,7 @@
             <i class="bi bi-gear-fill me-1"></i>Viajes
           </a>
         </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="['/aportes']"
-            routerLinkActive="active"
-          >
-            <i class="bi bi-journal-plus me-1"></i>Aportes
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="['/clientes','']"
-            routerLinkActive="active"
-          >
-            <i class="bi bi-people-fill me-1"></i>Clientes
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="['/campos']"
-            routerLinkActive="active"
-          >
-            <i class="bi bi-map-fill me-1"></i>Campos
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="['/empleados','']"
-            routerLinkActive="active"
-          >
-            <i class="bi bi-person-badge-fill me-1"></i>Empleados
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="['/maquinas']"
-            routerLinkActive="active"
-          >
-            <i class="bi bi-truck me-1"></i>Maquinas
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [routerLink]="['/productos']"
-            routerLinkActive="active"
-          >
-            <i class="bi bi-box-seam-fill me-1"></i>Productos
-          </a>
-        </li>
+      
          <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Tablas
@@ -93,6 +40,7 @@
             <li nav-item>
               <a  class="dropdown-item"
                   [routerLink]="['/choferes']"
+                  [queryParams]="{ filtro: '' }"
                   routerLinkActive="active"
               >Choferes</a>
             </li>

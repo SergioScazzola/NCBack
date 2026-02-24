@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SinoDialogoComponent } from './componentes/sino-dialogo/sino-dialogo.component';
+import { SinoDialogoComponent } from '../componentes/sino-dialogo/sino-dialogo.component';
 import { MatDialog} from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
 @Injectable({

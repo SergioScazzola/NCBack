@@ -1,5 +1,6 @@
 import { Component, effect, ElementRef, EventEmitter, Inject, Input, Output, viewChild, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
 import { ServiciosService } from '../../../servicios/service';
 import { NotiserviceService } from '../../../servicios/notiservice.service';
 import { finalize, Subscription } from 'rxjs';
@@ -16,6 +17,7 @@ import { empTpteDTO } from '../../../../entidades/empTpteDTO';
   imports: [    MatFormField,
                 MatLabel,         
                 MatInputModule,
+                MatSelectModule,
                 ReactiveFormsModule,                  
                 CommonModule,
                 DragDropModule,
@@ -31,7 +33,8 @@ export class ChoferComponent {
   resumod          : string;
   nchofalta        : number;
   maxchof          : number;
-  empresas         : empTpteDTO[];
+  cempresas        : empTpteDTO[];
+  idEmpresaSel     : Number;
   private choferr  : choferDTO;  
  
 
@@ -47,16 +50,7 @@ export class ChoferComponent {
         });
 
   }
-    idChofer  : Number;
-    idEmpresa : Number;
-    empresa   : string;
-    nombre    : string;
-    domicilio : string;
-    localidad : string;
-    cuit      : string;
-    nrodoc    : string;
-    telefono  : string;
-    notas     : string;
+ 
   ngOnInit(){
       this.formChofer = this.fb.group({        
           nrochof     : [''], 
@@ -69,32 +63,41 @@ export class ChoferComponent {
           nroempresa : [''],
           notas      : [''],     
           saldoini   : ['']   
-        })
+      })
       var subs1 : Subscription;
       subs1 = this.servicio.getEmpresas()
-         .pipe(finalize(()=> {
-            subs1.unsubscribe();
-            var subs2 : Subscription;
-            subs2 = this.servicio.getCantChoferes()
-              .pipe(finalize(() => {
-                   this.nchofalta = this.maxchof+1;
-                   if (this.data.nrochof>0){ // modificar
+         .pipe(finalize(()=> {            
+            subs1.unsubscribe();                        
+            if (this.data.accion=="M"){ 
+               // MODIFICAR
+               var subs2 : Subscription;            
+               subs2 = this.servicio.leerChofer(this.data.nrochof)
+                 .pipe(finalize(()=> {            
+                    subs2.unsubscribe()
                     this.operacion = "Modificar Chofer : "+this.data.nombre;
                     this.actualizarControles();
-                 } else { // alta
-                     this.operacion = "Agregar Chofer Nro. "+this.nchofalta;
-                     this.formChofer.controls["nrochof"].setValue(this.nchofalta);
-                 }
-                   subscri.unsubscribe             
-         }))
-         }))
-      
-         .subscribe((data:any):void => {
-              this.maxchof = data;
-         })
-    
-
-  }
+                 }))
+                 .subscribe((data:any):void => {
+                     this.choferr = data;
+                 })
+            } else { // ALTA -> accion = "A"
+               var subs2 : Subscription;
+               subs2 = this.servicio.getCantChoferes()
+                 .pipe(finalize(()=> {            
+                    subs2.unsubscribe()
+                    this.nchofalta = this.maxchof+1;
+                    this.operacion = "Agregar Chofer Nro. "+this.nchofalta;
+                    this.formChofer.controls["nrochof"].setValue(this.nchofalta);
+                 }))
+                 .subscribe((data:any):void => {
+                     this.maxchof = data;
+                 })                                   
+            }
+          }))
+          .subscribe((data:any):void => {
+              this.cempresas = data;
+          })
+   }
   actualizarControles(){
     // Actualiza controles para modificar
          var subscri1 : Subscription;
@@ -119,16 +122,20 @@ export class ChoferComponent {
    }
 
    AgregarChofer(){
+
+    var indemp = this.cempresas.findIndex(p=>p.idEmpresa==this.idEmpresaSel);
     var chofer : choferDTO = {
         idChofer     : this.formChofer.controls["nrochof"].value,
+        idEmpresa    : this.formChofer.controls["nroempresa"].value,   
+        empresa      : this.cempresas[indemp].nombre,
         nombre       : this.formChofer.controls["nombre"].value,
         domicilio    : this.formChofer.controls["domicilio"].value,
+        localidad    : this.formChofer.controls["localidad"].value,
+        cuit         : this.formChofer.controls["cuit"].value,
         nrodoc       : this.formChofer.controls["nrodoc"].value,
-        telefono     : this.formChofer.controls["telefono"].value,
-        idEmpresa    : this.formChofer.controls["nroempresa"].value,
-        empresa      : 
+        telefono     : this.formChofer.controls["telefono"].value,                  
         notas        : this.formChofer.controls["notas"].value,
-       
+   
     }   
     var subscri : Subscription;
     var resu    : string;
@@ -142,29 +149,36 @@ export class ChoferComponent {
     }
     
     
-    ModificarEmpleado(){
-      var empleado : choferDTO = {
-        idChofer       : this.formChofer.controls["nrochof"].value,
-        nombre         : this.formChofer.controls["nombre"].value,
-        domicilio      : this.formEmp.controls["domicilio"].value,
-        dni            : this.formEmp.controls["dni"].value,
-        telefono       : this.formEmp.controls["telefono"].value,
-        notas          : this.formEmp.controls["notas"].value,
-        saldoini       : this.empl.saldoini
-    }   
+    ModificarChofer(){
+     var indemp = this.cempresas.findIndex(p=>p.idEmpresa==this.idEmpresaSel);
+     var chofer : choferDTO = {
+        idChofer     : this.formChofer.controls["nrochof"].value,
+        idEmpresa    : this.formChofer.controls["nroempresa"].value,   
+        empresa      : this.cempresas[indemp].nombre,
+        nombre       : this.formChofer.controls["nombre"].value,
+        domicilio    : this.formChofer.controls["domicilio"].value,
+        localidad    : this.formChofer.controls["localidad"].value,
+        cuit         : this.formChofer.controls["cuit"].value,
+        nrodoc       : this.formChofer.controls["nrodoc"].value,
+        telefono     : this.formChofer.controls["telefono"].value,                  
+        notas        : this.formChofer.controls["notas"].value,
+   
+    }    
    
     var subscri : Subscription;
     var resu    : string;
-    subscri = this.servicio.updateEmpleado(empleado.idEmpleado,empleado)  
+    subscri = this.servicio.updateChofer(chofer.idChofer,chofer)  
             .pipe(finalize(() => {   
-             this.notiService.showNotification("El Empleado "+this.data.nombre+" se ha modificado con éxito",'Aceptar','mensaje',500); 
+             this.notiService.showNotification("El Chofer "+this.data.nombre+" se ha modificado con éxito",'Aceptar','mensaje',500); 
              subscri.unsubscribe();
              this.dialogRef.close({ clicked : "Modi"})
                 }))                  
            .subscribe((data : any): void => {resu=data});   
     }
              
+onSelectionEmpresa($event : any){
 
+}
  
     Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})

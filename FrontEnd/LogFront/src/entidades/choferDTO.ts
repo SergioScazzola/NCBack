@@ -1,6 +1,6 @@
 export interface choferDTO {
-    idChofer  : Number;
-    idEmpresa : Number;
+    idChofer  : number;
+    idEmpresa : number;
     empresa   : string;
     nombre    : string;
     domicilio : string;

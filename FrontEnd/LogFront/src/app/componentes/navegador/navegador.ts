@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 })
 export class NavegadorComponent {
   constructor(
-    private ruta: ActivatedRoute,
+    public ruta: ActivatedRoute,
     private authService: AuthService,
     private router: Router
   ) {}

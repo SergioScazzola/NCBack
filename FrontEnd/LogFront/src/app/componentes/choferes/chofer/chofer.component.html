@@ -1,17 +1,17 @@
 <div class="container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
   <h4 mat-dialog-title >{{operacion}}</h4>  
-    <form [formGroup]="formEmp" class="row ml-3 mt-3 mr-10">         
+    <form [formGroup]="formChofer" class="row ml-3 mt-3 mr-10">         
        <div class="row justify-content-md-left">
         <div class="col-auto">           
            <mat-form-field style="width:70px;"  appearance="fill">
                  <mat-label>Nro</mat-label>
-                 <input matInput [readonly]="true" formControlName="nroemp" style="text-align: center;">	
+                 <input matInput [readonly]="true" formControlName="nrochof" style="text-align: center;">	
             </mat-form-field>    
         </div>
 
         <div class="col-auto">
            <mat-form-field style="width:350px;"  appearance="fill">
-                <mat-label>Nombre del Empleado</mat-label>
+                <mat-label>Nombre del Chofer</mat-label>
                 <input #nombreempleado matInput #inputFocus formControlName="nombre" style="text-align: left;">	
             </mat-form-field>    
         </div>   
@@ -25,8 +25,8 @@
             </div> 
             <div class="col-auto">
                 <mat-form-field style="width:200px;text-align:left;" appearance="fill">
-                  <mat-label>DNI</mat-label>
-                  <input matInput formControlName="dni">	
+                  <mat-label>Localidad</mat-label>
+                  <input matInput formControlName="localidad">	
                  </mat-form-field>                   
               </div> 
             <div class="col-auto">
@@ -37,23 +37,50 @@
               </div> 
         </div> 
         <div class="row justify-content-md-left">
-            <div class="col-auto">
+             <div class="col-auto">
+                <mat-form-field style="width:150px;text-align:left;" appearance="fill">
+                  <mat-label>Cuit</mat-label>
+                  <input matInput formControlName="cuit">	
+                 </mat-form-field>                   
+              </div>  
+              <div class="col-auto">
+                <mat-form-field style="width:150px;text-align:left;" appearance="fill">
+                  <mat-label>Nro.Doc</mat-label>
+                  <input matInput formControlName="nrodoc">	
+                 </mat-form-field>                   
+              </div> 
+              <div class="col-auto">
+                <mat-form-field   style="width:200px;margin-left: 70px;">
+                  <mat-label>Empresa de Transporte</mat-label>
+                   <mat-select formControlName="nroempresa"
+                     (selectionChange)="onSelectionEmpresa($event)">
+                     @for (empresa of this.cempresas; track empresa.idEmpresa){
+                       <mat-option 
+                        [value]="empresa.idEmpresa">
+                        {{ empresa.nombre }} </mat-option>
+                     }                    
+                   </mat-select>
+                 </mat-form-field>
+              </div>  
+            </div>  
+            <div class="row justify-content-md-left">
+              <div class="col-auto">
                 <mat-form-field style="width:600px;text-align:left;" appearance="fill">
                   <mat-label>Notas</mat-label>
                   <input matInput formControlName="notas">	
                  </mat-form-field>                   
               </div>           
-        </div>
+            </div>
        <div class="botonera">
               <button class="btn btn-sm btn-outline-primary me-5" 
-                       [disabled]="formEmp.invalid || data.accion!='A'" 
-                       (click)="AgregarEmpleado()">Agregar</button>                                
+                       [disabled]="formChofer.invalid || data.accion!='A'" 
+                       (click)="AgregarChofer()">Agregar</button>                                
               <button class="btn btn-sm btn-outline-success me-5" 
-                       [disabled]="formEmp.invalid ||  data.accion!='M'" 
-                       (click)="ModificarEmpleado()">Modificar</button>  
+                       [disabled]="formChofer.invalid ||  data.accion!='M'" 
+                       (click)="ModificarChofer()">Modificar</button>  
               <button class="btn btn-sm btn-outline-secondary"                
                        (click)="Anular()">Cancelar</button>                       
-        </div>  
+       </div>  
          
     </form>
 </div>

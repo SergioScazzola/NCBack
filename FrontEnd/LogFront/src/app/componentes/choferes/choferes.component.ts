@@ -7,7 +7,7 @@ import { NotiserviceService } from '../../servicios/notiservice.service';
 import { finalize, Subscription } from 'rxjs';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
-import { EmpleadoComponent } from './chofer/chofer.component';
+import { ChoferComponent } from './chofer/chofer.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -18,7 +18,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   templateUrl: './choferes.component.html',
   styleUrl: './choferes.component.css'
 })
-export class EmpleadosComponent {  
+export class ChoferesComponent {  
    @ViewChild('filtroInput') inputRef!: ElementRef<HTMLInputElement>;
    
    
@@ -32,26 +32,27 @@ export class EmpleadosComponent {
    dataSource = new MatTableDataSource<any>();
    
         
-   colEmpleados: string[] = ["idChofer" , "nombre","domicilio","localidad","empresa","cuit","telefono","notas","M","B","CC" ];
+   colChoferes : string[] = ["idChofer" , "nombre","domicilio","localidad","empresa","cuit","telefono","notas","M","B" ];
  
    
-   constructor(     private servicio : ServiciosService,               
-                    private rutaActiva : ActivatedRoute,
-                    private router: Router,
+   constructor(     private servicio     : ServiciosService,               
+                    private rutaActiva   : ActivatedRoute,
+                    private router       : Router,
                     public  dialog       : MatDialog,
                     private sinoServicio : SinoService,
                     private notiServicio : NotiserviceService
                                ) {    
    }         
  ngOnInit(){         
-     this.rutaActiva.paramMap.subscribe((params) => { // lee el parametro de ruteo y lo asigna al filtro
+     this.rutaActiva.queryParamMap.subscribe((params) => { // lee el parametro de ruteo y lo asigna al filtro
         var fil  = params.get('filtro')||'';     
       this.filtro = fil;   
       if (this.inputRef) {
           this.inputRef.nativeElement.value = this.filtro;   
       }             
+      this.leerChoferes();  
       })       
-      this.leerChoferes();    
+       
  }
        
    leerChoferes(){
@@ -75,7 +76,7 @@ export class EmpleadosComponent {
      } 
    agChofer(){
      const data = {
-          nroemp : 0,          
+          nrochof    : 0,          
           accion     : "A"
      }       
      const dialogConfig = new MatDialogConfig();   
@@ -137,23 +138,7 @@ export class EmpleadosComponent {
      }
     }
 
-  cuentaCorriente(nroemp : number,nomemp : string){
-      var fil = this.inputRef.nativeElement.value;//guardar filtro para volver
-      this.router.navigate(['/empleados', nroemp,nomemp,fil,'ctactee']);
-    }
-
-  informeSaldos(){
-    this.router.navigate(['/empleados','infoemp']);
-   }
-
-   informePagos(){
-    this.router.navigate(['/empleados','infopagos']);
-   }
-
-  informeTrabajos(){
-    this.router.navigate(['/empleados','infoempleados']);
-  }
-
+ 
    aplicarFiltro(valor : string)  {
     this.dataSource.filter = valor.trim().toLowerCase();
  }

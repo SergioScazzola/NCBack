@@ -1,5 +1,5 @@
 /* Contenedor principal */
-.empleados-container {
+.choferes-container {
   width: 100%;
   height: calc(100vh - 70px); /* Restar altura de navbar */
   display: flex;
@@ -99,7 +99,7 @@
 }
 
 /* Ancho de columnas */
-.mat-column-idEmpleado {
+.mat-column-idChofer {
   padding-left: 10px !important;
   width: 70px;
   text-align: center;
@@ -116,16 +116,25 @@
   text-overflow: ellipsis;
 }
 
-.mat-column-domicilio {
+.mat-column-localidad {
   padding-left: 0;
-  width: 200px;
+  width: 150px;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.mat-column-dni {
+.mat-column-empresa {
+  padding-left: 0;
+  width: 100px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-cuit {
   padding-left: 0;
   width: 120px;
   text-align: left;
@@ -133,7 +142,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .mat-column-telefono {
   padding-left: 0;
   width: 150px;
