@@ -76,8 +76,9 @@ export class ChoferesComponent {
      } 
    agChofer(){
      const data = {
-          nrochof    : 0,          
-          accion     : "A"
+          nrochof    : 0,    
+          nombre     : "",      
+          accion     : "A",
      }       
      const dialogConfig = new MatDialogConfig();   
      dialogConfig.autoFocus = false;
@@ -91,9 +92,9 @@ export class ChoferesComponent {
      this.formchof = true;
      this.chofmod  = 0; 
    }
-   modificarChofer(nrochof : number,nom : string){      
+   modificarChofer(nrochofer : number,nom : string){      
     const data = {
-      nrochofer : nrochof,        
+      nrochof : nrochofer,        
       nombre    : nom,
       accion     : "M"
     }       

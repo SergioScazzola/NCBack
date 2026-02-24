@@ -33,7 +33,7 @@ export class ChoferComponent {
   resumod          : string;
   nchofalta        : number;
   maxchof          : number;
-  cempresas        : empTpteDTO[];
+  public cempresas : empTpteDTO[];
   idEmpresaSel     : Number;
   private choferr  : choferDTO;  
  

@@ -55,16 +55,16 @@ export class ServiciosService {
   // ** Empresas de Transporte ** //
 
    public getEmpresas() {
-    return this.http.get<empTpteDTO[]>(this.apiUrl + `/empt/emps`);
+    return this.http.get<empTpteDTO[]>(this.apiUrl + `empt/emps`);
   }
 
   public getCantEmpresas() {
     return this.http.get<number>(this.apiUrl + `empt/max`);
   }
 
-  public leerEmpresa(nrochofer: number) {
-    return this.http.get<choferDTO>(
-      this.apiUrl + `empt/empt?id=` + nrochofer
+  public leerEmpresa(nroemp: number) {
+    return this.http.get<empTpteDTO>(
+      this.apiUrl + `empt/empt?id=` + nroemp
     );
   }
   
