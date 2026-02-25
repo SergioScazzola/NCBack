@@ -1,60 +1,60 @@
-<div class="container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+<!--div class="container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
   <h4 mat-dialog-title >{{operacion}}</h4>  
     <form [formGroup]="formChofer" class="row ml-3 mt-3 mr-10">         
-       <div class="row justify-content-md-left">
-        <div class="col-auto">           
+       <div class="row mt-2">
+        <div class="col">           
            <mat-form-field style="width:70px;"  appearance="fill">
                  <mat-label>Nro</mat-label>
                  <input matInput [readonly]="true" formControlName="nrochof" style="text-align: center;">	
             </mat-form-field>    
         </div>
 
-        <div class="col-auto">
-           <mat-form-field style="width:350px;"  appearance="fill">
+        <div class="col">
+           <mat-form-field style="width:300px;"  appearance="fill">
                 <mat-label>Nombre del Chofer</mat-label>
-                <input #nombreempleado matInput #inputFocus formControlName="nombre" style="text-align: left;">	
+                <input #nombre matInput #inputFocus formControlName="nombre" style="text-align: left;">	
             </mat-form-field>    
         </div>   
         </div>
-        <div class="row justify-content-md-left">
-            <div class="col-auto">
+        <div class="row">
+            <div class="col">
               <mat-form-field style="width:250px;text-align:left;" appearance="fill">
                 <mat-label>Domicilio</mat-label>
                 <input matInput formControlName="domicilio">	
                </mat-form-field>                   
             </div> 
-            <div class="col-auto">
+            <div class="col">
                 <mat-form-field style="width:200px;text-align:left;" appearance="fill">
                   <mat-label>Localidad</mat-label>
                   <input matInput formControlName="localidad">	
                  </mat-form-field>                   
               </div> 
-            <div class="col-auto">
+            <div class="col">
                 <mat-form-field style="width:150px;text-align:left;" appearance="fill">
                   <mat-label>Teléfono</mat-label>
                   <input matInput formControlName="telefono">	
                  </mat-form-field>                   
               </div> 
         </div> 
-        <div class="row justify-content-md-left">
-             <div class="col-auto">
+        <div class="row">
+             <div class="col">
                 <mat-form-field style="width:150px;text-align:left;" appearance="fill">
                   <mat-label>Cuit</mat-label>
                   <input matInput formControlName="cuit">	
                  </mat-form-field>                   
               </div>  
-              <div class="col-auto">
+              <div class="col">
                 <mat-form-field style="width:150px;text-align:left;" appearance="fill">
                   <mat-label>Nro.Doc</mat-label>
                   <input matInput formControlName="nrodoc">	
                  </mat-form-field>                   
               </div> 
-              <div class="col-auto">
+              <div class="col">
                 <mat-form-field   style="width:200px;margin-left: 70px;">
                   <mat-label>Empresa de Transporte</mat-label>
                    <mat-select formControlName="nroempresa"
                      (selectionChange)="onSelectionEmpresa($event)">
-                     @for (empresa of this.cempresas; track empresa.idEmpresa){
+                     @for (empresa of cempresas; track empresa.idEmpresa){
                        <mat-option 
                         [value]="empresa.idEmpresa">
                         {{ empresa.nombre }} </mat-option>
@@ -63,9 +63,9 @@
                  </mat-form-field>
               </div>  
             </div>  
-            <div class="row justify-content-md-left">
-              <div class="col-auto">
-                <mat-form-field style="width:600px;text-align:left;" appearance="fill">
+            <div class="row">
+              <div class="col">
+                <mat-form-field style="width:300px;text-align:left;" appearance="fill">
                   <mat-label>Notas</mat-label>
                   <input matInput formControlName="notas">	
                  </mat-form-field>                   
@@ -83,4 +83,123 @@
        </div>  
          
     </form>
+</div-->
+<div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  <h4 mat-dialog-title>{{ operacion }}</h4>
+
+  <form [formGroup]="formChofer" class="p-3">
+    <!-- Primera fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-2">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nro</mat-label>
+          <input
+            matInput
+            readonly
+            formControlName="nrochof"
+            style="text-align: center"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-8">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nombre del Chofer</mat-label>
+          <input
+            matInput
+            #nombre
+            #inputFocus
+            formControlName="nombre"
+            style="text-align: left"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Segunda fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Domicilio</mat-label>
+          <input matInput formControlName="domicilio" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Localidad</mat-label>
+          <input matInput formControlName="localidad" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="telefono" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Tercera fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Cuit</mat-label>
+          <input matInput formControlName="cuit" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nro.Doc</mat-label>
+          <input matInput formControlName="nrodoc" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Empresa de Transporte</mat-label>
+          <mat-select
+            formControlName="nroempresa"
+            (selectionChange)="onSelectionEmpresa($event)"
+          >
+            @for (empresa of cempresas; track empresa.idEmpresa) {
+              <mat-option [value]="empresa.idEmpresa">
+                {{ empresa.nombre }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Cuarta fila -->
+    <div class="row g-3 mb-4">
+      <div class="col-12">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Notas</mat-label>
+          <input matInput formControlName="notas" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Botonera -->
+    <div class="botonera">
+      <button
+        class="btn btn-sm btn-outline-primary"
+        [disabled]="formChofer.invalid || data.accion != 'A'"
+        (click)="AgregarChofer()"
+      >
+        Agregar
+      </button>
+      <button
+        class="btn btn-sm btn-outline-success"
+        [disabled]="formChofer.invalid || data.accion != 'M'"
+        (click)="ModificarChofer()"
+      >
+        Modificar
+      </button>
+      <button
+        class="btn btn-sm btn-outline-secondary"
+        (click)="Anular()"
+      >
+        Cancelar
+      </button>
+    </div>
+  </form>
 </div>

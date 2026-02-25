@@ -4,17 +4,34 @@ h4 {
     text-align: center;
 }
 
-.container {
-    background-color:lightgray;
-    width : 700px;
-    height: 500px;
 
-}
   .botonera {    
     background-color:lightgray;
     display: flex;
-    justify-content:space-around;
+    justify-content:space-between;
     margin-top: 20px;
     margin-bottom: 5px;
     width: 100%
+}
+
+/* Esta clase se la envia choferes cuando llama, es la panelClass*/
+.custom-dialog-container {
+  background-color: lightgray; /* quita el fondo blanco */
+
+  border-radius: none;
+}
+.custom-dialog-container .mat-mdc-dialog-container .mat-mdc-dialog-surface {
+  background-color: lightgray; /* quita el fondo blanco */
+  padding: 0;              /* elimina padding extra */
+  overflow: visible;       /* para que no aparezca scroll */
+  box-shadow: none;        /* elimina sombra si quieres */
+}
+
+.custom-dialog-container .mat-mdc-dialog-content {
+  overflow: visible;       /* permite que el contenido fluya */
+  padding: 0;              /* elimina padding extra */
+}
+
+.custom-dialog-container .mat-mdc-form-field {
+  width: 100%;             /* los campos se ajustan al ancho disponible */
 }

@@ -49,21 +49,23 @@ app-root {
 
 
 /* Estilos para diálogos personalizados */
-.custom-dialog-container .mat-mdc-dialog-container {
+/*.custom-dialog-container .mat-mdc-dialog-container {
   padding: 0 !important;
   border-radius: 8px;
   overflow: hidden !important;
+  
 }
 
 .mat-mdc-dialog-container .mdc-dialog__surface {
   overflow: hidden !important;
-}
+}*/
 
-.custom-dialog-container .mat-mdc-dialog-content {
-  max-height: none !important;
-  overflow-y: visible !important;
-  padding: 0 !important;
-  margin: 0 !important;
+.custom-dialog-container .mat-mdc-dialog-content .mat-mdc-dialog-surface {
+  background-color: transparent; /* quita el fondo blanco */
+  padding: 0;              /* elimina padding extra */
+  overflow: visible;       /* para que no aparezca scroll */
+  box-shadow: none;        /* elimina sombra si quieres */
+ 
 }
 
 .password-change-dialog .mat-mdc-dialog-title {
@@ -93,11 +95,10 @@ app-root {
   margin-bottom: 16px;
 }
 
-/* Quitar scroll innecesario en diálogos */
-.cdk-overlay-pane {
-  max-height: 95vh;
-}
 
+.cdk-overlay-backdrop {
+  background-color: transparent !important; /* Elimina el fondo oscuro o blanco */
+}
 .mat-mdc-dialog-actions {
   padding: 0 24px 24px !important;
   margin-bottom: 0 !important;

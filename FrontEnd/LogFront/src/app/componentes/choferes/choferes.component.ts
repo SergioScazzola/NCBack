@@ -98,10 +98,17 @@ export class ChoferesComponent {
       nombre    : nom,
       accion     : "M"
     }       
-    const dialogConfig = new MatDialogConfig();   
+    const dialogConfig = new MatDialogConfig() 
+   
+    dialogConfig.width =  '900';         // ancho máximo de la ventana
+    dialogConfig.maxWidth = '95vw';      
+    dialogConfig.height   = 'auto';        // altura se ajusta al contenido
+    dialogConfig.panelClass = 'custom-dialog-container';
+    dialogConfig.disableClose =  false; // opcional según necesidad
+  
     dialogConfig.autoFocus = false;
     dialogConfig.data = data;
-    dialogConfig.panelClass = "";
+    
     const dialogRef =  this.dialog.open(ChoferComponent, dialogConfig);
     dialogRef.afterClosed().subscribe( // 
           (data:any) => { if (data.clicked === 'Modi'){                   

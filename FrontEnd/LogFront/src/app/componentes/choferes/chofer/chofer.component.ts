@@ -27,19 +27,16 @@ import { empTpteDTO } from '../../../../entidades/empTpteDTO';
 })
 export class ChoferComponent {
  //@ViewChild('nombreempleado') nameInput: ElementRef;
-  public nameInput = viewChild<ElementRef>('nombrechofer');
+  public nameInput = viewChild<ElementRef>('nombre');
   formChofer       : FormGroup;
-  operacion        : string;
+  operacion        : string = "";
   resumod          : string;
   nchofalta        : number;
   maxchof          : number;
-  public cempresas : empTpteDTO[];
+  cempresas        : any[]=[];
   idEmpresaSel     : Number;
   private choferr  : choferDTO;  
- 
-
- 
- 
+  
   constructor(  public fb           : FormBuilder,
                 public servicio     : ServiciosService,
                 public dialogRef    : MatDialogRef<ChoferComponent>,
@@ -66,37 +63,29 @@ export class ChoferComponent {
       })
       var subs1 : Subscription;
       subs1 = this.servicio.getEmpresas()
-         .pipe(finalize(()=> {            
-            subs1.unsubscribe();                        
+          .subscribe((data:any):void =>{
+            this.cempresas = data;
             if (this.data.accion=="M"){ 
                // MODIFICAR
                var subs2 : Subscription;            
                subs2 = this.servicio.leerChofer(this.data.nrochof)
-                 .pipe(finalize(()=> {            
-                    subs2.unsubscribe()
+                  .subscribe((data:any):void =>{                           
+                    this.choferr = data;
                     this.operacion = "Modificar Chofer : "+this.data.nombre;
                     this.actualizarControles();
-                 }))
-                 .subscribe((data:any):void => {
-                     this.choferr = data;
-                 })
+                  })
+                 
             } else { // ALTA -> accion = "A"
                var subs2 : Subscription;
                subs2 = this.servicio.getCantChoferes()
-                 .pipe(finalize(()=> {            
-                    subs2.unsubscribe()
-                    this.nchofalta = this.maxchof+1;
+                  .subscribe((data:any):void =>{                           
+                    this.maxchof = data;
+                    this.nchofalta = this.maxchof + 1;
                     this.operacion = "Agregar Chofer Nro. "+this.nchofalta;
                     this.formChofer.controls["nrochof"].setValue(this.nchofalta);
-                 }))
-                 .subscribe((data:any):void => {
-                     this.maxchof = data;
-                 })                                   
+                   })                                              
             }
-          }))
-          .subscribe((data:any):void => {
-              this.cempresas = data;
-          })
+          })                                
    }
   actualizarControles(){
     // Actualiza controles para modificar
@@ -113,7 +102,7 @@ export class ChoferComponent {
                   this.formChofer.controls["telefono"].setValue(this.choferr.telefono),   
                   this.formChofer.controls["nroempresa"].setValue(this.choferr.idEmpresa),                    
                   this.formChofer.controls["notas"].setValue(this.choferr.notas),      
-                 
+                  this.formChofer.controls["saldoini"].setValue(this.choferr.saldoini),    
                   subscri1.unsubscribe;
                 }))                                              
                 .subscribe((data : any): void => {
@@ -135,6 +124,7 @@ export class ChoferComponent {
         nrodoc       : this.formChofer.controls["nrodoc"].value,
         telefono     : this.formChofer.controls["telefono"].value,                  
         notas        : this.formChofer.controls["notas"].value,
+        saldoini     : this.formChofer.controls["saldoini"].value,
    
     }   
     var subscri : Subscription;
@@ -162,6 +152,7 @@ export class ChoferComponent {
         nrodoc       : this.formChofer.controls["nrodoc"].value,
         telefono     : this.formChofer.controls["telefono"].value,                  
         notas        : this.formChofer.controls["notas"].value,
+        saldoini     : this.formChofer.controls["saldoini"].value,
    
     }    
    
