@@ -11,6 +11,7 @@ public class Chofer {
     private String nrodoc;
     private String telefono;
     private String notas;
+    private double saldoini;
    
 
     public String getEmpresa() {
@@ -97,8 +98,13 @@ public class Chofer {
         this.cuit = cuit;
     }
 
-  
-   
-        
+    public double getSaldoini() {
+        return saldoini;
+    }
+
+    public void setSaldoini(double saldoini) {
+        this.saldoini = saldoini;
+    }
+               
 }
 
