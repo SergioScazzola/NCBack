@@ -33,8 +33,8 @@ export class ChoferComponent {
   resumod          : string;
   nchofalta        : number;
   maxchof          : number;
-  cempresas        : any[]=[];
-  idEmpresaSel     : Number;
+  cempresas        : empTpteDTO[]=[];
+  idEmpresaSel     : number = 1;
   private choferr  : choferDTO;  
   
   constructor(  public fb           : FormBuilder,
@@ -54,10 +54,10 @@ export class ChoferComponent {
           nombre     : ['',[Validators.required]],
           domicilio  : [''],
           localidad  : [''],
-          cuit       : [''],
+          cuit       : ['',[Validators.pattern("^(20|23|24|25|27|30|33|34|40|41|45|46|47|49|55)[0-9]{8}[0-9]{1}$" )]],          
           nrodoc     : [''],   
           telefono   : [''],          
-          nroempresa : [''],
+          nroempresa : [1],
           notas      : [''],     
           saldoini   : ['']   
       })
@@ -71,7 +71,7 @@ export class ChoferComponent {
                subs2 = this.servicio.leerChofer(this.data.nrochof)
                   .subscribe((data:any):void =>{                           
                     this.choferr = data;
-                    this.operacion = "Modificar Chofer : "+this.data.nombre;
+                    this.operacion = "Modificar Chofer Nro. "+this.data.nrochof+" - "+this.data.nombre;
                     this.actualizarControles();
                   })
                  
@@ -103,6 +103,7 @@ export class ChoferComponent {
                   this.formChofer.controls["nroempresa"].setValue(this.choferr.idEmpresa),                    
                   this.formChofer.controls["notas"].setValue(this.choferr.notas),      
                   this.formChofer.controls["saldoini"].setValue(this.choferr.saldoini),    
+                  this.idEmpresaSel = this.choferr.idEmpresa;
                   subscri1.unsubscribe;
                 }))                                              
                 .subscribe((data : any): void => {
@@ -124,14 +125,15 @@ export class ChoferComponent {
         nrodoc       : this.formChofer.controls["nrodoc"].value,
         telefono     : this.formChofer.controls["telefono"].value,                  
         notas        : this.formChofer.controls["notas"].value,
-        saldoini     : this.formChofer.controls["saldoini"].value,
+        saldoini     : 0
    
     }   
     var subscri : Subscription;
     var resu    : string;
     subscri = this.servicio.grabarChofer(chofer)  
             .pipe(finalize(() => {   
-             this.notiService.showNotification("El Chofer "+chofer.nombre+" se ha agregado con éxito",'Aceptar','mensaje',500); 
+             this.notiService.showNotification("El Chofer Nro. "+chofer.idChofer+" - "+
+                                        chofer.nombre+" se ha agregado con éxito",'Aceptar','mensaje',500); 
                 subscri.unsubscribe();
                 this.dialogRef.close({ clicked : "Alta"})
                 }))                  
@@ -160,7 +162,8 @@ export class ChoferComponent {
     var resu    : string;
     subscri = this.servicio.updateChofer(chofer.idChofer,chofer)  
             .pipe(finalize(() => {   
-             this.notiService.showNotification("El Chofer "+this.data.nombre+" se ha modificado con éxito",'Aceptar','mensaje',500); 
+             this.notiService.showNotification("El Chofer Nro. "+this.data.nrochof+" - "+
+                                                chofer.nombre+" se ha modificado con éxito",'Aceptar','mensaje',500); 
              subscri.unsubscribe();
              this.dialogRef.close({ clicked : "Modi"})
                 }))                  
@@ -168,10 +171,50 @@ export class ChoferComponent {
     }
              
 onSelectionEmpresa($event : any){
-
+  // recibo un idEmpresa
+ this.idEmpresaSel = $event.value;
+ console.log("empresa : "+this.idEmpresaSel);
 }
- 
-    Anular(){
+
+validarDigito($event:any):string{
+// Calcula digito verificador a patir de un numero de 11 o 10 digitos sin guiones
+var numero : string = $event.value;
+var suma   : number;
+var digver : number;
+var d1     : number;
+var d2     : number;
+var retorno : string = "";
+var digent  : string = "";
+
+var numeros : number[] = [5,4,3,2,7,6,5,4,3,2];
+
+if (numero.length == 13){
+    digent = numero.substring(12,12);
+}
+
+suma = 0;
+
+for (let i : number=0;i<10;i++){
+    suma = suma + (Number.parseInt(numero.substring(i,i+1))*numeros[i]);  
+}
+
+d1 =suma % 11;
+d2 = 11-d1;
+
+if (d2==11){
+  digver = 0;
+} else {
+   if (d2 == 10){
+      digver = 9;
+   } else {   
+       digver = d2;
+   }
+}
+retorno = digver.toString().trim();
+return retorno;
+}
+
+Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})
      }
 }

@@ -60,14 +60,21 @@ app-root {
   overflow: hidden !important;
 }*/
 
-.custom-dialog-container .mat-mdc-dialog-content .mat-mdc-dialog-surface {
-  background-color: transparent; /* quita el fondo blanco */
+.custom-dialog-container .mat-mdc-dialog-container {
+  background-color: lightgray; /* quita el fondo blanco */
   padding: 0;              /* elimina padding extra */
   overflow: visible;       /* para que no aparezca scroll */
   box-shadow: none;        /* elimina sombra si quieres */
+  border: 2px solid gray;
+  border-radius: 0px;
  
 }
 
+/* Estilo adicional para campos de formulario en diálogos */
+.custom-dialog-container .mat-mdc-form-field {
+  width: 100%;
+  /*margin-bottom: 16px;*/
+}
 .password-change-dialog .mat-mdc-dialog-title {
   color: #3f51b5;
   font-weight: 500;
@@ -89,11 +96,7 @@ app-root {
   width: 100%;
 }
 
-/* Estilo adicional para campos de formulario en diálogos */
-.mat-mdc-form-field {
-  width: 100%;
-  margin-bottom: 16px;
-}
+
 
 
 .cdk-overlay-backdrop {

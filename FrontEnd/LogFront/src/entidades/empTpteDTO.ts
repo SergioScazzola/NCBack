@@ -1,5 +1,5 @@
 export interface empTpteDTO {
-    idEmpresa     : Number;
+    idEmpresa     : number;
     nombre        : string;
     domicilio     : string;
     localidad     : string;
