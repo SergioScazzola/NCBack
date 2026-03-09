@@ -61,7 +61,8 @@ export class ChoferComponent {
           domicilio  : [''],
           localidad  : [''],
        //   cuit       : ['',[Validators.pattern("^(20|23|24|25|27|30|33|34|40|41|45|46|47|49|55)[0-9]{8}[0-9]{1}$" )]],          
-          cuit       : ['',[cuitValidator]],          
+          // cuitValidator esta definida en servicios, y determina si el cuit el valido ó no
+          cuit       : ['',[Validators.required,cuitValidator]],          
           nrodoc     : [''],   
           telefono   : [''],          
           nroempresa : [1],
@@ -121,6 +122,8 @@ export class ChoferComponent {
    AgregarChofer(){
 
     var indemp = this.cempresas.findIndex(p=>p.idEmpresa==this.idEmpresaSel);
+    var cuitingre = this.formChofer.controls["cuit"].value;
+
     var chofer : choferDTO = {
         idChofer     : this.formChofer.controls["nrochof"].value,
         idEmpresa    : this.formChofer.controls["nroempresa"].value,   
@@ -128,24 +131,14 @@ export class ChoferComponent {
         nombre       : this.formChofer.controls["nombre"].value,
         domicilio    : this.formChofer.controls["domicilio"].value,
         localidad    : this.formChofer.controls["localidad"].value,
-        cuit         : this.formChofer.controls["cuit"].value,
+        cuit         : cuitingre.slice(0,11)+"-"+cuitingre.slice(11),
         nrodoc       : this.formChofer.controls["nrodoc"].value,
         telefono     : this.formChofer.controls["telefono"].value,                  
         notas        : this.formChofer.controls["notas"].value,
         saldoini     : 0
  
     }   
-    console.log( chofer.idChofer);
-    console.log(chofer.idEmpresa);
-    console.log(chofer.empresa);
-    console.log(chofer.nombre);    
-    console.log(chofer.domicilio);
-    console.log(chofer.localidad);
-    console.log(chofer.cuit);
-    console.log(chofer.nrodoc);
-    console.log(chofer.telefono);
-    console.log(chofer.notas);
-    console.log(chofer.saldoini);    
+    
         
     var subscri : Subscription;
     var resu    : string;
@@ -163,6 +156,10 @@ export class ChoferComponent {
     
     ModificarChofer(){
      var indemp = this.cempresas.findIndex(p=>p.idEmpresa==this.idEmpresaSel);
+     var cuitingre = this.formChofer.controls["cuit"].value;
+     if (cuitingre.length < 13){
+        cuitingre = cuitingre.slice(0,11)+"-"+cuitingre.slice(11);
+     }
      var chofer : choferDTO = {
         idChofer     : this.formChofer.controls["nrochof"].value,
         idEmpresa    : this.formChofer.controls["nroempresa"].value,   
@@ -170,7 +167,7 @@ export class ChoferComponent {
         nombre       : this.formChofer.controls["nombre"].value,
         domicilio    : this.formChofer.controls["domicilio"].value,
         localidad    : this.formChofer.controls["localidad"].value,
-        cuit         : this.formChofer.controls["cuit"].value,
+        cuit         : cuitingre,
         nrodoc       : this.formChofer.controls["nrodoc"].value,
         telefono     : this.formChofer.controls["telefono"].value,                  
         notas        : this.formChofer.controls["notas"].value,
@@ -196,43 +193,6 @@ onSelectionEmpresa($event : any){
  console.log("empresa : "+this.idEmpresaSel);
 }
 
-validarCuit($event:any):string{
-// Calcula digito verificador a patir de un numero de 11 o 10 digitos sin guiones
-var numero : string = $event.value;
-var suma   : number;
-var digver : number;
-var d1     : number;
-var d2     : number;
-var retorno : string = "";
-var digent  : string = "";
-
-var numeros : number[] = [5,4,3,2,7,6,5,4,3,2];
-
-if (numero.length == 11){
-    digent = numero.substring(11,11);
-}
-
-suma = 0;
-
-for (let i : number=0;i<10;i++){
-    suma = suma + (Number.parseInt(numero.substring(i,i+1))*numeros[i]);  
-}
-
-d1 =suma % 11;
-d2 = 11-d1;
-
-if (d2==11){
-  digver = 0;
-} else {
-   if (d2 == 10){
-      digver = 9;
-   } else {   
-       digver = d2;
-   }
-}
-retorno = digver.toString().trim();
-return retorno;
-}
 
 Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})

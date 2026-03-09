@@ -120,17 +120,17 @@
       </button>
     </div>
     @if(formChofer.controls['cuit'].hasError('cuitFormato')){
-    <div>    
+    <div class="menserror">    
          El CUIT debe tener 11 dígitos    
     </div>
     }
     @if(formChofer.controls['cuit'].hasError('cuitPrefijo')){
-    <div>
+    <div class="menserror">
        Prefijo de CUIT inválido
     </div>
     }
     @if(formChofer.controls['cuit'].hasError('cuitInvalido')){
-    <div>
+    <div class="menserror">
          El CUIT no es válido
     </div>
     }

@@ -1,0 +1,110 @@
+<div class="camiones-container">
+  <div class="row">
+    <div class="col">
+       <div class="header">
+         <h4>CAMIONES</h4>
+       </div>
+    </div>  
+    <div class="col">
+       <input #filtroInput (keyup)="aplicarFiltro(filtroInput.value)" placeholder="Filtrar por nombre">
+    </div>        
+ 
+    <div class="col-3">      
+    </div>
+    <div class="col">
+      <button class="btn btn-primary add-button" (click)="agCamion()">
+        <i class="bi bi-plus-circle me-1"></i>Agregar
+      </button>
+    </div>        
+  </div>
+
+  <div class="table-container" style="overflow-x: auto">
+    <table
+      mat-table
+      class="mat-elevation-z8"
+      [dataSource]="this.dataSource"
+      style="width: 100%"
+    >
+      <!-- Columna ID Camion -->
+      <ng-container matColumnDef="idCamion">
+        <th mat-header-cell *matHeaderCellDef>Nro</th>
+        <td mat-cell *matCellDef="let renCam">{{ renCam.idCamion }}</td>
+      </ng-container>
+
+      <!-- Columna  -->
+      <ng-container matColumnDef="marca">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let renCam">{{ renCam.marca }}</td>
+      </ng-container>
+
+      <!-- Columna Modelo -->
+      <ng-container matColumnDef="modelo">
+        <th mat-header-cell *matHeaderCellDef>Modelo</th>
+        <td mat-cell *matCellDef="let renCam">{{ renCam.modelo }}</td>
+      </ng-container>
+
+      <!-- Columna anio -->
+      <ng-container matColumnDef="anio">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let renCam">{{ renCam.anio }}</td>
+      </ng-container>
+
+      <!-- Columna Dominio Chasis -->
+      <ng-container matColumnDef="domChasis">
+        <th mat-header-cell *matHeaderCellDef>Dominio</th>
+        <td mat-cell *matCellDef="let renCam">{{ renCam.domChasis }}</td>
+      </ng-container>
+
+      <!-- Columna Dominio Acoplado -->
+      <ng-container matColumnDef="domAcoplado">
+        <th mat-header-cell *matHeaderCellDef>Dominio Acop.</th>
+        <td mat-cell *matCellDef="let renCam">{{ renCam.domAcoplado }}</td>
+      </ng-container>
+
+      <!-- Columna Empresa -->
+      <ng-container matColumnDef="emptpte">
+        <th mat-header-cell *matHeaderCellDef>Empresa</th>
+        <td mat-cell *matCellDef="let renCam">{{ renCam.emptpte }}</td>
+      </ng-container>
+     
+
+      <!-- Columna Modificar -->
+      <ng-container matColumnDef="M">
+        <th mat-header-cell *matHeaderCellDef>Mod</th>
+        <td mat-cell *matCellDef="let renCam">
+          <div class="text-center">
+            <button
+              mat-icon-button
+              class="action-btn"
+              title="modificar camion"
+              (click)="modificarCamion(renCam.idCamion, renCam.marca)"
+            >
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Columna Borrar -->
+      <ng-container matColumnDef="B">
+        <th mat-header-cell *matHeaderCellDef>Bor</th>
+        <td mat-cell *matCellDef="let renChof">
+          <div class="text-center">
+            <button
+              mat-icon-button
+              class="action-btn"
+              title="borrar camion"
+              (click)="borrarCamion(renChof.idChofer)"
+            >
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+     
+      <!-- Definición de filas -->
+      <tr mat-header-row *matHeaderRowDef="colCamiones; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; let index; columns: colCamiones"></tr>
+    </table>
+  </div>
+</div>
