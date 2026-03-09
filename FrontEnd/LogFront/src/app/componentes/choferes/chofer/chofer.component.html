@@ -58,7 +58,8 @@
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Cuit</mat-label>
           <input matInput formControlName="cuit"
-              (onLostFocus)="validarDigito($event)"/>
+              cuitFormat
+              />
         
         </mat-form-field>
       </div>
@@ -118,5 +119,21 @@
         Cancelar
       </button>
     </div>
+    @if(formChofer.controls['cuit'].hasError('cuitFormato')){
+    <div>    
+         El CUIT debe tener 11 dígitos    
+    </div>
+    }
+    @if(formChofer.controls['cuit'].hasError('cuitPrefijo')){
+    <div>
+       Prefijo de CUIT inválido
+    </div>
+    }
+    @if(formChofer.controls['cuit'].hasError('cuitInvalido')){
+    <div>
+         El CUIT no es válido
+    </div>
+    }
+    
   </form>
 </div>

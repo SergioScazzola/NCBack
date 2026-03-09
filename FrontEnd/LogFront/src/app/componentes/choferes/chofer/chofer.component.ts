@@ -10,6 +10,11 @@ import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { empTpteDTO } from '../../../../entidades/empTpteDTO';
+import { CuitFormatDirective } from '../../../Directivas/cuit-format.directive';
+import { cuitValidator } from '../../../servicios/cuit.validator';
+
+
+export class AppModule {}
 
 @Component({
   selector: 'app-chofer',
@@ -18,7 +23,8 @@ import { empTpteDTO } from '../../../../entidades/empTpteDTO';
                 MatLabel,         
                 MatInputModule,
                 MatSelectModule,
-                ReactiveFormsModule,                  
+                ReactiveFormsModule,  
+                CuitFormatDirective,                
                 CommonModule,
                 DragDropModule,
                 FormsModule,],
@@ -54,7 +60,8 @@ export class ChoferComponent {
           nombre     : ['',[Validators.required]],
           domicilio  : [''],
           localidad  : [''],
-          cuit       : ['',[Validators.pattern("^(20|23|24|25|27|30|33|34|40|41|45|46|47|49|55)[0-9]{8}[0-9]{1}$" )]],          
+       //   cuit       : ['',[Validators.pattern("^(20|23|24|25|27|30|33|34|40|41|45|46|47|49|55)[0-9]{8}[0-9]{1}$" )]],          
+          cuit       : ['',[cuitValidator]],          
           nrodoc     : [''],   
           telefono   : [''],          
           nroempresa : [1],
@@ -126,12 +133,25 @@ export class ChoferComponent {
         telefono     : this.formChofer.controls["telefono"].value,                  
         notas        : this.formChofer.controls["notas"].value,
         saldoini     : 0
-   
+ 
     }   
+    console.log( chofer.idChofer);
+    console.log(chofer.idEmpresa);
+    console.log(chofer.empresa);
+    console.log(chofer.nombre);    
+    console.log(chofer.domicilio);
+    console.log(chofer.localidad);
+    console.log(chofer.cuit);
+    console.log(chofer.nrodoc);
+    console.log(chofer.telefono);
+    console.log(chofer.notas);
+    console.log(chofer.saldoini);    
+        
     var subscri : Subscription;
     var resu    : string;
     subscri = this.servicio.grabarChofer(chofer)  
             .pipe(finalize(() => {   
+             console.log("Error : "+resu);
              this.notiService.showNotification("El Chofer Nro. "+chofer.idChofer+" - "+
                                         chofer.nombre+" se ha agregado con éxito",'Aceptar','mensaje',500); 
                 subscri.unsubscribe();
@@ -176,7 +196,7 @@ onSelectionEmpresa($event : any){
  console.log("empresa : "+this.idEmpresaSel);
 }
 
-validarDigito($event:any):string{
+validarCuit($event:any):string{
 // Calcula digito verificador a patir de un numero de 11 o 10 digitos sin guiones
 var numero : string = $event.value;
 var suma   : number;
@@ -188,8 +208,8 @@ var digent  : string = "";
 
 var numeros : number[] = [5,4,3,2,7,6,5,4,3,2];
 
-if (numero.length == 13){
-    digent = numero.substring(12,12);
+if (numero.length == 11){
+    digent = numero.substring(11,11);
 }
 
 suma = 0;
