@@ -10,7 +10,7 @@ public class NodeServiceRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        ProcessBuilder processBuilder = new ProcessBuilder("node","C:\\LogisticaNC\\Microservicios\\Afip-Service\\src\\app.js");      
+        ProcessBuilder processBuilder = new ProcessBuilder("node","C:\\LogisticaNC\\NCBack\\Microservicios\\Afip-Service\\src\\app.js");      
         // Redirige la salida de Node a la consola de Spring Boot
         processBuilder.inheritIO(); 
         
