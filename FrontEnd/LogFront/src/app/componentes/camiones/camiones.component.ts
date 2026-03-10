@@ -30,7 +30,7 @@ export class CamionesComponent {
    dataSource            = new MatTableDataSource<any>();
 
         
-   colCamiones : string[] = ["idCamion" , "domChasis","domAcoplado","marca","modelo","anio","idEmptpte","emptpte","M","B" ];
+   colCamiones : string[] = ["idCamion" , "domChasis","domAcoplado","descrip","emptpte","M","B" ];
  
    
    constructor(     private servicio     : ServiciosService,               
@@ -55,7 +55,7 @@ export class CamionesComponent {
        
    leerCamiones(){
         var subs : Subscription;
-        subs = this.servicio.getChoferes()
+        subs = this.servicio.getCamiones()
            .pipe(finalize(()=> {
                this.cantcamion = this.ccamiones.length;
                 this.dataSource.data = this.ccamiones;         
@@ -74,11 +74,11 @@ export class CamionesComponent {
      } 
    agCamion(){
      const data = {
-          nrochof    : 0,    
-          nombre     : "",      
+          nrocamion    : 0,    
+          descrip      : "",      
           accion     : "A",
      }       
-     const dialogConfig = new MatDialogConfig();   
+    const dialogConfig = new MatDialogConfig();   
     dialogConfig.autoFocus = false;
     dialogConfig.data = data;
     dialogConfig.width =  '900';         // ancho máximo de la ventana
@@ -98,7 +98,7 @@ export class CamionesComponent {
    modificarCamion(nrocam : number,desc : string){      
     const data = {
       nrocamion : nrocam,        
-      nombre    : desc,
+      descrip   : desc,
       accion     : "M"
     }       
     const dialogConfig = new MatDialogConfig() 
@@ -119,14 +119,14 @@ export class CamionesComponent {
           }})
  
    }
-   borrarCamion(nrocam : number){
+   borrarCamion(nrocam : number,desc : string){
      var resu : string;
       this.sinoServicio.abrirSiNoDialogo("Confirmación",
-                               "¿ Está seguro de quiere borrar el Camión Nro."+nrocam+" ?")
+                               "¿ Está seguro de quiere borrar el Camión Nro."+nrocam+"-"+desc+" ?")
         .then(result => {
            if (result) {
                var subscri : Subscription;
-               subscri = this.servicio.elimChofer(nrocam)
+               subscri = this.servicio.elimCamion(nrocam)
                   .pipe(finalize(() => {
                      this.notiServicio.showNotification("El Camión Nro "+nrocam+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
                      subscri.unsubscribe();

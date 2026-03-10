@@ -2,6 +2,7 @@ export interface camionDTO {
     idCamion      : number;
     domChasis     : string;
     domAcoplado   : string;
+    descrip       : string;
     marca         : string;
     modelo        : string;
     anio          : string;
@@ -12,7 +13,7 @@ export interface camionDTO {
 
 export interface intCamion {
     nrocamion   : number,  
-    nombre      : string;
+    descrip     : string;
     accion      : string,
    
 }

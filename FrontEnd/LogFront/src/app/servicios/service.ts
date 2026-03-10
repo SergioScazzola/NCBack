@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
 import { ConfigService } from './config.service';
 import { choferDTO } from '../../entidades/choferDTO';
 import { empTpteDTO } from '../../entidades/empTpteDTO';
+import { camionDTO } from '../../entidades/camionDTO';
+import { marcaDTO } from '../../entidades/marcaDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -52,6 +54,37 @@ export class ServiciosService {
     );
   }
 
+  // ** CAMIONES ** //
+
+   public getCamiones() {
+    return this.http.get<camionDTO[]>(this.apiUrl + `camion/camiones`);
+  }
+
+  public getCantCamiones() {
+    return this.http.get<number>(this.apiUrl + `camion/max`);
+  }
+
+  public leerCamion(nrocamion: number) {
+    return this.http.get<camionDTO>(
+      this.apiUrl + `camion/camion?id=` + nrocamion
+    );
+  }
+  
+  public grabarCamion(camion : camionDTO) {
+    return this.http.post<camionDTO>(
+      this.apiUrl + `camion/camion/nuevo`, camion);
+  }
+
+  public updateCamion(nrocamion : number, camion : camionDTO) {
+    return this.http.put<camionDTO>(
+      environment.apiUrl + `camion/camion/actualizar?id=` + nrocamion, camion);
+  }
+
+  public elimCamion(nrocamion : number) {
+    return this.http.delete(
+      environment.apiUrl + `camion/camion?id=` + nrocamion);
+  }
+
   // ** Empresas de Transporte ** //
 
    public getEmpresas() {
@@ -87,5 +120,10 @@ export class ServiciosService {
       environment.apiUrl + `empt/empt?id=` + nroempresa
     );
   }
-    
+
+ public getMarcas() {
+    return this.http.get<marcaDTO[]>(this.apiUrl + `tablas/marcas`);
+ } 
+
+
 }

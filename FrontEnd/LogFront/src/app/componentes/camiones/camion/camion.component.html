@@ -1,116 +1,122 @@
-<div class="camiones-container">
-  <div class="row">
-    <div class="col">
-       <div class="header">
-         <h4>CHOFERES</h4>
-       </div>
-    </div>  
-    <div class="col">
-       <input #filtroInput (keyup)="aplicarFiltro(filtroInput.value)" placeholder="Filtrar por nombre">
-    </div>        
- 
-    <div class="col-3">      
+<div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  <h4>{{ operacion }}</h4>
+  <form [formGroup]="formCamion" class="p-3">
+    <!-- Primera fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-2">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nro</mat-label>
+          <input
+            matInput
+            readonly
+            formControlName="nrocam"
+            style="text-align: center"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Dominio Chasis</mat-label>
+          <input
+            matInput
+            #nombre
+            #inputFocus
+            formControlName="domChasis"
+            style="text-align: left"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Dominio Acoplado</mat-label>
+          <input matInput formControlName="domAcoplado" />
+        </mat-form-field>
+      </div>
     </div>
-    <div class="col">
-      <button class="btn btn-primary add-button" (click)="agChofer()">
-        <i class="bi bi-plus-circle me-1"></i>Agregar
-      </button>
-    </div>        
-  </div>
 
-  <div class="table-container" style="overflow-x: auto">
-    <table
-      mat-table
-      class="mat-elevation-z8"
-      [dataSource]="this.dataSource"
-      style="width: 100%"
-    >
-      <!-- Columna ID Empleado -->
-      <ng-container matColumnDef="idChofer">
-        <th mat-header-cell *matHeaderCellDef>Nro</th>
-        <td mat-cell *matCellDef="let renChof">{{ renChof.idChofer }}</td>
-      </ng-container>
+    <!-- Segunda fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Marcas</mat-label>
+          <mat-select
+            formControlName="marca"
+            (selectionChange)="onSelectionMarca($event)"
+          >
+            @for (marcaa of cmarcas; track marcaa.marca) {
+              <mat-option [value]="marcaa.marca">
+                {{ marcaa.marca }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Modelo</mat-label>
+          <input selecText formControlName="modelo" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Año</mat-label>
+          <input selecText formControlName="anio" />
+        </mat-form-field>
+      </div>
+    </div>
 
-      <!-- Columna Nombre -->
-      <ng-container matColumnDef="nombre">
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
-        <td mat-cell *matCellDef="let renChof">{{ renChof.nombre }}</td>
-      </ng-container>
-
-      <!-- Columna Domicilio -->
-      <ng-container matColumnDef="domicilio">
-        <th mat-header-cell *matHeaderCellDef>Domicilio</th>
-        <td mat-cell *matCellDef="let renChof">{{ renChof.domicilio }}</td>
-      </ng-container>
-
-      <!-- Columna Localidad -->
-      <ng-container matColumnDef="localidad">
-        <th mat-header-cell *matHeaderCellDef>Localidad</th>
-        <td mat-cell *matCellDef="let renChof">{{ renChof.localidad }}</td>
-      </ng-container>
-
-      <!-- Columna Empresa -->
-      <ng-container matColumnDef="empresa">
-        <th mat-header-cell *matHeaderCellDef>Empresa</th>
-        <td mat-cell *matCellDef="let renChof">{{ renChof.empresa }}</td>
-      </ng-container>
-
-      <!-- Columna Cuit -->
-      <ng-container matColumnDef="cuit">
-        <th mat-header-cell *matHeaderCellDef>Cuit</th>
-        <td mat-cell *matCellDef="let renChof">{{ renChof.cuit }}</td>
-      </ng-container>
-
-      <!-- Columna Telefono -->
-      <ng-container matColumnDef="telefono">
-        <th mat-header-cell *matHeaderCellDef>Telefono</th>
-        <td mat-cell *matCellDef="let renChof">{{ renChof.telefono }}</td>
-      </ng-container>
-
-      <!-- Columna Notas -->
-      <ng-container matColumnDef="notas">
-        <th mat-header-cell *matHeaderCellDef>Notas</th>
-        <td mat-cell *matCellDef="let renChof">{{ renChof.notas }}</td>
-      </ng-container>
-
-      <!-- Columna Modificar -->
-      <ng-container matColumnDef="M">
-        <th mat-header-cell *matHeaderCellDef>Mod</th>
-        <td mat-cell *matCellDef="let renChof">
-          <div class="text-center">
-            <button
-              mat-icon-button
-              class="action-btn"
-              title="modificar chofer"
-              (click)="modificarChofer(renChof.idChofer, renChof.nombre)"
-            >
-              <i class="bi bi-pencil-fill"></i>
-            </button>
-          </div>
-        </td>
-      </ng-container>
-
-      <!-- Columna Borrar -->
-      <ng-container matColumnDef="B">
-        <th mat-header-cell *matHeaderCellDef>Bor</th>
-        <td mat-cell *matCellDef="let renChof">
-          <div class="text-center">
-            <button
-              mat-icon-button
-              class="action-btn"
-              title="borrar chofer"
-              (click)="borrarChofer(renChof.idChofer)"
-            >
-              <i class="bi bi-trash-fill"></i>
-            </button>
-          </div>
-        </td>
-      </ng-container>
+    <!-- Tercera fila -->
+    <div class="row g-3 mb-3">      
+      <div class="col-md-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Descripcion</mat-label>
+          <input [readOnly]="true" formControlName="descrip"
+          />
+        
+        </mat-form-field>
+      </div>
      
-      <!-- Definición de filas -->
-      <tr mat-header-row *matHeaderRowDef="colChoferes; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; let index; columns: colChoferes"></tr>
-    </table>
-  </div>
-</div>
+      <div class="col-md-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Empresa de Transporte</mat-label>
+          <mat-select
+            formControlName="nroempresa"
+            (selectionChange)="onSelectionEmpresa($event)"
+          >
+            @for (empresa of cempresas; track empresa.idEmpresa) {
+              <mat-option [value]="empresa.idEmpresa">
+                {{ empresa.nombre }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
 
+  
+
+    <!-- Botonera -->
+    <div class="botonera">
+      <button
+        class="btn btn-outline-primary"
+        [disabled]="formCamion.invalid || data.accion != 'A'"
+        (click)="AgregarCamion()"
+      >
+        Agregar
+      </button>
+      <button
+        class="btn btn-outline-success"
+        [disabled]="formCamion.invalid || data.accion != 'M'"
+        (click)="ModificarCamion()"
+      >
+        Modificar
+      </button>
+      <button
+        class="btn btn-outline-secondary"
+        (click)="Anular()"
+      >
+        Cancelar
+      </button>
+    </div>       
+  </form>
+</div>

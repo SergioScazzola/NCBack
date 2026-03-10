@@ -107,25 +107,7 @@
   overflow: visible;
 }
 
-.mat-column-nombre {
-  padding-left: 0;
-  width: 200px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mat-column-localidad {
-  padding-left: 0;
-  width: 150px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mat-column-empresa {
+.mat-column-domChasis {
   padding-left: 0;
   width: 100px;
   text-align: left;
@@ -134,26 +116,27 @@
   text-overflow: ellipsis;
 }
 
-.mat-column-cuit {
+.mat-column-domAcoplado {
   padding-left: 0;
-  width: 120px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.mat-column-telefono {
-  padding-left: 0;
-  width: 150px;
+  width: 100px;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.mat-column-notas {
+.mat-column-descrip {
   padding-left: 0;
-  width: 200px;
+  width: 300px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-emptpte {
+  padding-left: 0;
+  width: 150px;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
