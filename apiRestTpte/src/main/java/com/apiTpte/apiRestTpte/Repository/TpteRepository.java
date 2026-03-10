@@ -14,6 +14,7 @@ import com.apiTpte.apiRestTpte.Entidades.FactTpte;
 import com.apiTpte.apiRestTpte.Entidades.Gasto;
 import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
+import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
 
@@ -108,5 +109,8 @@ public interface TpteRepository {
     int saveGasto(Gasto gasto);
     int actualizarGasto(int idgasto, Gasto gasto);    
     int deleteGasto(int idgasto); 
+
+    // TABLAS Auxiliares //
+    List<Marca> AllMarcas();
 
 }

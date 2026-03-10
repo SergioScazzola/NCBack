@@ -18,6 +18,7 @@ import com.apiTpte.apiRestTpte.Entidades.FactTpte;
 import com.apiTpte.apiRestTpte.Entidades.Gasto;
 import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
+import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
 
@@ -135,9 +136,9 @@ public class JdbcTpteRepository implements TpteRepository {
       public int actualizarCamion(int nroc, Camion camion){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE camiones SET domChasis=?,domAcoplado=?,marca=?,modelo=?,"+
+          resu = jdbcTemplate.update("UPDATE camiones SET domChasis=?,domAcoplado=?,descrip=?,marca=?,modelo=?,"+
                                     "anio=?,idEmptpte=?,emptpte=?"+" WHERE idCamion=?",
-                    new Object[] { camion.getDomChasis(), camion.getDomAcoplado(), camion.getMarca(),
+                    new Object[] { camion.getDomChasis(), camion.getDomAcoplado(), camion.getDescrip(),camion.getMarca(),
                                    camion.getModelo(),camion.getAnio(),camion.getEmptpte(),camion.getEmptpte(),
                                    camion.getIdCamion()
                                 });
@@ -151,9 +152,10 @@ public class JdbcTpteRepository implements TpteRepository {
       // Graba nuevo Camion 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT camiones(idCamion,domChasis,domAcoplado,marca,modelo,"+
-                                    "anio,idEmptpte,emptpte) VALUES(?,?,?,?,?,?,?,?) ",
-                    new Object[] { camion.getIdCamion(),camion.getDomChasis(), camion.getDomAcoplado(), camion.getMarca(),
+          resu = jdbcTemplate.update("INSERT camiones(idCamion,domChasis,domAcoplado,descrip,marca,modelo,"+
+                                    "anio,idEmptpte,emptpte) VALUES(?,?,?,?,?,?,?,?,?) ",
+                    new Object[] { camion.getIdCamion(),camion.getDomChasis(), camion.getDomAcoplado(),
+                                   camion.getDescrip(), camion.getMarca(),
                                    camion.getModelo(),camion.getAnio(),camion.getEmptpte(),camion.getEmptpte()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
@@ -890,4 +892,12 @@ public class JdbcTpteRepository implements TpteRepository {
       }
       return resu;
     }   
+
+    // TABLAS Auxiliares //
+
+    @Override
+    public List<Marca> AllMarcas() {   
+      String selec = "SELECT * FROM marcas ORDER BY marca";
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Marca.class));
+    }
 }
