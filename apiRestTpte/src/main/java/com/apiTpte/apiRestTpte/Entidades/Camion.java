@@ -5,6 +5,7 @@ public class Camion {
      private String domChasis;   
      private String domAcoplado;
      private String descrip;   
+     private int    idMarca;
      private String marca;
      private String modelo;
      private String anio;
@@ -83,5 +84,14 @@ public class Camion {
 
      public void setDescrip(String descrip) {
          this.descrip = descrip;
-     }     
+     }
+
+     public int getIdMarca() {
+         return idMarca;
+     }
+
+     public void setIdMarca(int idMarca) {
+         this.idMarca = idMarca;
+     }  
+        
 }

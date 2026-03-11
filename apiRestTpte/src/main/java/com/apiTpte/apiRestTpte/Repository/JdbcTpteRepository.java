@@ -136,9 +136,10 @@ public class JdbcTpteRepository implements TpteRepository {
       public int actualizarCamion(int nroc, Camion camion){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE camiones SET domChasis=?,domAcoplado=?,descrip=?,marca=?,modelo=?,"+
+          resu = jdbcTemplate.update("UPDATE camiones SET domChasis=?,domAcoplado=?,descrip=?,idMarca=?,marca=?,modelo=?,"+
                                     "anio=?,idEmptpte=?,emptpte=?"+" WHERE idCamion=?",
-                    new Object[] { camion.getDomChasis(), camion.getDomAcoplado(), camion.getDescrip(),camion.getMarca(),
+                    new Object[] { camion.getDomChasis(), camion.getDomAcoplado(), camion.getDescrip(),
+                                    camion.getIdMarca(),camion.getMarca(),
                                    camion.getModelo(),camion.getAnio(),camion.getEmptpte(),camion.getEmptpte(),
                                    camion.getIdCamion()
                                 });
@@ -152,10 +153,10 @@ public class JdbcTpteRepository implements TpteRepository {
       // Graba nuevo Camion 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT camiones(idCamion,domChasis,domAcoplado,descrip,marca,modelo,"+
-                                    "anio,idEmptpte,emptpte) VALUES(?,?,?,?,?,?,?,?,?) ",
+          resu = jdbcTemplate.update("INSERT camiones(idCamion,domChasis,domAcoplado,descrip,idMarca,marca,modelo,"+
+                                    "anio,idEmptpte,emptpte) VALUES(?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] { camion.getIdCamion(),camion.getDomChasis(), camion.getDomAcoplado(),
-                                   camion.getDescrip(), camion.getMarca(),
+                                   camion.getDescrip(), camion.getIdMarca(),camion.getMarca(),
                                    camion.getModelo(),camion.getAnio(),camion.getEmptpte(),camion.getEmptpte()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
