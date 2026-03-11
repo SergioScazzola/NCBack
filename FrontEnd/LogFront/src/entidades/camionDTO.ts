@@ -3,6 +3,7 @@ export interface camionDTO {
     domChasis     : string;
     domAcoplado   : string;
     descrip       : string;
+    idMarca       : number;
     marca         : string;
     modelo        : string;
     anio          : string;

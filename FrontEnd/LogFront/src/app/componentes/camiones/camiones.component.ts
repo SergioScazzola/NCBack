@@ -101,7 +101,7 @@ export class CamionesComponent {
       descrip   : desc,
       accion     : "M"
     }       
-    const dialogConfig = new MatDialogConfig() 
+    const dialogConfig = new MatDialogConfig();
    
     dialogConfig.width =  '900';         // ancho máximo de la ventana
     dialogConfig.maxWidth = '95vw';      

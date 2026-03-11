@@ -15,19 +15,19 @@ import { SelecTextDirective } from "../../../Directivas/selec-text.directive";
 
 @Component({
   selector: 'app-camion',
-  imports: [MatFormField,
-    MatLabel,
-    MatInputModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    CommonModule,
-    DragDropModule,
-    FormsModule, SelecTextDirective],
+  imports: [    MatFormField,
+                 MatLabel,   
+                 MatInputModule,      
+                 MatSelectModule,
+                 ReactiveFormsModule,                                
+                 CommonModule,
+                 DragDropModule,
+                 FormsModule,],
   templateUrl: './camion.component.html',
   styleUrl: './camion.component.css',
 })
 export class CamionComponent {
- public nameInput = viewChild<ElementRef>('nombre');
+ public nameInput = viewChild<ElementRef>('domChasis');
   formCamion       : FormGroup;
   operacion        : string = "";
   resumod          : string;
@@ -36,7 +36,7 @@ export class CamionComponent {
   cempresas        : empTpteDTO[]=[];
   cmarcas          : marcaDTO[]=[];
   idEmpresaSel     : number = 1;
-  marcaSel         : string;
+  idMarcaSel       : number;
   private camionn  : camionDTO;  
   
   constructor(  public fb           : FormBuilder,
@@ -45,27 +45,40 @@ export class CamionComponent {
                 @Inject(MAT_DIALOG_DATA) public data: intCamion,  
                 private notiService : NotiserviceService )
    { effect(() => {
-            this.nameInput()?.nativeElement.focus(); //enfoca fecha al iniciar
+            this.nameInput()?.nativeElement.focus(); //enfoca  iniciar
         });
 
   }
  
   ngOnInit(){
+       this.formCamion = this.fb.group({        
+             nrocam       : [''], 
+             domChasis    : ['',[Validators.required]],
+             domAcoplado  : [''],
+             idMarca      : [1],
+             marca        : [''],
+             modelo       : [''],
+             anio         : [''],
+             descrip      : [''],       
+             nroempresa   : [1]        
+      })
      
+      
       var subs1 : Subscription;
       subs1 = this.servicio.getEmpresas()
-          .subscribe((data:any):void =>{
-            this.cempresas = data;
+          .subscribe((data1:any):void =>{
+            this.cempresas = data1;
             var subs : Subscription;
             subs = this.servicio.getMarcas()
-              .subscribe((data:any):void =>{
-                this.cmarcas = data;
+              .subscribe((data2:any):void =>{
+                this.cmarcas = data2;
+                
                 if (this.data.accion=="M"){ 
                  // MODIFICAR
                  var subs2 : Subscription;            
                  subs2 = this.servicio.leerCamion(this.data.nrocamion)
-                  .subscribe((data:any):void =>{                           
-                    this.camionn   = data;
+                  .subscribe((data3:any):void =>{                           
+                    this.camionn   = data3;
                     this.operacion = "Modificar Camión Nro. "+this.data.nrocamion+" - "+this.data.descrip;
                     this.actualizarControles();
                   })
@@ -73,29 +86,15 @@ export class CamionComponent {
                 } else { // ALTA -> accion = "A"
                   var subs2 : Subscription;
                   subs2 = this.servicio.getCantCamiones()
-                   .subscribe((data:any):void =>{                           
-                      this.maxcam = data;
+                   .subscribe((data1:any):void =>{                           
+                      this.maxcam = data1;
                       this.ncamalta = this.maxcam + 1;
                       this.operacion = "Agregar Camión Nro. "+this.ncamalta;
                       this.formCamion.controls["nrocam"].setValue(this.ncamalta);
                     })                                              
                 }
               })            
-          })                                
-       
-          this.formCamion = this.fb.group({        
-             nrocam       : [''], 
-             domChasis    : ['',[Validators.required]],
-             domAcoplado  : [''],
-             marca        : [this.cmarcas[0].marca],
-             modelo       : [''],
-             anio         : [''],
-             descrip      : [this.cmarcas[0].marca],       
-             nroempresa   : [1],          
-      })
-      this.marcaSel = this.cmarcas[0].marca;
-      
-
+          })                                               
    }
   actualizarControles(){
     // Actualiza controles para modificar
@@ -123,7 +122,8 @@ export class CamionComponent {
    AgregarCamion(){
 
     var indemp = this.cempresas.findIndex(p=>p.idEmpresa==this.idEmpresaSel);
-
+    var indmarca = this.cmarcas.findIndex(p=>p.idMarca==this.idMarcaSel);
+    
     var camion : camionDTO = {
         idCamion     : this.formCamion.controls["nrocam"].value,
         idEmptpte    : this.formCamion.controls["nroempresa"].value,   
@@ -131,7 +131,8 @@ export class CamionComponent {
         domChasis    : this.formCamion.controls["domChasis"].value,
         domAcoplado  : this.formCamion.controls["domAcoplado"].value,
         descrip      : this.formCamion.controls["descrip"].value,
-        marca        : this.formCamion.controls["marca"].value,
+        idMarca      : this.formCamion.controls["idMarca"].value,
+        marca        : this.cmarcas[indmarca].marca,
         modelo       : this.formCamion.controls["modelo"].value,
         anio         : this.formCamion.controls["anio"].value,                          
     }   
@@ -153,7 +154,7 @@ export class CamionComponent {
     
     ModificarCamion(){
      var indemp = this.cempresas.findIndex(p=>p.idEmpresa==this.idEmpresaSel);
-    
+     var indmarca = this.cmarcas.findIndex(p=>p.idMarca==this.idMarcaSel); 
      var camion : camionDTO = {
         idCamion     : this.formCamion.controls["nrocam"].value,
         idEmptpte    : this.formCamion.controls["nroempresa"].value,   
@@ -161,7 +162,8 @@ export class CamionComponent {
         domChasis    : this.formCamion.controls["domChasis"].value,
         domAcoplado  : this.formCamion.controls["domAcoplado"].value,
         descrip      : this.formCamion.controls["descrip"].value,
-        marca        : this.formCamion.controls["marca"].value,
+        idMarca      : this.formCamion.controls["idMarca"].value,
+        marca        : this.cmarcas[indmarca].marca,
         modelo       : this.formCamion.controls["modelo"].value,
         anio         : this.formCamion.controls["anio"].value,      
    
@@ -186,8 +188,10 @@ onSelectionEmpresa($event : any){
 }
 
 onSelectionMarca($event : any){
-   this.marcaSel = $event.value; 
-   this.formCamion.controls["descrip"].setValue(this.marcaSel+" "+
+   this.idMarcaSel = $event.value; 
+   var indmarca = this.cmarcas.findIndex(p=>p.idMarca==this.idMarcaSel);
+   this.formCamion.controls["marca"].setValue(this.cmarcas[indmarca].marca); 
+   this.formCamion.controls["descrip"].setValue(this.cmarcas[indmarca].marca+" "+
         this.formCamion.controls["modelo"].value+" "+this.formCamion.controls["anio"].value
   )
 }
