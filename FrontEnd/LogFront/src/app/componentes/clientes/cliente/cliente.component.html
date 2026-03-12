@@ -1,0 +1,131 @@
+
+<div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  <h4>{{ operacion }}</h4>
+
+  <form [formGroup]="formCliente" class="p-3">
+    <!-- Primera fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-2">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nro</mat-label>
+          <input
+            matInput
+            readonly
+            formControlName="nrocliente"
+            style="text-align: center"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-8">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nombre del Cliente</mat-label>
+          <input
+            matInput
+            #nombre
+            #inputFocus
+            formControlName="nombre"
+            style="text-align: left"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Segunda fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Domicilio</mat-label>
+          <input matInput formControlName="domicilio" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Localidad</mat-label>
+          <input matInput formControlName="localidad" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="telefono" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Tercera fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Cuit</mat-label>
+          <input matInput formControlName="cuit"
+              cuitFormat
+              />
+        
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Contacto</mat-label>
+          <input matInput formControlName="contacto" />
+        </mat-form-field>
+      </div>
+     
+    </div>
+
+    <!-- Cuarta fila -->
+    <div class="row g-3 mb-4">
+      <div class="col-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>E-mail</mat-label>
+          <input matInput formControlName="email" />
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Notas</mat-label>
+          <input matInput formControlName="notas" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Botonera -->
+    <div class="botonera">
+      <button
+        class="btn btn-outline-primary"
+        [disabled]="formCliente.invalid || data.accion != 'A'"
+        (click)="AgregarCliente()"
+      >
+        Agregar
+      </button>
+      <button
+        class="btn btn-outline-success"
+        [disabled]="formCliente.invalid || data.accion != 'M'"
+        (click)="ModificarCliente()"
+      >
+        Modificar
+      </button>
+      <button
+        class="btn btn-outline-secondary"
+        (click)="Anular()"
+      >
+        Cancelar
+      </button>
+    </div>
+    @if(formCliente.controls['cuit'].hasError('cuitFormato')){
+    <div class="menserror">    
+         El CUIT debe tener 11 dígitos    
+    </div>
+    }
+    @if(formCliente.controls['cuit'].hasError('cuitPrefijo')){
+    <div class="menserror">
+       Prefijo de CUIT inválido
+    </div>
+    }
+    @if(formCliente.controls['cuit'].hasError('cuitInvalido')){
+    <div class="menserror">
+         El CUIT no es válido
+    </div>
+    }
+    
+  </form>
+</div>

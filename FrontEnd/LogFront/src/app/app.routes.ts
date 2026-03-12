@@ -7,6 +7,7 @@ import { authGuard } from './guards/auth.guard';
 import { LoginComponent } from './componentes/login/login.component';
 import { ChangePasswordComponent } from './componentes/change-password/change-password.component';
 import { CamionesComponent } from './componentes/camiones/camiones.component';
+import { ClientesComponent } from './componentes/clientes/clientes.component';
 
 export const routes: Routes = [
   // Rutas para invitados (no autenticados)
@@ -26,7 +27,8 @@ export const routes: Routes = [
     children: [
       { path: 'ppal', component: NavegadorComponent },     
       { path: 'choferes', component: ChoferesComponent },  
-      { path: 'camiones', component: CamionesComponent },                 
+      { path: 'camiones', component: CamionesComponent },          
+      { path: 'clientes', component: ClientesComponent },          
     ],
   },
 

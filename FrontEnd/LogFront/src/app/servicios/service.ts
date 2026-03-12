@@ -7,6 +7,7 @@ import { choferDTO } from '../../entidades/choferDTO';
 import { empTpteDTO } from '../../entidades/empTpteDTO';
 import { camionDTO } from '../../entidades/camionDTO';
 import { marcaDTO } from '../../entidades/marcaDTO';
+import { clienteDTO } from '../../entidades/clienteDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -125,5 +126,37 @@ export class ServiciosService {
     return this.http.get<marcaDTO[]>(this.apiUrl + `tablas/marcas`);
  } 
 
+ // ** CLIENTES ** //
 
+   public getClientes() {
+    return this.http.get<clienteDTO[]>(this.apiUrl + `cliente/clientes`);
+  }
+
+  public getCantClientes() {
+    return this.http.get<number>(this.apiUrl + `cliente/max`);
+  }
+
+  public leerCliente(nrocli : number) {
+    return this.http.get<clienteDTO>(
+      this.apiUrl + `cliente/cliente?id=` + nrocli
+    );
+  }
+  
+  public grabarCliente(cliente : clienteDTO) {
+    return this.http.post<clienteDTO>(
+      this.apiUrl + `cliente/cliente/nuevo`, cliente
+    );
+  }
+
+  public updateCliente(nrocli : number, cliente: clienteDTO) {
+    return this.http.put<clienteDTO>(
+      environment.apiUrl + `cliente/cliente/actualizar?id=` + nrocli,cliente
+    );
+  }
+
+  public elimCliente(nrocli: number) {
+    return this.http.delete(
+      environment.apiUrl + `cliente/cliente?id=` + nrocli
+    );
+  }
 }

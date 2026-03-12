@@ -8,29 +8,40 @@ import { MatTableModule,MatTableDataSource } from '@angular/material/table';
 import { SinoService } from '../../servicios/sino.service';
 import { NotiserviceService } from '../../servicios/notiservice.service';
 import { finalize, Subscription } from 'rxjs';
-import { CamionComponent } from './camion/camion.component';
+import { ClienteComponent } from './cliente/cliente.component';
+import { clienteDTO } from '../../../entidades/clienteDTO';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-camiones',
-imports: [ MatTableModule],
-  templateUrl: './camiones.component.html',
-  styleUrl: './camiones.component.css',
+  selector: 'app-clientes',
+  imports: [CommonModule, MatTableModule],
+  templateUrl: './clientes.component.html',
+  styleUrl: './clientes.component.css',
 })
-export class CamionesComponent {
- @ViewChild('filtroInput') inputRef!: ElementRef<HTMLInputElement>;
+export class ClientesComponent {
+@ViewChild('filtroInput') inputRef!: ElementRef<HTMLInputElement>;
    
    
    //public inputRef    = viewChild.required<ElementRef>('filtroInput');
    public filtro       : string;
-   public ccamiones    : camionDTO[]=[];
+   public cclientes    : clienteDTO[]=[];
 
-   cantcamion            : number;
-   formcamion            : boolean;
-   camionmod             : number;
+   cantcliente           : number;
+   formcliente           : boolean;
+   clientemod            : number;
    dataSource            = new MatTableDataSource<any>();
 
-        
-   colCamiones : string[] = ["idCamion" , "domChasis","domAcoplado","marca","modelo","anio","descrip","emptpte","M","B" ];
+        idCliente      : number;
+   nombre         : string;
+   domicilio      : string;
+   localidad      : string;
+   telefono       : string;
+   contacto       : string;
+   cuit           : string;
+   notas          : string;
+   saldoini       : number;   
+
+   colClientes : string[] = ["idCliente" , "nombre","domicilio","localidad","telefono","cuit","notas","M","B" ];
  
    
    constructor(     private servicio     : ServiciosService,               
@@ -48,19 +59,19 @@ export class CamionesComponent {
       if (this.inputRef) {
           this.inputRef.nativeElement.value = this.filtro;   
       }             
-      this.leerCamiones();  
+      this.leerClientes();  
       })       
        
  }
        
-   leerCamiones(){
+   leerClientes(){
         var subs : Subscription;
-        subs = this.servicio.getCamiones()
+        subs = this.servicio.getClientes()
            .pipe(finalize(()=> {
-               this.cantcamion = this.ccamiones.length;
-                this.dataSource.data = this.ccamiones;         
-                this.dataSource.filterPredicate = (dato : camionDTO, fil : string) => {
-                     return dato.marca.toLowerCase().includes(fil);
+               this.cantcliente = this.cclientes.length;
+                this.dataSource.data = this.cclientes;         
+                this.dataSource.filterPredicate = (dato : clienteDTO, fil : string) => {
+                     return dato.nombre.toLowerCase().includes(fil);
                                      };    
                 // Aplica filtro si hay uno
                 if (this.filtro!=='') {                                 
@@ -70,13 +81,13 @@ export class CamionesComponent {
                subs.unsubscribe();
            }))
            .subscribe((data : any): void => {
-                            this.ccamiones = data});  
+                            this.cclientes = data});  
      } 
-   agCamion(){
+   agCliente(){
      const data = {
-          nrocamion    : 0,    
-          descrip      : "",      
-          accion     : "A",
+          nrocliente    : 0,    
+          nombre        : "",      
+          accion        : "A",
      }       
     const dialogConfig = new MatDialogConfig();   
     dialogConfig.autoFocus = false;
@@ -87,18 +98,18 @@ export class CamionesComponent {
     dialogConfig.panelClass = 'custom-dialog-container';
     dialogConfig.disableClose =  false; // opcional según necesidad
   
-     const dialogRef =  this.dialog.open(CamionComponent, dialogConfig);
+     const dialogRef =  this.dialog.open(ClienteComponent, dialogConfig);
      dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Alta'){                   
-          this.leerCamiones();
+          this.leerClientes();
          }})
-     this.formcamion = true;
-     this.camionmod  = 0; 
+     this.formcliente = true;
+     this.clientemod  = 0; 
    }
-   modificarCamion(nrocam : number,desc : string){      
+   modificarCliente(nrocli : number,nom : string){      
     const data = {
-      nrocamion : nrocam,        
-      descrip   : desc,
+      nrocliente : nrocli,        
+      nombre     : nom,
       accion     : "M"
     }       
     const dialogConfig = new MatDialogConfig();
@@ -112,25 +123,25 @@ export class CamionesComponent {
     dialogConfig.autoFocus = false;
     dialogConfig.data = data;
     
-    const dialogRef =  this.dialog.open(CamionComponent, dialogConfig);
+    const dialogRef =  this.dialog.open(ClienteComponent, dialogConfig);
     dialogRef.afterClosed().subscribe( // 
           (data:any) => { if (data.clicked === 'Modi'){                   
-              this.leerCamiones(); // refrescar lista
+              this.leerClientes(); // refrescar lista
           }})
  
    }
-   borrarCamion(nrocam : number,desc : string){
+   borrarCliente(nrocli : number,nom : string){
      var resu : string;
       this.sinoServicio.abrirSiNoDialogo("Confirmación",
-                               "¿ Está seguro de quiere borrar el Camión Nro."+nrocam+"-"+desc+" ?")
+                               "¿ Está seguro de quiere borrar el Cliente Nro."+nrocli+"-"+nom+" ?")
         .then(result => {
            if (result) {
                var subscri : Subscription;
-               subscri = this.servicio.elimCamion(nrocam)
+               subscri = this.servicio.elimCliente(nrocli)
                   .pipe(finalize(() => {
-                     this.notiServicio.showNotification("El Camión Nro "+nrocam+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
+                     this.notiServicio.showNotification("El Cliente Nro "+nrocli+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
                      subscri.unsubscribe();
-                    this.leerCamiones(); // refrescar lista
+                    this.leerClientes(); // refrescar lista
  
                    }))
                    .subscribe((data : any): void => {
@@ -142,10 +153,10 @@ export class CamionesComponent {
   }
    manejarOperacion($event:any){
      if ($event==="Alta" || $event==="Modi"){
-         this.formcamion = false;
-           this.leerCamiones(); // refrescar lista
+         this.formcliente = false;
+           this.leerClientes(); // refrescar lista
      } else {
-       this.formcamion = false;
+       this.formcliente = false;
      }
     }
 

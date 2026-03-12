@@ -47,13 +47,13 @@
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Modelo</mat-label>
-          <input matInput formControlName="modelo" />
+          <input   (input)="onModeloChange($event)"  matInput formControlName="modelo" />
         </mat-form-field>
       </div>
       <div class="col-md-2">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Año</mat-label>
-          <input matInput formControlName="anio" />
+          <input (input)="onAnioChange($event)" matInput formControlName="anio" />
         </mat-form-field>
       </div>
     </div>
@@ -73,7 +73,7 @@
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Empresa de Transporte</mat-label>
           <mat-select
-            formControlName="nroempresa"
+            formControlName="idEmptpte"
             (selectionChange)="onSelectionEmpresa($event)"
           >
             @for (empresa of cempresas; track empresa.idEmpresa) {

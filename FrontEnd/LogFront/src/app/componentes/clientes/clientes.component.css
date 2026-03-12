@@ -1,11 +1,11 @@
 /* Contenedor principal */
-.camiones-container {
+.clientes-container {
   width: 100%;
   height: calc(100vh - 70px); /* Restar altura de navbar */
   display: flex;
   flex-direction: column;
   padding: 1px;
-  margin-top: 10px;
+  margin-top: 45px;
   overflow: hidden;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .header h4 {
-  background-color: #b6c1dd;
+  background-color: #ddb6c2;
   padding: 8px 16px;
   border-radius: 4px;
   margin: 0;
@@ -31,7 +31,7 @@
   align-items: center;
   padding: 6px 15px;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px  #ddb6c2;
 }
 
 .add-button:hover {
@@ -54,7 +54,7 @@
 }
 
 .mat-mdc-header-row {
-  background-color: #b6c1dd;
+  background-color: #ddb6c2;
   height: 24px;
   font-size: 14px;
   font-weight: 500;
@@ -76,12 +76,12 @@
 }
 
 .mat-mdc-row:nth-child(even) {
-  background-color: #cbd0d8;
+  background-color: #d8cbd1;
   color: black;
 }
 
 .mat-mdc-row:hover {
-  background-color: #e8edf5;
+  background-color: #ddb6c2;
 }
 
 /* Estilos para las celdas */
@@ -99,7 +99,7 @@
 }
 
 /* Ancho de columnas */
-.mat-column-idCamion {
+.mat-column-idCliente {
   padding-left: 10px !important;
   width: 70px;
   text-align: center;
@@ -107,61 +107,53 @@
   overflow: visible;
 }
 
-.mat-column-domChasis {
+.mat-column-nombre {
   padding-left: 0;
-  width: 100px;
+  width: 200px;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.mat-column-domAcoplado {
-  padding-left: 0;
-  width: 100px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.mat-column-marca {
-  padding-left: 0;
-  width: 100px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mat-column-modelo {
-  padding-left: 0;
-  width: 100px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mat-column-anio {
-  padding-left: 0;
-  width: 80px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.mat-column-descrip {
-  padding-left: 0;
-  width: 300px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mat-column-emptpte {
+.mat-column-domicilio {
   padding-left: 0;
   width: 150px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-localidad {
+  padding-left: 0;
+  width: 100px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-telefono {
+  padding-left: 0;
+  width: 150px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-cuit {
+  padding-left: 0;
+  width: 120px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-notas {
+  padding-left: 0;
+  width: 200px;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;

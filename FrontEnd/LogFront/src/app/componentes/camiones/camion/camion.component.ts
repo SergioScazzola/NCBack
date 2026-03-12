@@ -51,7 +51,7 @@ export class CamionComponent {
   }
  
   ngOnInit(){
-       this.formCamion = this.fb.group({        
+      this.formCamion = this.fb.group({        
              nrocam       : [''], 
              domChasis    : ['',[Validators.required]],
              domAcoplado  : [''],
@@ -60,10 +60,9 @@ export class CamionComponent {
              modelo       : [''],
              anio         : [''],
              descrip      : [''],       
-             nroempresa   : [1]        
+             idEmptpte    : [1],
+             emptpte      : [''],
       })
-     
-      
       var subs1 : Subscription;
       subs1 = this.servicio.getEmpresas()
           .subscribe((data1:any):void =>{
@@ -95,27 +94,24 @@ export class CamionComponent {
                 }
               })            
           })                                               
+         
    }
   actualizarControles(){
     // Actualiza controles para modificar
-         var subscri1 : Subscription;
-        
-         subscri1 =  this.servicio.leerChofer(this.data.nrocamion)            
-                .pipe(finalize(() => {                                        
-                  this.formCamion.controls["nrocam"].setValue(this.camionn.idCamion), 
-                  this.formCamion.controls["domChasis"].setValue(this.camionn.domChasis), 
-                  this.formCamion.controls["domAcoplado"].setValue(this.camionn.domAcoplado),                    
-                  this.formCamion.controls["marca"].setValue(this.camionn.marca),
-                  this.formCamion.controls["modelo"].setValue(this.camionn.modelo),                    
-                  this.formCamion.controls["anio"].setValue(this.camionn.anio),   
-                  this.formCamion.controls["descrip"].setValue(this.camionn.descrip),   
-                  this.formCamion.controls["nroempresa"].setValue(this.camionn.idEmptpte),                    
+                        
+    this.formCamion.controls["nrocam"].setValue(this.camionn.idCamion), 
+    this.formCamion.controls["domChasis"].setValue(this.camionn.domChasis), 
+    this.formCamion.controls["domAcoplado"].setValue(this.camionn.domAcoplado), 
+    this.formCamion.controls["idMarca"].setValue(this.camionn.idMarca),                   
+    this.formCamion.controls["marca"].setValue(this.camionn.marca),
+    this.formCamion.controls["modelo"].setValue(this.camionn.modelo),                    
+    this.formCamion.controls["anio"].setValue(this.camionn.anio),   
+    this.formCamion.controls["descrip"].setValue(this.camionn.descrip),   
+    this.formCamion.controls["idEmptpte"].setValue(this.camionn.idEmptpte),                    
+    this.formCamion.controls["emptpte"].setValue(this.camionn.emptpte),                    
              
-                  this.idEmpresaSel = this.camionn.idEmptpte;
-                  subscri1.unsubscribe;
-                }))                                              
-                .subscribe((data : any): void => {
-                       this.camionn = data});
+    this.idEmpresaSel = this.camionn.idEmptpte;
+    
                            
    }
 
@@ -126,7 +122,7 @@ export class CamionComponent {
     
     var camion : camionDTO = {
         idCamion     : this.formCamion.controls["nrocam"].value,
-        idEmptpte    : this.formCamion.controls["nroempresa"].value,   
+        idEmptpte    : this.formCamion.controls["idEmptpte"].value,   
         emptpte      : this.cempresas[indemp].nombre,
         domChasis    : this.formCamion.controls["domChasis"].value,
         domAcoplado  : this.formCamion.controls["domAcoplado"].value,
@@ -157,7 +153,7 @@ export class CamionComponent {
      var indmarca = this.cmarcas.findIndex(p=>p.idMarca==this.idMarcaSel); 
      var camion : camionDTO = {
         idCamion     : this.formCamion.controls["nrocam"].value,
-        idEmptpte    : this.formCamion.controls["nroempresa"].value,   
+        idEmptpte    : this.formCamion.controls["idEmptpte"].value,   
         emptpte      : this.cempresas[indemp].nombre,
         domChasis    : this.formCamion.controls["domChasis"].value,
         domAcoplado  : this.formCamion.controls["domAcoplado"].value,
@@ -191,12 +187,33 @@ onSelectionMarca($event : any){
    this.idMarcaSel = $event.value; 
    var indmarca = this.cmarcas.findIndex(p=>p.idMarca==this.idMarcaSel);
    this.formCamion.controls["marca"].setValue(this.cmarcas[indmarca].marca); 
-   this.formCamion.controls["descrip"].setValue(this.cmarcas[indmarca].marca+" "+
-        this.formCamion.controls["modelo"].value+" "+this.formCamion.controls["anio"].value
-  )
+
+   this.formCamion.controls["descrip"].setValue( this.cmarcas[indmarca].marca+" "+
+                                                 this.formCamion.controls["modelo"].value+" "+
+                                                 this.formCamion.controls["anio"].value+"-"+
+                                                 this.formCamion.controls["domChasis"].value )
+  
 }
 
+onModeloChange(event : Event ){
+ const target = event.target as HTMLInputElement;
+ var modelo = target.value;
+ this.formCamion.controls["descrip"].setValue(this.formCamion.controls["marca"].value+" "+
+                                              modelo+" "+
+                                              this.formCamion.controls["anio"].value+"-"+
+                                              this.formCamion.controls["domChasis"].value)
 
+}
+
+onAnioChange(event : Event ){
+  const target = event.target as HTMLInputElement;
+  var anioo = target.value;
+  this.formCamion.controls["descrip"].setValue(this.formCamion.controls["marca"].value+" "+
+                                               this.formCamion.controls["modelo"].value+" "+
+                                               anioo+"-"+
+                                               this.formCamion.controls["domChasis"].value)
+  
+}
 Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})
      }

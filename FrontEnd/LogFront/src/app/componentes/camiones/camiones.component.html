@@ -43,6 +43,21 @@
         <td mat-cell *matCellDef="let renCam">{{ renCam.domAcoplado }}</td>
       </ng-container>
 
+      <ng-container matColumnDef="marca">
+        <th mat-header-cell *matHeaderCellDef>Marca</th>
+        <td mat-cell *matCellDef="let renCam">{{ renCam.marca }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="modelo">
+        <th mat-header-cell *matHeaderCellDef>Modelo</th>
+        <td mat-cell *matCellDef="let renCam">{{ renCam.modelo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="anio">
+        <th mat-header-cell *matHeaderCellDef>Año</th>
+        <td mat-cell *matCellDef="let renCam">{{ renCam.anio }}</td>
+      </ng-container>
+      
       <!-- Columna  Descripción -->
       <ng-container matColumnDef="descrip">
         <th mat-header-cell *matHeaderCellDef>Descripción</th>
