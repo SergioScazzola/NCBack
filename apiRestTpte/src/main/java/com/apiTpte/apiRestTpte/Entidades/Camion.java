@@ -12,7 +12,7 @@ public class Camion {
      private int    idEmptpte;
      private String emptpte;
 
-     public Camion(int ncam,String dchasis,String dacop){}
+     public Camion(){}
 
      public int getIdCamion() {
          return idCamion;
@@ -62,11 +62,11 @@ public class Camion {
          this.emptpte = empresa;
      }
 
-     public int getIdEmpresa() {
+     public int getIdEmptpte() {
          return idEmptpte;
      }
 
-     public void setIdEmpresa(int idEmpresa) {
+     public void setIdEmptpte(int idEmpresa) {
          this.idEmptpte = idEmpresa;
      }
 

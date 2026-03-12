@@ -106,7 +106,7 @@ public class JdbcTpteRepository implements TpteRepository {
     // *** CAMIONES *** //
       @Override
       public List<Camion> AllCamiones() {   
-        String selec = "SELECT * FROM camiones ORDER BY marca ASC,modelo ASC,anio DESC";
+        String selec = "SELECT * FROM camiones ORDER BY descrip";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Camion.class));
       }
       @Override
@@ -140,7 +140,7 @@ public class JdbcTpteRepository implements TpteRepository {
                                     "anio=?,idEmptpte=?,emptpte=?"+" WHERE idCamion=?",
                     new Object[] { camion.getDomChasis(), camion.getDomAcoplado(), camion.getDescrip(),
                                     camion.getIdMarca(),camion.getMarca(),
-                                   camion.getModelo(),camion.getAnio(),camion.getEmptpte(),camion.getEmptpte(),
+                                   camion.getModelo(),camion.getAnio(),camion.getIdEmptpte(),camion.getEmptpte(),
                                    camion.getIdCamion()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
@@ -157,7 +157,7 @@ public class JdbcTpteRepository implements TpteRepository {
                                     "anio,idEmptpte,emptpte) VALUES(?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] { camion.getIdCamion(),camion.getDomChasis(), camion.getDomAcoplado(),
                                    camion.getDescrip(), camion.getIdMarca(),camion.getMarca(),
-                                   camion.getModelo(),camion.getAnio(),camion.getEmptpte(),camion.getEmptpte()
+                                   camion.getModelo(),camion.getAnio(),camion.getIdEmptpte(),camion.getEmptpte()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;

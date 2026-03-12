@@ -30,23 +30,11 @@ public class CamionController {
     @Autowired
     JdbcTpteRepository tpteRepository;
    
-    //@SuppressWarnings("null")
+    @SuppressWarnings("null")
     @GetMapping(value="/camiones")
     public ResponseEntity<List<Camion>> getAllCamiones() {
        return ResponseEntity.ok(tpteRepository.AllCamiones());
-    /*try {
-      List<Camion> camiones = null;
-            
-      camiones = tpteRepository.AllCamiones();
-      
-      if (camiones==null || camiones.isEmpty()) {                         
-         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      } else {
-         return new ResponseEntity<>(camiones, HttpStatus.OK);
-      }
-    } catch (Exception e) {
-       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    }*/
+   
   }
 
   @RequestMapping(value="/max")
