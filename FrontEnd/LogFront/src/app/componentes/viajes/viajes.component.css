@@ -1,11 +1,11 @@
 /* Contenedor principal */
-.choferes-container {
+.viajes-container {
   width: 100%;
   height: calc(100vh - 70px); /* Restar altura de navbar */
   display: flex;
   flex-direction: column;
   padding: 1px;
-  margin-top: 15px;
+  margin-top: 10px;
   overflow: hidden;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .header h4 {
-  background-color: #b6c1dd;
+  background-color: #bdddb6;
   padding: 8px 16px;
   border-radius: 4px;
   margin: 0;
@@ -26,9 +26,9 @@
 }
 
 .add-button {
-  background-color: #b6c1dd;
-  color : black;
   font-weight: 500;
+  background-color: #bdddb6;
+  color : black; 
   display: flex;
   align-items: center;
   padding: 6px 15px;
@@ -56,7 +56,7 @@
 }
 
 .mat-mdc-header-row {
-  background-color: #b6c1dd;
+  background-color: #bdddb6;
   height: 24px;
   font-size: 14px;
   font-weight: 500;
@@ -78,12 +78,12 @@
 }
 
 .mat-mdc-row:nth-child(even) {
-  background-color: #cbd0d8;
+  background-color: #cdd8cb;
   color: black;
 }
 
 .mat-mdc-row:hover {
-  background-color: #e8edf5;
+  background-color: #c2dbbd;
 }
 
 /* Estilos para las celdas */
@@ -101,33 +101,15 @@
 }
 
 /* Ancho de columnas */
-.mat-column-idChofer {
+.mat-column-idViaje {
   padding-left: 10px !important;
-  width: 70px;
+  width: 50px;
   text-align: center;
   white-space: nowrap;
   overflow: visible;
 }
 
-.mat-column-nombre {
-  padding-left: 0;
-  width: 200px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mat-column-localidad {
-  padding-left: 0;
-  width: 150px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.mat-column-empresa {
+.mat-column-fecha {
   padding-left: 0;
   width: 100px;
   text-align: left;
@@ -136,15 +118,15 @@
   text-overflow: ellipsis;
 }
 
-.mat-column-cuit {
+.mat-column-nomchofer {
   padding-left: 0;
-  width: 120px;
+  width: 150px;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.mat-column-telefono {
+.mat-column-nomcliente {
   padding-left: 0;
   width: 150px;
   text-align: left;
@@ -153,10 +135,36 @@
   text-overflow: ellipsis;
 }
 
-.mat-column-notas {
+.mat-column-domChasis {
   padding-left: 0;
-  width: 200px;
+  width: 80px;
   text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-destino {
+  padding-left: 0;
+  width: 150px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mat-column-cantkm {
+  padding-left: 0;
+  width: 80px;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-impviaje {
+  padding-left: 0;
+  width: 100px;
+  text-align: right;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

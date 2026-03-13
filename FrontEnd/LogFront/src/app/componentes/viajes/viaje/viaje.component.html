@@ -1,0 +1,115 @@
+<div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  <h4>{{ operacion }}</h4>
+  <form [formGroup]="formCamion" class="p-3">
+    <!-- Primera fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-2">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nro</mat-label>
+          <input matInput formControlName="nrocam"
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Dominio Chasis</mat-label>
+          <input
+            matInput            
+            formControlName="domChasis"
+            style="text-align: left"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Dominio Acoplado</mat-label>
+          <input matInput formControlName="domAcoplado" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Segunda fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Marca</mat-label>
+          <mat-select
+            formControlName="idMarca"
+            (selectionChange)="onSelectionMarca($event)">
+            @for (marcaa of cmarcas; track marcaa.idMarca) {
+              <mat-option [value]="marcaa.idMarca">
+                {{ marcaa.marca }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Modelo</mat-label>
+          <input   (input)="onModeloChange($event)"  matInput formControlName="modelo" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-2">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Año</mat-label>
+          <input (input)="onAnioChange($event)" matInput formControlName="anio" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Tercera fila -->
+    <div class="row g-3 mb-3">      
+      <div class="col-md-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Descripcion</mat-label>
+          <input matInput readonly="true" formControlName="descrip"
+          />
+        
+        </mat-form-field>
+      </div>
+     
+      <div class="col-md-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Empresa de Transporte</mat-label>
+          <mat-select
+            formControlName="idEmptpte"
+            (selectionChange)="onSelectionEmpresa($event)"
+          >
+            @for (empresa of cempresas; track empresa.idEmpresa) {
+              <mat-option [value]="empresa.idEmpresa">
+                {{ empresa.nombre }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+  
+
+    <!-- Botonera -->
+    <div class="botonera">
+      <button
+        class="btn btn-outline-primary"
+        [disabled]="formCamion.invalid || data.accion != 'A'"
+        (click)="AgregarCamion()"
+      >
+        Agregar
+      </button>
+      <button
+        class="btn btn-outline-success"
+        [disabled]="formCamion.invalid || data.accion != 'M'"
+        (click)="ModificarCamion()"
+      >
+        Modificar
+      </button>
+      <button
+        class="btn btn-outline-secondary"
+        (click)="Anular()"
+      >
+        Cancelar
+      </button>
+    </div>       
+  </form>
+</div>

@@ -8,6 +8,7 @@ import { empTpteDTO } from '../../entidades/empTpteDTO';
 import { camionDTO } from '../../entidades/camionDTO';
 import { marcaDTO } from '../../entidades/marcaDTO';
 import { clienteDTO } from '../../entidades/clienteDTO';
+import { viajeDTO } from '../../entidades/viajeDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -158,5 +159,36 @@ export class ServiciosService {
     return this.http.delete(
       environment.apiUrl + `cliente/cliente?id=` + nrocli
     );
+  }
+
+   // ** VIAJES ** //
+
+   public getViajes() {
+    return this.http.get<viajeDTO[]>(this.apiUrl + `viaje/viajes`);
+  }
+
+  public getCantViajes() {
+    return this.http.get<number>(this.apiUrl + `viaje/max`);
+  }
+
+  public leerViaje(nroviaje: number) {
+    return this.http.get<viajeDTO>(
+      this.apiUrl + `viaje/viaje?id=` + nroviaje
+    );
+  }
+  
+  public grabarViaje(viaje : viajeDTO) {
+    return this.http.post<viajeDTO>(
+      this.apiUrl + `viaje/viaje/nuevo`, viaje);
+  }
+
+  public updateViaje(nroviaje : number, viaje : viajeDTO) {
+    return this.http.put<viajeDTO>(
+      environment.apiUrl + `viaje/viaje/actualizar?id=` + nroviaje, viaje);
+  }
+
+  public elimViaje(nroviaje : number) {
+    return this.http.delete(
+      environment.apiUrl + `viaje/viaje?id=` + nroviaje);
   }
 }

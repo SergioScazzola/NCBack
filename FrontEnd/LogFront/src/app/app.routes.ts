@@ -8,6 +8,7 @@ import { LoginComponent } from './componentes/login/login.component';
 import { ChangePasswordComponent } from './componentes/change-password/change-password.component';
 import { CamionesComponent } from './componentes/camiones/camiones.component';
 import { ClientesComponent } from './componentes/clientes/clientes.component';
+import { ViajesComponent } from './componentes/viajes/viajes.component';
 
 export const routes: Routes = [
   // Rutas para invitados (no autenticados)
@@ -28,7 +29,9 @@ export const routes: Routes = [
       { path: 'ppal', component: NavegadorComponent },     
       { path: 'choferes', component: ChoferesComponent },  
       { path: 'camiones', component: CamionesComponent },          
-      { path: 'clientes', component: ClientesComponent },          
+      { path: 'clientes', component: ClientesComponent },     
+      { path: 'viajes', component: ViajesComponent },     
+
     ],
   },
 
