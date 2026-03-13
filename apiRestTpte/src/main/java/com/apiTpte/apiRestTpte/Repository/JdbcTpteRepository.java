@@ -353,14 +353,13 @@ public class JdbcTpteRepository implements TpteRepository {
       public int actualizarViaje(int nrov, Viaje viaje){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE viajes SET fecha=?,idEmpTpte=?,nometpte=?,idChofer=?,nomchofer=?,"+
-                                    "idCliente=?,nomcliente=?,cuitchofer=?,idCamion=?,domChasis=?,domAcop=?,"+
-                                    "origen=?,destino=?,ctg=?,titctg=?,cantkm=?,cargaton=?,"+
+          resu = jdbcTemplate.update("UPDATE viajes SET fecha=?,idChofer=?,nomchofer=?,"+
+                                    "idCliente=?,nomcliente=?,idCamion=?,domChasis=?,domAcop=?,"+
+                                    "origen=?,destino=?,ctg=?,cantkm=?,cargaton=?,"+
                                     "tarifap=?,ltsgasoil=?,impviaje=? WHERE idViaje=?",
-                    new Object[] {viaje.getFecha(),viaje.getIdEmpTpte(),viaje.getNometpte(),viaje.getIdChofer(),
-                                  viaje.getNomchofer(),viaje.getIdCliente(),viaje.getNomcliente(),viaje.getCuitchofer(),
-                                  viaje.getIdCamion(),viaje.getDomChasis(),viaje.getDomAcop(),viaje.getOrigen(),
-                                  viaje.getDestino(),viaje.getCtg(),viaje.getTitctg(),viaje.getCantkm(),viaje.getCargaton(),
+                    new Object[] {viaje.getFecha(),viaje.getIdChofer(),viaje.getNomchofer(),viaje.getIdCliente(),
+                                  viaje.getNomcliente(),viaje.getIdCamion(),viaje.getDomChasis(),viaje.getDomAcop(),viaje.getOrigen(),
+                                  viaje.getDestino(),viaje.getCtg(),viaje.getCantkm(),viaje.getCargaton(),
                                   viaje.getTarifap(),viaje.getLtsgasoil(),viaje.getImpviaje(),viaje.getIdViaje()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
@@ -373,14 +372,14 @@ public class JdbcTpteRepository implements TpteRepository {
       // Graba nuevo Viaje 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT viajes(idViaje,fecha,idEmpTpte,nometpte,idChofer,"+
-                                    "nomchofer,idCliente,nomcliente,cuitchofer,idCamion,domChasis,"+
-                                    "domAcop,origen,destino,ctg,titctg,cantkm,cargaton,"+
-                                    "tarifap,ltsgasoil,impviaje) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
-                    new Object[] {viaje.getIdViaje(),viaje.getFecha(),viaje.getIdEmpTpte(),viaje.getNometpte(),viaje.getIdChofer(),
-                                  viaje.getNomchofer(),viaje.getIdCliente(),viaje.getNomcliente(),viaje.getCuitchofer(),
+          resu = jdbcTemplate.update("INSERT viajes(idViaje,fecha,idChofer,"+
+                                    "nomchofer,idCliente,nomcliente,idCamion,domChasis,"+
+                                    "domAcop,origen,destino,ctg,cantkm,cargaton,"+
+                                    "tarifap,ltsgasoil,impviaje) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
+                    new Object[] {viaje.getIdViaje(),viaje.getFecha(),viaje.getIdChofer(),
+                                  viaje.getNomchofer(),viaje.getIdCliente(),viaje.getNomcliente(),
                                   viaje.getIdCamion(),viaje.getDomChasis(),viaje.getDomAcop(),viaje.getOrigen(),
-                                  viaje.getDestino(),viaje.getCtg(),viaje.getTitctg(),viaje.getCantkm(),viaje.getCargaton(),
+                                  viaje.getDestino(),viaje.getCtg(),viaje.getCantkm(),viaje.getCargaton(),
                                   viaje.getTarifap(),viaje.getLtsgasoil(),viaje.getImpviaje()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {

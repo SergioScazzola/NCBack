@@ -5,20 +5,16 @@ import java.util.Date;
 public class Viaje {
     private int      idViaje;
     private Date     fecha;
-    private int      idEmpTpte;
-    private String   nometpte;
     private int      idChofer;
     private String   nomchofer;
     private int      idCliente;
     private String   nomcliente;   
-    private String   cuitchofer;
     private int      idCamion;
     private String   domChasis;
     private String   domAcop;
     private String   origen;
     private String   destino;
     private String   ctg;
-    private String   titctg;
     private float    cantkm;
     private float    cargaton;
     private double   tarifap;
@@ -28,6 +24,7 @@ public class Viaje {
     public Viaje(){
 
     }
+
     public int getIdViaje() {
         return idViaje;
     }
@@ -44,20 +41,20 @@ public class Viaje {
         this.fecha = fecha;
     }
 
-    public int getIdEmpTpte() {
-        return idEmpTpte;
-    }
-
-    public void setIdEmpTpte(int idEmpTpte) {
-        this.idEmpTpte = idEmpTpte;
-    }
-
     public int getIdChofer() {
         return idChofer;
     }
 
     public void setIdChofer(int idChofer) {
         this.idChofer = idChofer;
+    }
+
+    public String getNomchofer() {
+        return nomchofer;
+    }
+
+    public void setNomchofer(String nomchofer) {
+        this.nomchofer = nomchofer;
     }
 
     public int getIdCliente() {
@@ -74,22 +71,6 @@ public class Viaje {
 
     public void setNomcliente(String nomcliente) {
         this.nomcliente = nomcliente;
-    }
-
-    public String getNomchofer() {
-        return nomchofer;
-    }
-
-    public void setNomchofer(String nomchofer) {
-        this.nomchofer = nomchofer;
-    }
-
-    public String getCuitchofer() {
-        return cuitchofer;
-    }
-
-    public void setCuitchofer(String cuitchofer) {
-        this.cuitchofer = cuitchofer;
     }
 
     public int getIdCamion() {
@@ -116,6 +97,22 @@ public class Viaje {
         this.domAcop = domAcop;
     }
 
+    public String getOrigen() {
+        return origen;
+    }
+
+    public void setOrigen(String origen) {
+        this.origen = origen;
+    }
+
+    public String getDestino() {
+        return destino;
+    }
+
+    public void setDestino(String destino) {
+        this.destino = destino;
+    }
+
     public String getCtg() {
         return ctg;
     }
@@ -123,14 +120,7 @@ public class Viaje {
     public void setCtg(String ctg) {
         this.ctg = ctg;
     }
-
-    public String getTitctg() {
-        return titctg;
-    }
-
-    public void setTitctg(String titctg) {
-        this.titctg = titctg;
-    }
+  
 
     public float getCantkm() {
         return cantkm;
@@ -171,24 +161,7 @@ public class Viaje {
     public void setImpviaje(double impviaje) {
         this.impviaje = impviaje;
     }
-    public String getNometpte() {
-        return nometpte;
-    }
-    public void setNometpte(String nometpte) {
-        this.nometpte = nometpte;
-    }
-    public String getOrigen() {
-        return origen;
-    }
-    public void setOrigen(String origen) {
-        this.origen = origen;
-    }
-    public String getDestino() {
-        return destino;
-    }
-    public void setDestino(String destino) {
-        this.destino = destino;
-    }
+   
 
  
     
