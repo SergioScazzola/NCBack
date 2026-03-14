@@ -323,7 +323,7 @@ public class JdbcTpteRepository implements TpteRepository {
 
        @Override
       public List<Viaje> AllViajes() {   
-        String selec = "SELECT * FROM viajes ORDER BY fecha DES";
+        String selec = "SELECT * FROM viajes ORDER BY fecha DESC";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Viaje.class));
       }
       @Override
@@ -354,13 +354,14 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("UPDATE viajes SET fecha=?,idChofer=?,nomchofer=?,"+
-                                    "idCliente=?,nomcliente=?,idCamion=?,domChasis=?,domAcop=?,"+
+                                    "idCliente=?,nomcliente=?,idCamion=?,descrip=?,"+
                                     "origen=?,destino=?,ctg=?,cantkm=?,cargaton=?,"+
-                                    "tarifap=?,ltsgasoil=?,impviaje=? WHERE idViaje=?",
+                                    "tarifap=?,ltsgasoil=?,impviaje=?,facturado=? WHERE idViaje=?",
                     new Object[] {viaje.getFecha(),viaje.getIdChofer(),viaje.getNomchofer(),viaje.getIdCliente(),
-                                  viaje.getNomcliente(),viaje.getIdCamion(),viaje.getDomChasis(),viaje.getDomAcop(),viaje.getOrigen(),
+                                  viaje.getNomcliente(),viaje.getIdCamion(),viaje.getDescrip(),viaje.getOrigen(),
                                   viaje.getDestino(),viaje.getCtg(),viaje.getCantkm(),viaje.getCargaton(),
-                                  viaje.getTarifap(),viaje.getLtsgasoil(),viaje.getImpviaje(),viaje.getIdViaje()
+                                  viaje.getTarifap(),viaje.getLtsgasoil(),viaje.getImpviaje(),
+                                  viaje.getFacturado(),viaje.getIdViaje()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -373,14 +374,14 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("INSERT viajes(idViaje,fecha,idChofer,"+
-                                    "nomchofer,idCliente,nomcliente,idCamion,domChasis,"+
-                                    "domAcop,origen,destino,ctg,cantkm,cargaton,"+
-                                    "tarifap,ltsgasoil,impviaje) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
+                                    "nomchofer,idCliente,nomcliente,idCamion,descrip,"+
+                                    "origen,destino,ctg,cantkm,cargaton,"+
+                                    "tarifap,ltsgasoil,impviaje,facturado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {viaje.getIdViaje(),viaje.getFecha(),viaje.getIdChofer(),
                                   viaje.getNomchofer(),viaje.getIdCliente(),viaje.getNomcliente(),
-                                  viaje.getIdCamion(),viaje.getDomChasis(),viaje.getDomAcop(),viaje.getOrigen(),
+                                  viaje.getIdCamion(),viaje.getDescrip(),viaje.getOrigen(),
                                   viaje.getDestino(),viaje.getCtg(),viaje.getCantkm(),viaje.getCargaton(),
-                                  viaje.getTarifap(),viaje.getLtsgasoil(),viaje.getImpviaje()
+                                  viaje.getTarifap(),viaje.getLtsgasoil(),viaje.getImpviaje(),viaje.getFacturado()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;

@@ -10,8 +10,7 @@ public class Viaje {
     private int      idCliente;
     private String   nomcliente;   
     private int      idCamion;
-    private String   domChasis;
-    private String   domAcop;
+    private String   descrip;
     private String   origen;
     private String   destino;
     private String   ctg;
@@ -20,6 +19,7 @@ public class Viaje {
     private double   tarifap;
     private float    ltsgasoil;
     private double   impviaje;
+    private int      facturado;
 
     public Viaje(){
 
@@ -80,23 +80,7 @@ public class Viaje {
     public void setIdCamion(int idCamion) {
         this.idCamion = idCamion;
     }
-
-    public String getDomChasis() {
-        return domChasis;
-    }
-
-    public void setDomChasis(String domChasis) {
-        this.domChasis = domChasis;
-    }
-
-    public String getDomAcop() {
-        return domAcop;
-    }
-
-    public void setDomAcop(String domAcop) {
-        this.domAcop = domAcop;
-    }
-
+      
     public String getOrigen() {
         return origen;
     }
@@ -160,6 +144,22 @@ public class Viaje {
 
     public void setImpviaje(double impviaje) {
         this.impviaje = impviaje;
+    }
+
+    public String getDescrip() {
+        return descrip;
+    }
+
+    public void setDescrip(String descrip) {
+        this.descrip = descrip;
+    }
+
+    public int getFacturado() {
+        return facturado;
+    }
+
+    public void setFacturado(int facturado) {
+        this.facturado = facturado;
     }
    
 
