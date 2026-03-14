@@ -111,6 +111,7 @@ export class CamionComponent {
     this.formCamion.controls["emptpte"].setValue(this.camionn.emptpte),                    
              
     this.idEmpresaSel = this.camionn.idEmptpte;
+    this.idMarcaSel   = this.camionn.idMarca;
     
                            
    }
@@ -190,7 +191,7 @@ onSelectionMarca($event : any){
 
    this.formCamion.controls["descrip"].setValue( this.cmarcas[indmarca].marca+" "+
                                                  this.formCamion.controls["modelo"].value+" "+
-                                                 this.formCamion.controls["anio"].value+"-"+
+                                                 this.formCamion.controls["anio"].value+" - "+
                                                  this.formCamion.controls["domChasis"].value )
   
 }
@@ -200,7 +201,7 @@ onModeloChange(event : Event ){
  var modelo = target.value;
  this.formCamion.controls["descrip"].setValue(this.formCamion.controls["marca"].value+" "+
                                               modelo+" "+
-                                              this.formCamion.controls["anio"].value+"-"+
+                                              this.formCamion.controls["anio"].value+" - "+
                                               this.formCamion.controls["domChasis"].value)
 
 }
@@ -210,7 +211,7 @@ onAnioChange(event : Event ){
   var anioo = target.value;
   this.formCamion.controls["descrip"].setValue(this.formCamion.controls["marca"].value+" "+
                                                this.formCamion.controls["modelo"].value+" "+
-                                               anioo+"-"+
+                                               anioo+" - "+
                                                this.formCamion.controls["domChasis"].value)
   
 }

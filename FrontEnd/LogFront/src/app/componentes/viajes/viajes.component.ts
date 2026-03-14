@@ -8,6 +8,7 @@ import { SinoService } from '../../servicios/sino.service';
 import { NotiserviceService } from '../../servicios/notiservice.service';
 import { finalize, Subscription } from 'rxjs';
 import { viajeDTO } from '../../../entidades/viajeDTO';
+import { ViajeComponent } from './viaje/viaje.component';
 
 @Component({
   selector: 'app-viajes',
@@ -28,7 +29,7 @@ export class ViajesComponent {
    viajemod              : number;
    dataSource            = new MatTableDataSource<any>();
    
-   colViajes : string[] = ["idViaje","fecha","nomchofer","nomcliente","domChasis","destino","cantkm","impviaje","M","B" ];
+   colViajes : string[] = ["idViaje","fecha","nomchofer","nomcliente","descrip","destino","tarifap","cantkm","impviaje","M","B" ];
  
    
    constructor(     private servicio     : ServiciosService,               
@@ -79,13 +80,13 @@ export class ViajesComponent {
     const dialogConfig = new MatDialogConfig();   
     dialogConfig.autoFocus = false;
     dialogConfig.data = data;
-    dialogConfig.width =  '900';         // ancho máximo de la ventana
+    dialogConfig.width =  '1200';         // ancho máximo de la ventana
     dialogConfig.maxWidth = '95vw';      
     dialogConfig.height   = 'auto';        // altura se ajusta al contenido
     dialogConfig.panelClass = 'custom-dialog-container';
     dialogConfig.disableClose =  false; // opcional según necesidad
   
-     const dialogRef =  this.dialog.open(ViajesComponent, dialogConfig);
+     const dialogRef =  this.dialog.open(ViajeComponent, dialogConfig);
      dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Alta'){                   
           this.leerViajes();
@@ -110,7 +111,7 @@ export class ViajesComponent {
     dialogConfig.autoFocus = false;
     dialogConfig.data = data;
     
-    const dialogRef =  this.dialog.open(ViajesComponent, dialogConfig);
+    const dialogRef =  this.dialog.open(ViajeComponent, dialogConfig);
     dialogRef.afterClosed().subscribe( // 
           (data:any) => { if (data.clicked === 'Modi'){                   
               this.leerViajes(); // refrescar lista

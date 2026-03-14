@@ -39,25 +39,31 @@
 
       <!-- Columna Chofer -->
       <ng-container matColumnDef="nomchofer">
-        <th mat-header-cell *matHeaderCellDef>Chofer</th>
+        <th style="text-align: center" mat-header-cell *matHeaderCellDef>Chofer</th>
         <td mat-cell *matCellDef="let renViaje">{{ renViaje.nomchofer }}</td>
       </ng-container>
 
       <ng-container matColumnDef="nomcliente">
-        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <th style="text-align: center" mat-header-cell *matHeaderCellDef>Cliente</th>
         <td mat-cell *matCellDef="let renViaje">{{ renViaje.nomcliente }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="domChasis">
-        <th mat-header-cell *matHeaderCellDef>Dominio</th>
-        <td mat-cell *matCellDef="let renViaje">{{ renViaje.domChasis }}</td>
+      <ng-container matColumnDef="descrip">
+        <th style="text-align: center" mat-header-cell *matHeaderCellDef>Camion</th>
+        <td mat-cell *matCellDef="let renViaje">{{ renViaje.descrip }}</td>
       </ng-container>
 
       <ng-container matColumnDef="destino">
-        <th mat-header-cell *matHeaderCellDef>Destino</th>
+        <th style="text-align: center" mat-header-cell *matHeaderCellDef>Destino</th>
         <td mat-cell *matCellDef="let renViaje">{{ renViaje.destino }}</td>
       </ng-container>
       
+      <!-- Columna  Tarifa Plena -->
+      <ng-container matColumnDef="tarifap">
+        <th mat-header-cell *matHeaderCellDef>Tarifa(P)</th>
+        <td mat-cell *matCellDef="let renViaje">{{ renViaje.tarifap | number : "1.2-2" }}</td>
+      </ng-container>
+
       <!-- Columna  Cant. KM -->
       <ng-container matColumnDef="cantkm">
         <th mat-header-cell *matHeaderCellDef>Cant.KM</th>

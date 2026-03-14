@@ -6,8 +6,7 @@ export interface viajeDTO {
     idCliente      : number;
     nomcliente     : string;   
     idCamion       : number;    
-    domChasis      : string;
-    domAcop        : string;
+    descrip        : string;
     origen         : string;
     destino        : string;
     ctg            : string;
@@ -16,6 +15,7 @@ export interface viajeDTO {
     tarifap        : number;
     ltsgasoil      : number;
     impviaje       : number;
+    facturado      : number;
 }
 export interface intViaje {
     nroviaje   : number,  

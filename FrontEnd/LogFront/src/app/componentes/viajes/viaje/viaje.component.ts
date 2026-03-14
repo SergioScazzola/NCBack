@@ -34,16 +34,16 @@ export const DATE_FORMATS : MatDateFormats = {
 }
 @Component({
   selector: 'app-viaje',
-  imports: [    MatFormField,
-                 MatLabel,   
-                 MatInputModule,      
-                 MatSelectModule,
-                 MatDatepickerModule,
-                 MatNativeDateModule,
-                 ReactiveFormsModule,                                
-                 CommonModule,
-                 DragDropModule,
-                 FormsModule,],
+  imports: [MatFormField,
+    MatLabel,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    CommonModule,
+    DragDropModule,
+    FormsModule, SelecTextDirective],
    providers : [
     { provide : DateAdapter, useClass: DateFnsAdapter },
     { provide : MAT_DATE_FORMATS, useValue: DATE_FORMATS},
@@ -53,7 +53,7 @@ export const DATE_FORMATS : MatDateFormats = {
   styleUrl: './viaje.component.css',
 })
 export class ViajeComponent {
- public nameInput = viewChild<ElementRef>('fecha');
+ public nameInput = viewChild<ElementRef>('fechaviaje');
   formViaje        : FormGroup;
   operacion        : string = "";
   resumod          : string;
@@ -66,6 +66,7 @@ export class ViajeComponent {
   idClienteSel     : number = 1;
   idCamionSel      : number = 1;
   private viajee   : viajeDTO;  
+  hoy              : Date = new Date();
   
   constructor(  public fb           : FormBuilder,
                 public servicio     : ServiciosService,
@@ -81,19 +82,19 @@ export class ViajeComponent {
   ngOnInit(){
       this.formViaje = this.fb.group({        
              nroviaje     : [''], 
-             fecha        : [''],
+             fecha        : [new Date()],
              idChofer     : [1],
              idCliente    : [1],
              idCamion     : [1],
-             domChasis    : [''],
+             descrip      : [''],
              origen       : [''],
              destino      : [''],
              ctg          : [''],
-             cantkm       : [''],
-             cargaton     : [''],
-             tarifap      : [''],
-             ltsgasoil    : [''],
-             impviaje     : [''],
+             cantkm       : [0],
+             cargaton     : [0],
+             tarifap      : [0],
+             ltsgasoil    : [0],
+             impviaje     : [0],
       })
       var subs1 : Subscription;
       subs1 = this.servicio.getChoferes()
@@ -119,6 +120,7 @@ export class ViajeComponent {
                       })
                  
                 } else { // ALTA DE VIAJE -> accion = "A"
+                  this.mostrarHora(); //muesta y modica Horas y minutos
                   var subs2 : Subscription;
                   subs2 = this.servicio.getCantViajes()
                    .subscribe((data1:any):void =>{                           
@@ -138,46 +140,56 @@ export class ViajeComponent {
                         
     this.formViaje.controls["nroviaje"].setValue(this.viajee.idViaje), 
     this.formViaje.controls["fecha"].setValue(this.viajee.fecha), 
-    this.formCamion.controls["domAcoplado"].setValue(this.camionn.domAcoplado), 
-    this.formCamion.controls["idMarca"].setValue(this.camionn.idMarca),                   
-    this.formCamion.controls["marca"].setValue(this.camionn.marca),
-    this.formCamion.controls["modelo"].setValue(this.camionn.modelo),                    
-    this.formCamion.controls["anio"].setValue(this.camionn.anio),   
-    this.formCamion.controls["descrip"].setValue(this.camionn.descrip),   
-    this.formCamion.controls["idEmptpte"].setValue(this.camionn.idEmptpte),                    
-    this.formCamion.controls["emptpte"].setValue(this.camionn.emptpte),                    
+    this.formViaje.controls["idChofer"].setValue(this.viajee.idChofer), 
+    this.formViaje.controls["idCliente"].setValue(this.viajee.idCliente),                   
+    this.formViaje.controls["idCamion"].setValue(this.viajee.idCamion),
+    this.formViaje.controls["descrip"].setValue(this.viajee.descrip),                   
+    this.formViaje.controls["origen"].setValue(this.viajee.origen), 
+    this.formViaje.controls["destino"].setValue(this.viajee.destino), 
+    this.formViaje.controls["ctg"].setValue(this.viajee.ctg),                
+    this.formViaje.controls["cantkm"].setValue(this.viajee.cantkm),                
+    this.formViaje.controls["cargaton"].setValue(this.viajee.cargaton), 
              
-    this.idEmpresaSel = this.camionn.idEmptpte;
-    
+    this.idChoferSel      = this.viajee.idChofer;
+    this.idClienteSel     = this.viajee.idCliente;
+    this.idCamionSel      = this.viajee.idCamion;
                            
    }
 
-   AgregarCamion(){
+   AgregarViaje(){
 
-    var indemp = this.cempresas.findIndex(p=>p.idEmpresa==this.idEmpresaSel);
-    var indmarca = this.cmarcas.findIndex(p=>p.idMarca==this.idMarcaSel);
+    var indchof = this.cchoferes.findIndex(p=>p.idChofer==this.idChoferSel);
+    var indcli  = this.cclientes.findIndex(p=>p.idCliente==this.idClienteSel);
+    var indcam  = this.ccamiones.findIndex(p=>p.idCamion==this.idCamionSel);
     
-    var camion : camionDTO = {
-        idCamion     : this.formCamion.controls["nrocam"].value,
-        idEmptpte    : this.formCamion.controls["idEmptpte"].value,   
-        emptpte      : this.cempresas[indemp].nombre,
-        domChasis    : this.formCamion.controls["domChasis"].value,
-        domAcoplado  : this.formCamion.controls["domAcoplado"].value,
-        descrip      : this.formCamion.controls["descrip"].value,
-        idMarca      : this.formCamion.controls["idMarca"].value,
-        marca        : this.cmarcas[indmarca].marca,
-        modelo       : this.formCamion.controls["modelo"].value,
-        anio         : this.formCamion.controls["anio"].value,                          
+    var viaje : viajeDTO = {
+        idViaje     : this.formViaje.controls["nroviaje"].value,
+        fecha       : this.formViaje.controls["fecha"].value,
+        idChofer    : this.formViaje.controls["idChofer"].value,
+        nomchofer   : this.cchoferes[indchof].nombre,
+        idCliente   : this.formViaje.controls["idCliente"].value,
+        nomcliente  : this.cclientes[indcli].nombre,
+        idCamion    : this.formViaje.controls["idCamion"].value,
+        descrip     : this.ccamiones[indcam].descrip,
+        origen      : this.formViaje.controls["origen"].value,                                            
+        destino     : this.formViaje.controls["destino"].value,
+        ctg         : this.formViaje.controls["ctg"].value,
+        cantkm      : this.formViaje.controls["cantkm"].value,
+        cargaton    : this.formViaje.controls["cargaton"].value,
+        tarifap     : this.formViaje.controls["tarifap"].value,
+        ltsgasoil   : this.formViaje.controls["ltsgasoil"].value,
+        impviaje    : this.formViaje.controls["impviaje"].value,
+        facturado   : 0,
     }   
     
         
     var subscri : Subscription;
     var resu    : string;
-    subscri = this.servicio.grabarCamion(camion)  
+    subscri = this.servicio.grabarViaje(viaje)  
             .pipe(finalize(() => {   
              console.log("Error : "+resu);
-             this.notiService.showNotification("El Camión Nro. "+camion.idCamion+" - "+
-                                        camion.descrip+" se ha agregado con éxito",'Aceptar','mensaje',500); 
+             this.notiService.showNotification("El Viaje Nro. "+viaje.idViaje+" - "+
+                                        viaje.destino+" se ha agregado con éxito",'Aceptar','mensaje',500); 
                 subscri.unsubscribe();
                 this.dialogRef.close({ clicked : "Alta"})
                 }))                  
@@ -185,72 +197,122 @@ export class ViajeComponent {
     }
     
     
-    ModificarCamion(){
-     var indemp = this.cempresas.findIndex(p=>p.idEmpresa==this.idEmpresaSel);
-     var indmarca = this.cmarcas.findIndex(p=>p.idMarca==this.idMarcaSel); 
-     var camion : camionDTO = {
-        idCamion     : this.formCamion.controls["nrocam"].value,
-        idEmptpte    : this.formCamion.controls["idEmptpte"].value,   
-        emptpte      : this.cempresas[indemp].nombre,
-        domChasis    : this.formCamion.controls["domChasis"].value,
-        domAcoplado  : this.formCamion.controls["domAcoplado"].value,
-        descrip      : this.formCamion.controls["descrip"].value,
-        idMarca      : this.formCamion.controls["idMarca"].value,
-        marca        : this.cmarcas[indmarca].marca,
-        modelo       : this.formCamion.controls["modelo"].value,
-        anio         : this.formCamion.controls["anio"].value,      
-   
-    }    
+    ModificarViaje(){
+     var indchof = this.cchoferes.findIndex(p=>p.idChofer==this.idChoferSel);
+     var indcli  = this.cclientes.findIndex(p=>p.idCliente==this.idClienteSel);
+     var indcam  = this.ccamiones.findIndex(p=>p.idCamion==this.idCamionSel);
+    
+     var viaje : viajeDTO = {
+        idViaje     : this.formViaje.controls["nroviaje"].value,
+        fecha       : this.formViaje.controls["fecha"].value,
+        idChofer    : this.formViaje.controls["idChofer"].value,
+        nomchofer   : this.cchoferes[indchof].nombre,
+        idCliente   : this.formViaje.controls["idCliente"].value,
+        nomcliente  : this.cclientes[indcli].nombre,
+        idCamion    : this.formViaje.controls["idCamion"].value,
+        descrip     : this.ccamiones[indcam].descrip,
+        origen      : this.formViaje.controls["origen"].value,                                            
+        destino     : this.formViaje.controls["destino"].value,
+        ctg         : this.formViaje.controls["ctg"].value,
+        cantkm      : this.formViaje.controls["cantkm"].value,
+        cargaton    : this.formViaje.controls["cargaton"].value,
+        tarifap     : this.formViaje.controls["tarifap"].value,
+        ltsgasoil   : this.formViaje.controls["ltsgasoil"].value,
+        impviaje    : this.formViaje.controls["impviaje"].value,
+        facturado   : 0,
+    }   
    
     var subscri : Subscription;
     var resu    : string;
-    subscri = this.servicio.updateCamion(camion.idCamion,camion)  
+    subscri = this.servicio.updateViaje(viaje.idViaje,viaje)  
             .pipe(finalize(() => {   
-             this.notiService.showNotification("El Camión Nro. "+this.data.nrocamion+" - "+
-                                                camion.descrip+" se ha modificado con éxito",'Aceptar','mensaje',500); 
+             this.notiService.showNotification("El Viaje Nro. "+this.data.nroviaje+" - "+
+                                                this.data.descrip+" se ha modificado con éxito",'Aceptar','mensaje',500); 
              subscri.unsubscribe();
              this.dialogRef.close({ clicked : "Modi"})
                 }))                  
            .subscribe((data : any): void => {resu=data});   
     }
              
-onSelectionEmpresa($event : any){
-  // recibo un idEmpresa
- this.idEmpresaSel = $event.value;
+onSelectionChofer($event : any){
+  // recibo un idChofer
+ this.idChoferSel = $event.value;
  
 }
 
-onSelectionMarca($event : any){
-   this.idMarcaSel = $event.value; 
-   var indmarca = this.cmarcas.findIndex(p=>p.idMarca==this.idMarcaSel);
-   this.formCamion.controls["marca"].setValue(this.cmarcas[indmarca].marca); 
+onSelectionCliente($event : any){
+  // recibo un idCliente
+ this.idClienteSel = $event.value;
+ 
+}
 
-   this.formCamion.controls["descrip"].setValue( this.cmarcas[indmarca].marca+" "+
-                                                 this.formCamion.controls["modelo"].value+" "+
-                                                 this.formCamion.controls["anio"].value+"-"+
-                                                 this.formCamion.controls["domChasis"].value )
+onSelectionCamion($event : any){
+  // recibo un idCamion
+ this.idCamionSel = $event.value;
+ 
+}
+
+ mostrarHora() {
+    // mantiene actualizado el control "fecha" con Horas minutos y segundos
+    setInterval(() => {
+      this.hoy = new Date();
+      
+      const valorControl = this.formViaje.controls['fecha'].value;
+      const fechaform = new Date(valorControl); // ✅ convierte string/objeto a Date real
   
-}
-
-onModeloChange(event : Event ){
- const target = event.target as HTMLInputElement;
- var modelo = target.value;
- this.formCamion.controls["descrip"].setValue(this.formCamion.controls["marca"].value+" "+
-                                              modelo+" "+
-                                              this.formCamion.controls["anio"].value+"-"+
-                                              this.formCamion.controls["domChasis"].value)
-
-}
-
-onAnioChange(event : Event ){
-  const target = event.target as HTMLInputElement;
-  var anioo = target.value;
-  this.formCamion.controls["descrip"].setValue(this.formCamion.controls["marca"].value+" "+
-                                               this.formCamion.controls["modelo"].value+" "+
-                                               anioo+"-"+
-                                               this.formCamion.controls["domChasis"].value)
+      fechaform.setHours(this.hoy.getHours(), this.hoy.getMinutes(), this.hoy.getSeconds());
   
-}
+      this.formViaje.controls['fecha'].setValue(fechaform); // ✅ se actualiza con una fecha válida
+      
+    }, 1000);
+  }
+ 
+  
+  onFechaChange(event: any) {
+    const nuevaFecha: Date = event.value; // Fecha seleccionada en el datepicker
+    const ahora = new Date(); // Hora actual
+  
+    // Copiar la hora actual a la fecha seleccionada
+    nuevaFecha.setHours(ahora.getHours(), ahora.getMinutes(), ahora.getSeconds(), 0);
+  
+    // Establecer la fecha con hora en el form
+    this.formViaje.controls['fecha'].setValue(nuevaFecha);
+  }
+
+  onBlurCantKm($event : any){
+ // Calcula el importe del viaje cuando cambia la cantidad de km y lo actualiza
+    
+    var ckm      = this.formViaje.controls["cantkm"].value;
+    var tarifap  =  this.formViaje.controls["tarifap"].value; // tarifa plena
+    var tiva     =  0.21;
+    
+    var tarifav  =  this.redondearAdos(tarifap * 0.90); // tarifa del viaje
+    var valorviaje = this.redondearAdos(ckm * tarifav);
+    var netociva = valorviaje * (1+tiva);   
+    this.formViaje.controls["impviaje"].setValue(this.redondearAdos(netociva))
+  }
+
+  onBlurTarifaP($event : any){
+    // Calcula el importe del viaje cuando cambia la tarifa plena y lo actualiza
+    
+    var ckm      = this.formViaje.controls["cantkm"].value;
+    var tarifap  =  this.formViaje.controls["tarifap"].value; // tarifa plena
+    var tiva     =  0.21;
+    
+    var tarifav  =  this.redondearAdos(tarifap * 0.90); // tarifa del viaje
+    var valorviaje = this.redondearAdos(ckm * tarifav);
+    var netociva = valorviaje * (1+tiva);   
+    this.formViaje.controls["impviaje"].setValue(this.redondearAdos(netociva))
+  }
+  redondearAdos(nro : number): number{  
+    var numero : number = nro+0.005;
+    // está redondeado a dos decimales, pero tiene mas de 2 decimales
+    // convierto a cadena y le saco los decimales que no necesito
+    var cade : string = String(numero);  
+    var posi : number = cade.indexOf(".");
+    numero = Number(cade.substring(0,posi+3));  
+    return numero
+  }  
 Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})
      }
