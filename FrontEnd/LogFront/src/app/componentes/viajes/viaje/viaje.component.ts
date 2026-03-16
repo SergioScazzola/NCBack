@@ -95,6 +95,7 @@ export class ViajeComponent {
              tarifap      : [0],
              ltsgasoil    : [0],
              impviaje     : [0],
+             facturado    : [0],
       })
       var subs1 : Subscription;
       subs1 = this.servicio.getChoferes()
@@ -149,10 +150,16 @@ export class ViajeComponent {
     this.formViaje.controls["ctg"].setValue(this.viajee.ctg),                
     this.formViaje.controls["cantkm"].setValue(this.viajee.cantkm),                
     this.formViaje.controls["cargaton"].setValue(this.viajee.cargaton), 
+    this.formViaje.controls["tarifap"].setValue(this.viajee.tarifap),
+    this.formViaje.controls["ltsgasoil"].setValue(this.viajee.ltsgasoil),
+    this.formViaje.controls["impviaje"].setValue(this.viajee.impviaje),
+    this.formViaje.controls["facturado"].setValue(this.viajee.facturado),     
              
     this.idChoferSel      = this.viajee.idChofer;
     this.idClienteSel     = this.viajee.idCliente;
     this.idCamionSel      = this.viajee.idCamion;
+
+    //console.log("Choferrrrrrrrrrrrrrrrrrrrr : "+this.viajee.idChofer);
                            
    }
 

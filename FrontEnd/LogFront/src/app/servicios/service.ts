@@ -9,6 +9,7 @@ import { camionDTO } from '../../entidades/camionDTO';
 import { marcaDTO } from '../../entidades/marcaDTO';
 import { clienteDTO } from '../../entidades/clienteDTO';
 import { viajeDTO } from '../../entidades/viajeDTO';
+import { factpDTO } from '../../entidades/factpDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -190,5 +191,36 @@ export class ServiciosService {
   public elimViaje(nroviaje : number) {
     return this.http.delete(
       environment.apiUrl + `viaje/viaje?id=` + nroviaje);
+  }
+
+   // ** Facturas de Transporte ** //
+
+   public getFacsTP() {
+    return this.http.get<factpDTO[]>(this.apiUrl + `factp/facstp`);
+  }
+
+  public getCantFacsTP() {
+    return this.http.get<number>(this.apiUrl + `factp/max`);
+  }
+
+  public leerFacTP(nrof: number) {
+    return this.http.get<factpDTO>(
+      this.apiUrl + `factp/factp?id=` + nrof
+    );
+  }
+  
+  public grabarFacTP(factp : factpDTO) {
+    return this.http.post<factpDTO>(
+      this.apiUrl + `factp/factp/nuevo`, factp);
+  }
+
+  public updateFacTP(nrofactp : number, factp : factpDTO) {
+    return this.http.put<factpDTO>(
+      environment.apiUrl + `factp/factp/actualizar?id=` + nrofactp, factp);
+  }
+
+  public elimFacTP(nrofactp : number) {
+    return this.http.delete(
+      environment.apiUrl + `factp/factp?id=` + nrofactp);
   }
 }

@@ -1,0 +1,114 @@
+<div class="factp-container">
+  <div class="row">
+    <div class="col">
+       <div class="header">
+         <h4>Facturas de Transporte</h4>
+       </div>
+    </div>  
+    <div class="col">
+       <input #filtroInput (keyup)="aplicarFiltro(filtroInput.value)" placeholder="Filtrar por nombre">
+    </div>        
+ 
+    <div class="col-3">      
+    </div>
+    <div class="col">
+      <button class="btn btn-primary add-button" (click)="agFacTP()">
+        <i class="bi bi-plus-circle me-1"></i>Agregar
+      </button>
+    </div>        
+  </div>
+
+  <div class="table-container" style="overflow-x: auto">
+    <table
+      mat-table
+      class="mat-elevation-z8"
+      [dataSource]="this.dataSource"
+      style="width: 100%"
+    >
+      <!-- Columna ID Factura -->
+      <ng-container matColumnDef="idFactura">
+        <th mat-header-cell *matHeaderCellDef>Nro</th>
+        <td mat-cell *matCellDef="let renFac">{{ renFac.idFactura }}</td>
+      </ng-container>
+
+      <!-- Columna Nro. Factura -->
+      <ng-container matColumnDef="nrofactura">
+        <th mat-header-cell *matHeaderCellDef>Nro.Factura</th>
+        <td mat-cell *matCellDef="let renFac">{{ renFac.nrofactura }}</td>
+      </ng-container>
+
+      <!-- Columna Tipo de Factura -->
+      <ng-container matColumnDef="facndc">
+        <th mat-header-cell *matHeaderCellDef>Tipo</th>
+        <td mat-cell *matCellDef="let renFac">{{ renFac.facndc}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fecha">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let renFac">{{ renFac.fecha | date : "dd/MM/yyyy" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nomchofer">
+        <th mat-header-cell *matHeaderCellDef>Chofer</th>
+        <td mat-cell *matCellDef="let renFac">{{ renFac.nomchofer }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="impneto">
+        <th mat-header-cell *matHeaderCellDef>Imp. Neto</th>
+        <td mat-cell *matCellDef="let renFac">{{ renFac.impneto | number : "1.2-2"}}</td>
+      </ng-container>
+      
+      <!-- Columna  importe de IVA -->
+      <ng-container matColumnDef="impiva">
+        <th mat-header-cell *matHeaderCellDef>Imp. IVA</th>
+        <td mat-cell *matCellDef="let renFac">{{ renFac.impiva | number : "1.2-2" }}</td>
+      </ng-container>
+
+      <!-- Columna Empresa -->
+      <ng-container matColumnDef="totalfac">
+        <th mat-header-cell *matHeaderCellDef>Total Factura</th>
+        <td mat-cell *matCellDef="let renFac">{{ renFac.totalfac | number : "1.2-2" }}</td>
+      </ng-container>
+     
+
+      <!-- Columna Modificar -->
+      <ng-container matColumnDef="M">
+        <th mat-header-cell *matHeaderCellDef>Mod</th>
+        <td mat-cell *matCellDef="let renFac">
+          <div class="text-center">
+            <button
+              mat-icon-button
+              class="action-btn"
+              title="modificar Factura de tpte"
+              (click)="modificarFacTP(renFac.idFactura, renFac.nrofactura)"
+            >
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Columna Borrar -->
+      <ng-container matColumnDef="B">
+        <th mat-header-cell *matHeaderCellDef>Bor</th>
+        <td mat-cell *matCellDef="let renFac">
+          <div class="text-center">
+            <button
+              mat-icon-button
+              class="action-btn"
+              title="borrar Factura de tpte"
+              (click)="borrarFacTP(renFac.idFactura,renFac.nrofactura)"
+            >
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+     
+      <!-- Definición de filas -->
+      <tr mat-header-row *matHeaderRowDef="colfactp; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; let index; columns: colfactp"></tr>
+    </table>
+  </div>
+</div>
+

@@ -14,7 +14,8 @@
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Dominio Chasis</mat-label>
           <input
-            matInput            
+            matInput   
+             (blur)="onBlurDomChasis($event)"/>       
             formControlName="domChasis"
             style="text-align: left"
           />
@@ -23,7 +24,9 @@
       <div class="col-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Dominio Acoplado</mat-label>
-          <input matInput formControlName="domAcoplado" />
+          <input matInput 
+                 (blur)="onBlurDomAcoplado($event)"/>      
+                 formControlName="domAcoplado" />
         </mat-form-field>
       </div>
     </div>

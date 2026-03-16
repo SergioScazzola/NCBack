@@ -9,6 +9,7 @@ import { ChangePasswordComponent } from './componentes/change-password/change-pa
 import { CamionesComponent } from './componentes/camiones/camiones.component';
 import { ClientesComponent } from './componentes/clientes/clientes.component';
 import { ViajesComponent } from './componentes/viajes/viajes.component';
+import { FacsTPComponent } from './componentes/facs-tp/facs-tp.component';
 
 export const routes: Routes = [
   // Rutas para invitados (no autenticados)
@@ -31,7 +32,7 @@ export const routes: Routes = [
       { path: 'camiones', component: CamionesComponent },          
       { path: 'clientes', component: ClientesComponent },     
       { path: 'viajes', component: ViajesComponent },     
-
+      { path: 'factpte', component: FacsTPComponent },     
     ],
   },
 

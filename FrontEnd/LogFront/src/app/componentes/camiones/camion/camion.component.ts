@@ -215,6 +215,15 @@ onAnioChange(event : Event ){
                                                this.formCamion.controls["domChasis"].value)
   
 }
+onBlurDomChasis(event : any){
+  var texto : string = this.formCamion.controls["domChasis"].value;
+  this.formCamion.controls["domChasis"].setValue(texto.toUpperCase)
+}       
+
+onBlurDomAcoplado(event : any){
+  var texto : string = this.formCamion.controls["domAcoplado"].value;
+  this.formCamion.controls["domAcoplado"].setValue(texto.toUpperCase)
+} 
 Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})
      }

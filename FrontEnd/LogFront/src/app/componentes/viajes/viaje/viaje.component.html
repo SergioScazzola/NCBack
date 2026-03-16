@@ -61,7 +61,7 @@
             (selectionChange)="onSelectionCamion($event)">
             @for (camion of ccamiones; track camion.idCamion) {
               <mat-option [value]="camion.idCamion">
-                {{ camion.descrip }}
+                {{ camion.idCamion+" - "+camion.descrip }}
               </mat-option>
             }
           </mat-select>

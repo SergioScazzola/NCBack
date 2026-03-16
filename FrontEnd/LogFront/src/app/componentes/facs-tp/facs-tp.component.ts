@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { DatePipe,DecimalPipe} from '@angular/common';
+
+
 import { ServiciosService } from '../../servicios/service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -7,29 +8,34 @@ import { MatTableModule,MatTableDataSource } from '@angular/material/table';
 import { SinoService } from '../../servicios/sino.service';
 import { NotiserviceService } from '../../servicios/notiservice.service';
 import { finalize, Subscription } from 'rxjs';
-import { viajeDTO } from '../../../entidades/viajeDTO';
-import { ViajeComponent } from './viaje/viaje.component';
+import { DatePipe,DecimalPipe} from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { factpDTO } from '../../../entidades/factpDTO';
+import { FacTpComponent } from './fac-tp/fac-tp.component';
+
 
 @Component({
-  selector: 'app-viajes',
-  imports: [ MatTableModule,DatePipe,DecimalPipe],
-  templateUrl: './viajes.component.html',
-  styleUrl: './viajes.component.css',
+  selector: 'app-facs-tp',
+  imports: [ CommonModule,DatePipe,DecimalPipe,MatTableModule],
+  templateUrl: './facs-tp.component.html',
+  styleUrl: './facs-tp.component.css',
 })
-export class ViajesComponent {
+export class FacsTPComponent {
 @ViewChild('filtroInput') inputRef!: ElementRef<HTMLInputElement>;
    
    
    //public inputRef    = viewChild.required<ElementRef>('filtroInput');
    public filtro       : string;
-   public cviajes      : viajeDTO[]=[];
+  
 
-   cantviaje             : number;
-   formviaje             : boolean;
-   viajemod              : number;
+   cantfactp             : number;
+   formFactp             : boolean;
+   factpmod              : number; 
+   cfacsTP               : factpDTO[]=[];
    dataSource            = new MatTableDataSource<any>();
-   
-   colViajes : string[] = ["idViaje","fecha","nomcliente","nomchofer","descrip","destino","tarifap","cantkm","impviaje","M","B" ];
+
+ 
+   colfactp : string[] = ["idFactura" , "nrofactura","facndc","fecha","nomchofer","impneto","impiva","totalfac","M","B" ];
  
    
    constructor(     private servicio     : ServiciosService,               
@@ -47,19 +53,19 @@ export class ViajesComponent {
       if (this.inputRef) {
           this.inputRef.nativeElement.value = this.filtro;   
       }             
-      this.leerViajes();  
+      this.leerFacsTP();  
       })       
        
  }
        
-   leerViajes(){
-        var subs : Subscription;
-        subs = this.servicio.getViajes()
+   leerFacsTP(){
+      var subs : Subscription;
+      subs = this.servicio.getFacsTP()
            .pipe(finalize(()=> {
-               this.cantviaje = this.cviajes.length;
-                this.dataSource.data = this.cviajes;         
-                this.dataSource.filterPredicate = (dato : viajeDTO, fil : string) => {
-                     return dato.destino.toLowerCase().includes(fil);
+               this.cantfactp = this.cfacsTP.length;
+                this.dataSource.data = this.cfacsTP;         
+                this.dataSource.filterPredicate = (dato : factpDTO, fil : string) => {
+                     return dato.nomchofer.toLowerCase().includes(fil);
                                      };    
                 // Aplica filtro si hay uno
                 if (this.filtro!=='') {                                 
@@ -69,36 +75,37 @@ export class ViajesComponent {
                subs.unsubscribe();
            }))
            .subscribe((data : any): void => {
-                            this.cviajes = data});  
+                            this.cfacsTP = data});      
+    
      } 
-   agViaje(){
+   agFacTP(){
      const data = {
-          nroviaje     : 0,    
-          descrip      : "",      
-          accion     : "A",
-     }       
+          idFactura    : 0,  
+          nrofactura   : "",
+          accion       : "A",
+     }
     const dialogConfig = new MatDialogConfig();   
     dialogConfig.autoFocus = false;
     dialogConfig.data = data;
-    dialogConfig.width =  '1000px';         // ancho máximo de la ventana
-    dialogConfig.maxWidth = '1200px' //'95vw';      
+    dialogConfig.width =  '900';         // ancho máximo de la ventana
+    dialogConfig.maxWidth = '95vw';      
     dialogConfig.height   = 'auto';        // altura se ajusta al contenido
     dialogConfig.panelClass = 'custom-dialog-container';
     dialogConfig.disableClose =  false; // opcional según necesidad
   
-     const dialogRef =  this.dialog.open(ViajeComponent, dialogConfig);
+     const dialogRef =  this.dialog.open(FacTpComponent, dialogConfig);
      dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Alta'){                   
-          this.leerViajes();
+          this.leerFacsTP();
          }})
-     this.formviaje = true;
-     this.viajemod  = 0; 
+     this.formFactp = true;
+     this.factpmod  = 0; 
    }
-   modificarViaje(nrovje : number,desc : string){      
+   modificarFacTP(idfac : number,nrof : string){      
     const data = {
-      nroviaje    : nrovje,        
-      descrip     : desc,
-      accion      : "M"
+      idFactura     : idfac,        
+      nrofactura    : nrof,
+      accion        : "M"
     }       
     const dialogConfig = new MatDialogConfig();
    
@@ -111,25 +118,25 @@ export class ViajesComponent {
     dialogConfig.autoFocus = false;
     dialogConfig.data = data;
     
-    const dialogRef =  this.dialog.open(ViajeComponent, dialogConfig);
+    const dialogRef =  this.dialog.open(FacTpComponent, dialogConfig);
     dialogRef.afterClosed().subscribe( // 
           (data:any) => { if (data.clicked === 'Modi'){                   
-              this.leerViajes(); // refrescar lista
+              this.leerFacsTP(); // refrescar lista
           }})
  
    }
-   borrarViaje(nrovje : number,desc : string){
+   borrarFacTP(idfac : number,nrof : string){
      var resu : string;
       this.sinoServicio.abrirSiNoDialogo("Confirmación",
-                               "¿ Está seguro de quiere borrar el Viaje Nro."+nrovje+"-"+desc+" ?")
+                               "¿ Está seguro de quiere borrar la Factura Nro."+idfac+"-"+nrof+" ?")
         .then(result => {
            if (result) {
                var subscri : Subscription;
-               subscri = this.servicio.elimViaje(nrovje)
+               subscri = this.servicio.elimFacTP(idfac)               
                   .pipe(finalize(() => {
-                     this.notiServicio.showNotification("El Viaje Nro "+nrovje+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
+                     this.notiServicio.showNotification("La Factura Nro "+idfac+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
                      subscri.unsubscribe();
-                    this.leerViajes(); // refrescar lista
+                    this.leerFacsTP(); // refrescar lista
  
                    }))
                    .subscribe((data : any): void => {
@@ -141,10 +148,10 @@ export class ViajesComponent {
   }
    manejarOperacion($event:any){
      if ($event==="Alta" || $event==="Modi"){
-         this.formviaje = false;
-           this.leerViajes(); // refrescar lista
+         this.formFactp = false;
+           this.leerFacsTP(); // refrescar lista
      } else {
-       this.formviaje = false;
+       this.formFactp = false;
      }
     }
 
