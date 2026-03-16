@@ -7,8 +7,8 @@ public class FactTpte {
      private String nrofactura;
      private String facndc;  // fac : suma, ndc : resta
      private Date   fecha;
-     private int    idEmptpte;
-     private String nomempresa;
+     private int    idChofer;
+     private String nomchofer;
      private int    cantit;
         
      private double impneto;
@@ -44,20 +44,20 @@ public class FactTpte {
          this.fecha = fecha;
      }
 
-     public int getIdEmptpte() {
-         return idEmptpte;
+     public int getIdChofer() {
+         return idChofer;
      }
 
-     public void setIdEmptpte(int idEmptpte) {
-         this.idEmptpte = idEmptpte;
+     public void setIdChofer(int idchof) {
+         this.idChofer = idchof;
      }
 
-     public String getNomempresa() {
-         return nomempresa;
+     public String getNomchofer() {
+         return nomchofer;
      }
 
-     public void setNomempresa(String nomempresa) {
-         this.nomempresa = nomempresa;
+     public void setNomchofer(String nomchof) {
+         this.nomchofer = nomchof;
      }
 
      public int getCantit() {

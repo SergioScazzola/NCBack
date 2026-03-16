@@ -8,9 +8,7 @@ public class ItfactT {
      private int    nroitem;
      private int    idViaje;
      private int    idChofer;
-     private String nomChofer;
-     private int    idEmptpte;
-     private String nomemptpte;
+     private String nomChofer; 
      private String ctg;
      private double tarifa;  // tarifa del tpte = 0.9 * tarifa plena
      private float  cargaton;
@@ -63,22 +61,7 @@ public class ItfactT {
          this.nomChofer = nomChofer;
      }
 
-     public int getIdEmptpte() {
-         return idEmptpte;
-     }
-
-     public void setIdEmptpte(int idEmptpte) {
-         this.idEmptpte = idEmptpte;
-     }
-
-     public String getNomemptpte() {
-         return nomemptpte;
-     }
-
-     public void setNomemptpte(String nomemptpte) {
-         this.nomemptpte = nomemptpte;
-     }
-
+     
      public String getCtg() {
          return ctg;
      }

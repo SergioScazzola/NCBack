@@ -18,8 +18,19 @@ public class Viaje {
     private float    cargaton;
     private double   tarifap;
     private float    ltsgasoil;
+    private double   impneto;
     private double   impviaje;
-    private int      facturado;
+
+    
+   public double getImpneto() {
+    return impneto;
+}
+
+public void setImpneto(double impneto) {
+    this.impneto = impneto;
+}
+
+ private int      facturado;
 
     public Viaje(){
 
