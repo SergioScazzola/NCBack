@@ -33,6 +33,7 @@ export const routes: Routes = [
       { path: 'clientes', component: ClientesComponent },     
       { path: 'viajes', component: ViajesComponent },     
       { path: 'factpte', component: FacsTPComponent },     
+      { path: '', pathMatch: 'full', redirectTo: 'ppal' },
     ],
   },
 

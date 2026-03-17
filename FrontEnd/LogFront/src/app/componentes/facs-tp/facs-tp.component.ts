@@ -1,6 +1,4 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-
-
 import { ServiciosService } from '../../servicios/service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -12,6 +10,9 @@ import { DatePipe,DecimalPipe} from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { factpDTO } from '../../../entidades/factpDTO';
 import { FacTpComponent } from './fac-tp/fac-tp.component';
+import { MatDateFormats } from '@angular/material/core';
+
+
 
 
 @Component({
@@ -146,6 +147,7 @@ export class FacsTPComponent {
            }
      })
   }
+  
    manejarOperacion($event:any){
      if ($event==="Alta" || $event==="Modi"){
          this.formFactp = false;

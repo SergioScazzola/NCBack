@@ -1,1 +1,214 @@
-<p>fac-tp works!</p>
+<div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  <h4>{{ operacion }}</h4>
+  <form [formGroup]="formFactp" class="p-3">
+    <!-- Primera fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-2">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nro</mat-label>
+          <input matInput formControlName="idFactura"
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nro.de Factura</mat-label>
+          <input
+            matInput formControlName="nrofactura"
+            style="text-align: left"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>FAC/NDC</mat-label>
+          <input matInput 
+                 formControlName="facndc" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Segunda fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-4">
+        <mat-form-field class="w-100" appearance="fill"> 
+            <input #fechaviaje matInput #inputFocus [matDatepicker]="picker"  
+                  placeholder = "Elija una fecha" 
+                  (dateChange)="onFechaChange($event)"
+                  formControlName="fecha" > 
+            <mat-datepicker-toggle  matSuffix [for]="picker" > </mat-datepicker-toggle> 
+            <mat-datepicker #picker> </mat-datepicker>  
+            <mat-hint>{{ formFactp.controls['fecha'].value | date : "dd/MM/yyyy HH:mm"}}</mat-hint> 
+        </mat-form-field >
+      </div>
+    </div>
+      <div class="col-md-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Chofer</mat-label>
+          <mat-select
+            formControlName="idChofer"
+            (selectionChange)="onSelectionChofer($event)"
+          >
+            @for (chofer of cchoferes; track chofer.idChofer) {
+              <mat-option [value]="chofer.idChofer">
+                {{ chofer.nombre }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>  
+   
+
+    <!-- Tercera fila -->
+    <div class="row g-3 mb-3">      
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Importe Neto</mat-label>
+          <input matInput readonly="true" formControlName="impneto"
+                 [value]="formFactp.get('impneto')?.value | currency:'$':true"
+          />        
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Tasa de IVA</mat-label>
+          <input matInput formControlName="tasaiva"            
+          />        
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Importe IVA</mat-label>
+          <input matInput readonly="true" formControlName="impiva"
+                 [value]="formFactp.get('impiva')?.value | currency:'$':true"
+          />        
+        </mat-form-field>
+      </div>
+      </div>
+      <!-- Tercera fila -->
+      <div class="row g-3 mb-3">      
+       <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Total Factura</mat-label>
+          <input matInput readonly="true" formControlName="totalfac"
+                 [value]="formFactp.get('totalfac')?.value | currency:'$':true"
+          />        
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Items Detalle</mat-label>
+          <input matInput readonly="true" formControlName="totalfac"
+                 [value]="formFactp.get('cantit')?.value | currency:'$':true"
+          />        
+        </mat-form-field>
+      </div>
+    </div>
+    @if (cdetfactp.length>0){
+      <div class="table-container" style="overflow-x: auto">
+        <div>Detalle de Factura</div>      
+        <table mat-table class="mat-elevation-z8" [dataSource]="this.cdetfactp">
+              <ng-container matColumnDef="nroitem">
+                <th mat-header-cell *matHeaderCellDef>Item</th>
+                <td mat-cell *matCellDef="let renDC">
+                  {{ renDC.nroitem }}
+                </td>
+              </ng-container>             
+        
+             <ng-container matColumnDef="fecha">
+               <th mat-header-cell *matHeaderCellDef>Fecha</th>
+               <td mat-cell *matCellDef="let renDC">
+                 {{  renDC.fecha | date : "dd/MM/yyyy"}}
+               </td>
+             </ng-container>
+             <ng-container matColumnDef="nmpago">
+               <th mat-header-cell *matHeaderCellDef>M.Pago</th>
+               <td mat-cell *matCellDef="let renDC">
+                  {{ renDC.nmpago }}
+               </td>
+            </ng-container>
+            <ng-container matColumnDef="nrompago">
+              <th mat-header-cell *matHeaderCellDef>Nro M.Pago</th>
+              <td mat-cell *matCellDef="let renDC">
+                {{ renDC.nrompago }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="banco">
+              <th mat-header-cell *matHeaderCellDef>Banco</th>
+              <td mat-cell *matCellDef="let renDC">
+                {{ renDC.banco }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="fecvto">
+              <th mat-header-cell *matHeaderCellDef>
+                Fec.Vto
+              </th>
+              <td mat-cell *matCellDef="let renDC" >
+                {{  renDC.fecvto | date : "dd/MM/yyyy"}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="importe">
+              <th mat-header-cell *matHeaderCellDef>Importe</th>
+              <td mat-cell *matCellDef="let renDC" >
+                {{ renDC.importe | number : "1.2-2" }}
+              </td>
+            </ng-container>
+            <!-- Columna Modificar -->
+            <ng-container matColumnDef="M">
+              <th mat-header-cell *matHeaderCellDef>Mod</th>
+              <td mat-cell *matCellDef="let renDC">
+                <div class="text-center">
+                   <button
+                     mat-icon-button
+                     class="action-btn"
+                     title="modificar item cobranza"
+                     (click)="modificarItemFactura(renDC.idCobro,renDC.nroitem)"
+                    >
+                    <i class="bi bi-pencil-fill"></i>
+                   </button>
+                </div>
+              </td>
+            </ng-container>
+          <tr mat-header-row *matHeaderRowDef="colDFactp"></tr>
+          <tr mat-row *matRowDef="let row; let index; columns: colDFactp"></tr>          
+      </table>    
+    </div>   
+    }   
+  
+
+    <!-- Botonera -->
+    <div class="botonera">
+      <button
+        class="btn btn-outline-warning"
+        [disabled]="formFactp.invalid || data.accion != 'A' || data.accion != 'M'"
+        (click)="AgregarCamion()"
+      >
+        Modificar Detalle 
+      </button>
+      <button
+        class="btn btn-outline-primary"
+        [disabled]="formCamion.invalid || data.accion != 'A'"
+        (click)="AgregarCamion()"
+      >
+        Agregar
+      </button>
+      <button
+        class="btn btn-outline-success"
+        [disabled]="formCamion.invalid || data.accion != 'M'"
+        (click)="ModificarCamion()"
+      >
+        Modificar
+      </button>
+      <button
+        class="btn btn-outline-secondary"
+        (click)="Anular()"
+      >
+        Cancelar
+      </button>
+    </div>
+    @if (formFactp.get('facndc')?.errors?.['pattern']){
+     <div style="color: red;">El valor debe ser exactamente FAC o NDC.</div>     
+    }    
+     
+  </form>
+</div>
