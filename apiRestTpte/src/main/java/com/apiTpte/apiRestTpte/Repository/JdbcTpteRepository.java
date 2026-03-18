@@ -485,10 +485,10 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("INSERT dfacstp(idFactura,nroitem,idViaje,idChofer,"+
-                                    "nomchofer,ctg,tarifa,cargaton,impneto,tasaiva,"+
-                                    "impiva,totalitem VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ",
+                                    "nomchofer,origen,destino,tarifa,cargaton,impneto,tasaiva,"+
+                                    "impiva,totalitem VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {itfac.getIdFactura(),itfac.getNroitem(),itfac.getIdViaje(),itfac.getIdChofer(),
-                                  itfac.getNomChofer(),itfac.getCtg(),
+                                  itfac.getNomChofer(),itfac.getOrigen(),itfac.getDestino(),
                                   itfac.getTarifa(),itfac.getCargaton(),itfac.getImpneto(),itfac.getTasaiva(),
                                   itfac.getImpiva(),itfac.getTotalitem()
                                 });
@@ -502,11 +502,11 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("UPDATE dfacstp SET idViaje=?,idChofer=?,"+
-                                    "nomchofer=?,ctg=?,tarifa=?,cargaton=?,"+
+                                    "nomchofer=?,origen=?,destino=?,tarifa=?,cargaton=?,"+
                                     "impneto=?,tasaiva=?,impiva=?,totalitem=? "+
                                     "WHERE idFactura=? AND nroitem=?",
                     new Object[] {itfac.getIdViaje(),itfac.getIdChofer(),itfac.getNomChofer(),
-                                  itfac.getCtg(),itfac.getTarifa(),
+                                  itfac.getOrigen(),itfac.getDestino(),itfac.getTarifa(),
                                   itfac.getCargaton(),itfac.getImpneto(),itfac.getTasaiva(),itfac.getImpiva(),
                                   itfac.getTotalitem(),itfac.getIdFactura(),itfac.getNroitem()
                                 });

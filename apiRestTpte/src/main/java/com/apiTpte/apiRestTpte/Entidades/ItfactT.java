@@ -9,7 +9,16 @@ public class ItfactT {
      private int    idViaje;
      private int    idChofer;
      private String nomChofer; 
-     private String ctg;
+     private String origen;
+     private String destino;
+     public String getDestino() {
+        return destino;
+    }
+
+     public void setDestino(String destino) {
+         this.destino = destino;
+     }
+
      private double tarifa;  // tarifa del tpte = 0.9 * tarifa plena
      private float  cargaton;
      private double impneto;
@@ -62,12 +71,12 @@ public class ItfactT {
      }
 
      
-     public String getCtg() {
-         return ctg;
+     public String getOrigen() {
+         return origen;
      }
 
-     public void setCtg(String ctg) {
-         this.ctg = ctg;
+     public void setOrigen(String orig) {
+         this.origen = orig;
      }
 
      public double getTarifa() {
