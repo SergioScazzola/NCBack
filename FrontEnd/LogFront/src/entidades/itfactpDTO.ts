@@ -3,8 +3,9 @@ export interface itfactpDTO {
     nroitem        : number;
     idViaje        : number;
     idChofer       : number;
-    nomChofer      : number; 
-    ctg            : string;
+    nomChofer      : string; 
+    origen         : string;
+    destino        : string;
     tarifa         : number;  // tarifa del tpte = 0.9 * tarifa plena
     cargaton       : number;
     impneto        : number;
@@ -15,9 +16,10 @@ export interface itfactpDTO {
 }
 
 export interface intItFacTp {
-    idFactura    : number,  
+    idFactura    : number;
     nroitem      : number;
-    accion       : string,
-   
+    nomchof      : string;
+    accion       : string;
+    ditFac       : itfactpDTO
 }
 
