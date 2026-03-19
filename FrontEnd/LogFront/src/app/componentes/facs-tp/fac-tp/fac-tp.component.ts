@@ -1,11 +1,11 @@
-import { Component, effect, ElementRef, Inject, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, Inject, NgZone, viewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators,FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
-import { Subscription, finalize } from 'rxjs';
+import { Subscription, finalize, forkJoin } from 'rxjs';
 import { CurrencyPipe,DatePipe,DecimalPipe} from '@angular/common';
 import { NotiserviceService } from '../../../servicios/notiservice.service';
 import { ServiciosService } from '../../../servicios/service';
@@ -61,7 +61,7 @@ export class FacTpComponent {
   cchoferes        : choferDTO[]=[];
   operacion        : string;
   formFactp        : FormGroup;
-  idchoferSel      : number;
+  idchoferSel      : number = 1;
   maxfactp         : number;
   nfactpalta       : number;
   totfactura       : number;
@@ -72,6 +72,8 @@ export class FacTpComponent {
                 public dialogRef    : MatDialogRef<FacTpComponent>,
                 private currencyPipe: CurrencyPipe,
                 public  dialog      : MatDialog,
+                private cdr         : ChangeDetectorRef,
+                private zone        : NgZone,
                 @Inject(MAT_DIALOG_DATA) public data: intFacTp,  
                 private notiService : NotiserviceService )
    { effect(() => {
@@ -80,60 +82,60 @@ export class FacTpComponent {
 
   }
   colDFactp : string[] = ["nroitem","idViaje","origen","destino","nomchofer","totalitem"]
-  ngOnInit(){
+  ngOnInit(){                
+      this.initFormulario();
+          // 1. Lanzamos las peticiones base en paralelo
+      forkJoin({
+              choferes: this.servicio.getChoferes(),
+              //itfac   : this.servicio.getItemsFacsTP(this.data.idFactura),
+              facturas: this.servicio.getFacsTP()
+      }).subscribe(res => {
+              this.cchoferes = res.choferes;
+              //this.cdetfactp = res.itfac;
+              this.cfacstp   = res.facturas;
+      
+          // 2. Ahora que tenemos los maestros, ejecutamos la lógica de negocio
+          
+      if (this.data.accion === "M") {
+         this.servicio.leerFacTP(this.data.idFactura).subscribe(data4 => {
+           this.factpp = data4;
+           this.operacion = `Modificar Factura tpte Nro. ${this.data.idFactura} - ${this.data.nrofactura}`;
+           this.actualizarControles();
+           this.cdr.detectChanges(); // <--- Importante: fuerza la detección si sigue el error
+            });
+      } else { // data.accion = "A" -> Alta
+           this.mostrarHora();
+           this.servicio.getCantFacsTP().subscribe(max => {
+           this.maxfactp = max;
+           this.nfactpalta = this.maxfactp + 1;
+           this.operacion = "Agregar Factura tpte. Nro. " + this.nfactpalta;
+           this.formFactp.controls["idFactura"].setValue(this.nfactpalta);
+           this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
+          });
+      }
+      });                                                                               
+   }
    
-      this.formFactp = this.fb.group({        
+   initFormulario() {
+     this.formFactp = this.fb.group({        
              idFactura    : [''], 
              nrofactura   : ['',[Validators.required]],
-             facndc       : ['',[Validators.required, Validators.pattern(/^(FAC|NDC)$/)]],
+             facndc       : ['FAC',[Validators.required, Validators.pattern(/^(FAC|NDC)$/)]],
              fecha        : [new Date()],
              idChofer     : [1],
              impneto      : [0],
              tasaiva      : [21,[Validators.required,Validators.pattern("^[1-9]+([.]?[0-9]{1,2})?$")]],
              impiva       : [0],       
              totalfac     : [0],
-             cantit       : [0]
-             
+             cantit       : [0]   
       })
-      var sub : Subscription;
-      sub = this.servicio.getChoferes()
-      .subscribe((data:any):void => {
-        this.cchoferes = data;  
-        var subs : Subscription;
-        subs = this.servicio.getItemsFacsTP(this.data.idFactura)
-         .subscribe((data2:any):void => {
-           this.cdetfactp = data2;
-           var subs1 : Subscription;
-           subs1 = this.servicio.getFacsTP()
-           .subscribe((data1:any):void =>{
-               this.cfacstp = data1;                       
-               if (this.data.accion=="M"){ 
-                // MODIFICAR
-                var subs3 : Subscription;            
-                subs3 = this.servicio.leerFacTP(this.data.idFactura)
-                  .subscribe((data3:any):void =>{                           
-                    this.factpp   = data3;
-                    this.operacion = "Modificar Factura tpte Nro. "+this.data.idFactura+" - "+this.data.nrofactura;
-                    this.actualizarControles();
-                  })
-                 
-               } else { // ALTA -> accion = "A"
-                  var subs2 : Subscription;
-                  subs2 = this.servicio.getCantFacsTP()
-                   .subscribe((data1:any):void =>{                           
-                      this.maxfactp = data1;
-                      this.nfactpalta = this.maxfactp + 1;
-                      this.operacion = "Agregar Factura Tpte. Nro. "+this.nfactpalta;
-                      this.formFactp.controls["idFactura"].setValue(this.nfactpalta);
-                    })                                              
-                }
-           })
-         })
-      })
-                                                                            
-   }
+       var indchofer = this.cchoferes.findIndex(p=>p.idChofer=this.idchoferSel);
+       this.factpp.nomchofer = this.cchoferes[indchofer].nombre;
+
+    }
   actualizarControles(){
-   
+    var indchofer = this.cchoferes.findIndex(p=>p.idChofer=this.idchoferSel);
+    this.factpp.nomchofer = this.cchoferes[indchofer].nombre;
     this.formFactp.controls["idFactura"].setValue(this.factpp.idFactura), 
     this.formFactp.controls["nrofactura"].setValue(this.factpp.nrofactura),              
     this.formFactp.controls["facndc"].setValue(this.factpp.facndc), 
@@ -145,7 +147,7 @@ export class FacTpComponent {
     this.formFactp.controls["totalfac"].setValue(this.factpp.totalfac), 
     this.formFactp.controls["cantit"].setValue(this.factpp.cantit), 
     this.idchoferSel = this.factpp.idChofer;
-  
+    this.factpp.nomchofer = this.cchoferes[indchofer].nombre;
                            
    }
 
@@ -344,6 +346,27 @@ totalizarFactura(){
   this.formFactp.controls['cantit'].setValue(this.cdetfactp.length);
   
 }
+
+mostrarHora() {
+   this.zone.runOutsideAngular(() => {
+    setInterval(() => {
+      const hoy = new Date();
+      const valorControl = this.formFactp.controls['fecha'].value;
+      
+      if (valorControl) {
+        const fechaform = new Date(valorControl);
+        fechaform.setHours(hoy.getHours(), hoy.getMinutes(), hoy.getSeconds());
+
+        // Volvemos a la zona de Angular solo para actualizar el valor
+        this.zone.run(() => {
+          this.formFactp.controls['fecha'].setValue(fechaform, { emitEvent: false });
+          this.cdr.detectChanges(); // Forzamos la actualización sin romper el ciclo
+        });
+      }
+    }, 1000);
+  }) 
+  }
+
 Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})
      }

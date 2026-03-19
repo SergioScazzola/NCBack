@@ -1,10 +1,10 @@
-import { Component, effect, ElementRef, Inject, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, Inject, NgZone, viewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators,FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Subscription, finalize } from 'rxjs';
+import { Subscription, finalize, forkJoin } from 'rxjs';
 import { empTpteDTO } from '../../../../entidades/empTpteDTO';
 import { NotiserviceService } from '../../../servicios/notiservice.service';
 import { ServiciosService } from '../../../servicios/service';
@@ -71,6 +71,8 @@ export class ViajeComponent {
   constructor(  public fb           : FormBuilder,
                 public servicio     : ServiciosService,
                 public dialogRef    : MatDialogRef<ViajeComponent>,
+                private cdr         : ChangeDetectorRef,
+                private zone        : NgZone,
                 @Inject(MAT_DIALOG_DATA) public data: intViaje,  
                 private notiService : NotiserviceService )
    { effect(() => {
@@ -80,62 +82,59 @@ export class ViajeComponent {
   }
  
   ngOnInit(){
-      this.formViaje = this.fb.group({        
-             nroviaje     : [''], 
-             fecha        : [new Date()],
-             idChofer     : [1],
-             idCliente    : [1],
-             idCamion     : [1],
-             descrip      : [''],
-             origen       : [''],
-             destino      : [''],
-             ctg          : [''],
-             cantkm       : [0],
-             cargaton     : [0],
-             tarifap      : [0],
-             ltsgasoil    : [0],
-             impviaje     : [0],
-             facturado    : [0],
-      })
-      var subs1 : Subscription;
-      subs1 = this.servicio.getChoferes()
-          .subscribe((data1:any):void =>{
-            this.cchoferes = data1;
-            var subs : Subscription;
-            subs = this.servicio.getClientes()
-              .subscribe((data2:any):void =>{
-                this.cclientes = data2;
-                var subsc : Subscription;            
-                subsc = this.servicio.getCamiones()
-                .subscribe((data1:any):void =>{
-                  this.ccamiones = data1;
-                
-                  if (this.data.accion=="M"){ 
-                    // MODIFICAR VIAJE
-                    var subs2 : Subscription;            
-                    subs2 = this.servicio.leerViaje(this.data.nroviaje)
-                      .subscribe((data3:any):void =>{                           
-                      this.viajee   = data3;
-                      this.operacion = "Modificar Viaje Nro. "+this.data.nroviaje+" - "+this.data.descrip;
-                      this.actualizarControles();
-                      })
-                 
-                } else { // ALTA DE VIAJE -> accion = "A"
-                  this.mostrarHora(); //muesta y modica Horas y minutos
-                  var subs2 : Subscription;
-                  subs2 = this.servicio.getCantViajes()
-                   .subscribe((data1:any):void =>{                           
-                      this.maxviaje = data1;
-                      this.nviajealta = this.maxviaje + 1;
-                      this.operacion = "Agregar Viaje Nro. "+this.nviajealta;
-                      this.formViaje.controls["nroviaje"].setValue(this.nviajealta);
-                    })                                              
-                }
-              })            
-          })   
-        })                                            
+    this.initFormulario();
+     // 1. Lanzamos las peticiones base en paralelo
+    forkJoin({
+        choferes: this.servicio.getChoferes(),
+        clientes: this.servicio.getClientes(),
+        camiones: this.servicio.getCamiones()
+    }).subscribe(res => {
+        this.cchoferes = res.choferes;
+        this.cclientes = res.clientes;
+        this.ccamiones = res.camiones;
+
+    // 2. Ahora que tenemos los maestros, ejecutamos la lógica de negocio
+    
+    if (this.data.accion === "M") {
+      this.servicio.leerViaje(this.data.nroviaje).subscribe(data4 => {
+        this.viajee = data4;
+        this.operacion = `Modificar Viaje Nro. ${this.data.nroviaje} - ${this.data.descrip}`;
+        this.actualizarControles();
+        this.cdr.detectChanges(); // <--- Importante: fuerza la detección si sigue el error
+      });
+    } else {
+      this.mostrarHora();
+      this.servicio.getCantViajes().subscribe(max => {
+        this.maxviaje = max;
+        this.nviajealta = this.maxviaje + 1;
+        this.operacion = "Agregar Viaje Nro. " + this.nviajealta;
+        this.formViaje.controls["nroviaje"].setValue(this.nviajealta);
+        this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
+      });
+    }
+  });
          
    }
+
+  initFormulario(){
+    this.formViaje = this.fb.group({        
+       nroviaje     : [''], 
+       fecha        : [new Date()],
+       idChofer     : [2],
+       idCliente    : [1],
+       idCamion     : [1],
+       descrip      : [''],
+       origen       : [''],
+       destino      : [''],
+       ctg          : [''],
+       cantkm       : [0],
+       cargaton     : [0],
+       tarifap      : [0],
+       ltsgasoil    : [0],
+       impviaje     : [0],
+       facturado    : [0],
+    })
+  }
   actualizarControles(){
     // Actualiza controles para modificar
                         
@@ -157,9 +156,7 @@ export class ViajeComponent {
              
     this.idChoferSel      = this.viajee.idChofer;
     this.idClienteSel     = this.viajee.idCliente;
-    this.idCamionSel      = this.viajee.idCamion;
-
-    //console.log("Choferrrrrrrrrrrrrrrrrrrrr : "+this.viajee.idChofer);
+    this.idCamionSel      = this.viajee.idCamion;   
                            
    }
 
@@ -260,18 +257,24 @@ onSelectionCamion($event : any){
 }
 
  mostrarHora() {
-    // mantiene actualizado el control "fecha" con Horas minutos y segundos
+   this.zone.runOutsideAngular(() => {
     setInterval(() => {
-      this.hoy = new Date();
-      
+      const hoy = new Date();
       const valorControl = this.formViaje.controls['fecha'].value;
-      const fechaform = new Date(valorControl); // ✅ convierte string/objeto a Date real
-  
-      fechaform.setHours(this.hoy.getHours(), this.hoy.getMinutes(), this.hoy.getSeconds());
-  
-      this.formViaje.controls['fecha'].setValue(fechaform); // ✅ se actualiza con una fecha válida
       
+      if (valorControl) {
+        const fechaform = new Date(valorControl);
+        fechaform.setHours(hoy.getHours(), hoy.getMinutes(), hoy.getSeconds());
+
+        // Volvemos a la zona de Angular solo para actualizar el valor
+        this.zone.run(() => {
+          this.formViaje.controls['fecha'].setValue(fechaform, { emitEvent: false });
+          this.cdr.detectChanges(); // Forzamos la actualización sin romper el ciclo
+        });
+      }
     }, 1000);
+  })
+ 
   }
  
   

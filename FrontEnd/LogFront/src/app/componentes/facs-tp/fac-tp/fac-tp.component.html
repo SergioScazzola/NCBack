@@ -50,7 +50,7 @@
           >
             @for (chofer of cchoferes; track chofer.idChofer) {
               <mat-option [value]="chofer.idChofer">
-                {{ chofer.nombre }}
+                {{ chofer.idChofer+" - "+chofer.nombre }}
               </mat-option>
             }
           </mat-select>
