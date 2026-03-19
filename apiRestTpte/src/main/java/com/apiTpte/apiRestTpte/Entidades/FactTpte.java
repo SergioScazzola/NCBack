@@ -9,13 +9,12 @@ public class FactTpte {
      private Date   fecha;
      private int    idChofer;
      private String nomchofer;
-     private int    cantit;
-        
+     private int    cantit;        
      private double impneto;
      private float  tasaiva;
      private double impiva;
      private double totalfac;
-
+  
      public FactTpte(){
         
      }

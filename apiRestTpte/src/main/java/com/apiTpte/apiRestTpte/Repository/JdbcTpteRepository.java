@@ -404,12 +404,12 @@ public class JdbcTpteRepository implements TpteRepository {
 
        @Override
       public List<FactTpte> AllFacstp() {   
-        String selec = "SELECT * FROM facstp ORDER BY fecha DES";
+        String selec = "SELECT * FROM facstpte ORDER BY fecha DESC";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class));
       }
       @Override
       public int getMaxFacstp(){
-        String consulta = "SELECT MAX(idFactura) FROM facstp";
+        String consulta = "SELECT MAX(idFactura) FROM facstpte";
      
         Object obj = jdbcTemplate.queryForObject(consulta,Integer.class);    
         if (obj==null){
@@ -420,7 +420,7 @@ public class JdbcTpteRepository implements TpteRepository {
       }   
       @Override
       public FactTpte findFactpById(int idfac) {
-        String q = "SELECT * FROM facstp WHERE idFactura=?";
+        String q = "SELECT * FROM facstpte WHERE idFactura=?";
         try {
           FactTpte fac = jdbcTemplate.queryForObject(q,
               BeanPropertyRowMapper.newInstance(FactTpte.class), idfac);          
@@ -434,7 +434,7 @@ public class JdbcTpteRepository implements TpteRepository {
       public int actualizarFactp(int nrof, FactTpte fac){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE facstp SET nrofactura=?,facndc=?,fecha=?,"+
+          resu = jdbcTemplate.update("UPDATE facstpte SET nrofactura=?,facndc=?,fecha=?,"+
                                     "idChofer=?,nomchofer=?,cantit=?,impneto=?,tasaiva=?,"+
                                     "impiva=?,totalfac=? WHERE idFactura=?",
                     new Object[] {fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
@@ -452,7 +452,7 @@ public class JdbcTpteRepository implements TpteRepository {
       // Graba nueva Factura del Transporte 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT facstp(idFactura,nrofactura,facndc,fecha,"+
+          resu = jdbcTemplate.update("INSERT facstpte(idFactura,nrofactura,facndc,fecha,"+
                                     "idChofer,nomchofer,cantit,impneto,tasaiva,"+
                                     "impiva,totalfac VALUES(?,?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {fac.getIdFactura(),fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
@@ -468,7 +468,7 @@ public class JdbcTpteRepository implements TpteRepository {
     public int deleteFactp(int nrofac){
       int resu = 0;
       try {
-        resu = jdbcTemplate.update("DELETE FROM facstp WHERE idFactura="+nrofac);
+        resu = jdbcTemplate.update("DELETE FROM facstpte WHERE idFactura="+nrofac);
       } catch (DataAccessException dae){
         resu = -5;   
       }
