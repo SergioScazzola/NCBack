@@ -65,7 +65,36 @@ export class FacTpComponent {
   maxfactp         : number;
   nfactpalta       : number;
   totfactura       : number;
-  private factpp   : factpDTO;  
+  factpp           : factpDTO = {
+     idFactura      : 0,
+     nrofactura     : "",
+     facndc         : "FAC",  // fac : suma, ndc : resta
+     fecha          : new Date(),
+     idChofer       : 1,
+     nomchofer      : "",
+     cantit         : 0,        
+     impneto        : 0, 
+     tasaiva        : 0,
+     impiva         : 0,
+     totalfac       : 0
+  };  
+  itemfac : itfactpDTO = {
+    
+    idFactura      : 0,    
+    nroitem        : 1,
+    idViaje        : 0,
+    idChofer       : 0,
+    nomChofer      : "", 
+    origen         : "",
+    destino        : "",
+    tarifa         : 0,  // tarifa del tpte = 0.9 * tarifa plena
+    cargaton       : 0,
+    impneto        : 0,
+    tasaiva        : 0,
+    impiva         : 0,
+    totalitem      : 0
+  };
+  
   
   constructor(  public fb           : FormBuilder,
                 public servicio     : ServiciosService,
@@ -81,8 +110,10 @@ export class FacTpComponent {
         });
 
   }
-  colDFactp : string[] = ["nroitem","idViaje","origen","destino","nomchofer","totalitem"]
-  ngOnInit(){                
+  colDFactp : string[] = ["nroitem","idViaje","origen","destino","nomchofer","totalitem","M"]
+  ngOnInit(){             
+      this.cdetfactp.push(this.itemfac);
+     
       this.initFormulario();
           // 1. Lanzamos las peticiones base en paralelo
       forkJoin({
@@ -95,7 +126,7 @@ export class FacTpComponent {
               this.cfacstp   = res.facturas;
       
           // 2. Ahora que tenemos los maestros, ejecutamos la lógica de negocio
-          
+       
       if (this.data.accion === "M") {
          this.servicio.leerFacTP(this.data.idFactura).subscribe(data4 => {
            this.factpp = data4;
@@ -110,6 +141,8 @@ export class FacTpComponent {
            this.nfactpalta = this.maxfactp + 1;
            this.operacion = "Agregar Factura tpte. Nro. " + this.nfactpalta;
            this.formFactp.controls["idFactura"].setValue(this.nfactpalta);
+           var indchofer = this.cchoferes.findIndex(p=>p.idChofer=this.idchoferSel);
+           this.factpp.nomchofer = this.cchoferes[indchofer].nombre;   
            this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
           });
       }
@@ -128,9 +161,7 @@ export class FacTpComponent {
              impiva       : [0],       
              totalfac     : [0],
              cantit       : [0]   
-      })
-       var indchofer = this.cchoferes.findIndex(p=>p.idChofer=this.idchoferSel);
-       this.factpp.nomchofer = this.cchoferes[indchofer].nombre;
+      })       
 
     }
   actualizarControles(){
@@ -244,7 +275,7 @@ agItemFactp(){
       idFactura      : this.data.accion=="A"?this.nfactpalta:this.data.idFactura,
       nroitem        : this.cdetfactp.length + 1,  
       idViaje        : 0,           
-      idChofer       : 0,
+      idChofer       : this.factpp.idChofer,
       nomChofer      : "",
       origen         : "",
       destino        : "",

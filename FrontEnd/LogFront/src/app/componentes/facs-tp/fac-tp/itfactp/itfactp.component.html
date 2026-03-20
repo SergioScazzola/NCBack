@@ -1,1 +1,67 @@
-<p>itfactp works!</p>
+<div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  <h4>{{ operacion }}</h4>
+  <form [formGroup]="formItfac" class="p-3">
+    <!-- Primera fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-2">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nro Item</mat-label>
+          <input matInput readonly="true" formControlName="nroitem"
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>     
+    </div>
+
+    <!-- Segunda fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Viajes</mat-label>
+          <mat-select
+            formControlName="idViaje"
+            (selectionChange)="onSelectionViaje($event)">
+            @for (viaje of cviajes; track viaje.idViaje) {
+              <mat-option [value]="viaje.idViaje">
+                {{ viaje.idViaje+" - "+viaje.origen+"-"+viaje.destino }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Tercera Fila -->
+    <div class="row g-3 mb-3">
+       <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Origen</mat-label>
+          <input matInput formControlName="origen"
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Destino</mat-label>
+          <input matInput formControlName="destino"
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Tarifa Viaje</mat-label>
+          <input matInput [readonly]="true" formControlName="tarifa"
+           [value]="formItfac.get('tarifa')?.value | currency:'$':true"
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>
+    </div>
+        <!-- Cuarta Fila -->
+    <div class="row g-3 mb-3">
+       <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Tarifa Viaje</mat-label>
+          <input matInput [readonly]="true" formControlName="tarifa"
+           [value]="formItfac.get('tarifa')?.value | currency:'$':true"
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>

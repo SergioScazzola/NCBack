@@ -173,6 +173,9 @@ export class ServiciosService {
     return this.http.get<number>(this.apiUrl + `viaje/max`);
   }
 
+   public getViajesxChofer(nrochof : number) {
+    return this.http.get<viajeDTO[]>(this.apiUrl + `viaje/viajesxchofer?idchof=`+nrochof);
+  }
   public leerViaje(nroviaje: number) {
     return this.http.get<viajeDTO>(
       this.apiUrl + `viaje/viaje?id=` + nroviaje

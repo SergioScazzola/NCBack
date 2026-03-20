@@ -9,8 +9,7 @@ export interface choferDTO {
     nrodoc    : string;
     telefono  : string;
     notas     : string;
-    saldoini  : number;
-        
+    saldoini  : number;        
 }
 
 export interface intChofer {

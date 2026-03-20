@@ -93,9 +93,10 @@
           />        
         </mat-form-field>
       </div>
+      
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
-          <mat-label>Items Detalle</mat-label>
+          <mat-label>Total Factura</mat-label>
           <input matInput readonly="true" formControlName="totalfac"
                  [value]="formFactp.get('cantit')?.value | currency:'$':true"
           />        

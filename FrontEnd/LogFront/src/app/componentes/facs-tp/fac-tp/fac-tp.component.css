@@ -22,3 +22,62 @@ h4 {
   background-color:lightgray;  /*quita el fondo blanco */
   border-radius: 0px;
 }
+
+.table-container {
+    flex: 1;
+    overflow: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  .mat-mdc-header-row {
+    background-color: white;
+    height: 24px;
+    font-size: 12px;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+
+  .mat-mdc-row {
+    height: auto;
+    min-height: 40px;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+  }
+  .mat-mdc-row:nth-child(odd) {
+    background-color: white;
+    color: black;
+  }
+  
+  .mat-mdc-row:nth-child(even) {
+    background-color: #cbd0d8;
+    color: black;
+  }
+  
+  .mat-mdc-row:hover {
+    background-color: #e8edf5;
+  }
+  
+  /* Estilos para las celdas */
+  .mat-mdc-cell,
+  .mat-mdc-header-cell {
+    padding: 0 8px;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+  .mat-column-M
+ {
+  width: 50px !important;
+  min-width: 50px !important;
+  max-width: 50px !important;
+  padding: 0 !important;
+  flex: 0 0 50px !important;
+  text-align: center !important;
+  overflow: visible !important;
+}
