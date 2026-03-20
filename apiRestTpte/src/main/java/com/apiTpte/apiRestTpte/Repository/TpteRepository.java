@@ -49,6 +49,7 @@ public interface TpteRepository {
     int deleteCliente(int idcliente);
 
     List<Viaje> AllViajes();
+    List<Viaje> ViajesXChofer(int idchofer);
     int getMaxViajes();
     Viaje findViajeById(int idviaje);
     int saveViaje(Viaje viaje);

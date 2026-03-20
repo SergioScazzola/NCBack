@@ -327,6 +327,11 @@ public class JdbcTpteRepository implements TpteRepository {
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Viaje.class));
       }
       @Override
+      public List<Viaje> ViajesXChofer(int idchofer){
+        String selec = "SELECT * FROM viajes WHERE idChofer=? ORDER BY fecha DESC";
+        return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Viaje.class),idchofer);
+      }
+      @Override
       public int getMaxViajes(){
         String consulta = "SELECT MAX(idViaje) FROM viajes";
      
