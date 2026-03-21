@@ -16,7 +16,7 @@ export interface itfactpDTO {
 }
 
 export interface intItFacTp {
-    idFactura    : number;
+    nrofactura   : string;
     nroitem      : number;
     nomchof      : string;
     accion       : string;

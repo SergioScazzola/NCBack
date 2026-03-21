@@ -1,22 +1,23 @@
+@if (!isloading){
 <div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
   <h4>{{ operacion }}</h4>
   <form [formGroup]="formItfac" class="p-3">
     <!-- Primera fila -->
-    <div class="row g-3 mb-3">
-      <div class="col-2">
+    <div class="row g-3 mb-1">
+      <div class="col-md-2">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Nro Item</mat-label>
           <input matInput readonly="true" formControlName="nroitem"
             style="text-align: center"/>
         </mat-form-field>
       </div>     
-    </div>
+
 
     <!-- Segunda fila -->
-    <div class="row g-3 mb-3">
-      <div class="col-md-4">
+    <!--div class="row g-3 mb-3"-->
+      <div class="col-md-8">
         <mat-form-field class="w-100" appearance="fill">
-          <mat-label>Viajes</mat-label>
+          <mat-label>Viajes de {{this.data.nomchof}}</mat-label>
           <mat-select
             formControlName="idViaje"
             (selectionChange)="onSelectionViaje($event)">
@@ -29,19 +30,19 @@
         </mat-form-field>
       </div>
     </div>
-    <!-- Tercera Fila -->
-    <div class="row g-3 mb-3">
+    <!-- Segunda Fila -->
+    <div class="row g-3 mb-1">
        <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Origen</mat-label>
-          <input matInput formControlName="origen"
+          <input matInput readonly="true" formControlName="origen"
             style="text-align: center"/>
         </mat-form-field>
       </div>
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Destino</mat-label>
-          <input matInput formControlName="destino"
+          <input matInput readonly="true" formControlName="destino"
             style="text-align: center"/>
         </mat-form-field>
       </div>
@@ -49,19 +50,90 @@
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Tarifa Viaje</mat-label>
-          <input matInput [readonly]="true" formControlName="tarifa"
+          <input matInput readonly="true" formControlName="tarifa"
            [value]="formItfac.get('tarifa')?.value | currency:'$':true"
             style="text-align: center"/>
         </mat-form-field>
       </div>
     </div>
-        <!-- Cuarta Fila -->
-    <div class="row g-3 mb-3">
+    <!-- Cuarta Fila   -->
+    <div class="row g-3 mb-1">
        <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Tarifa Viaje</mat-label>
-          <input matInput [readonly]="true" formControlName="tarifa"
+          <input matInput readonly="true" formControlName="tarifa"
            [value]="formItfac.get('tarifa')?.value | currency:'$':true"
             style="text-align: center"/>
         </mat-form-field>
       </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Carga (Ton)</mat-label>
+          <input matInput readonly="true" formControlName="cargaton"
+           [value]="formItfac.get('cargaton')?.value | currency:'$':true"
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>
+       <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Importe Neto</mat-label>
+          <input matInput readonly="true" formControlName="impneto"
+           [value]="formItfac.get('impneto')?.value | currency:'$':true"
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>
+      </div>
+      <!-- Quinta Fila -->
+    <div class="row g-3 mb-1">
+      <div class="col-md-3">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Tasa IVA</mat-label>
+          <input matInput readonly="true" formControlName="tasaiva"
+           [value]="formItfac.get('tasaiva')?.value" 
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Importe IVA</mat-label>
+          <input matInput readonly="true" formControlName="impiva"
+           [value]="formItfac.get('impiva')?.value | currency:'$':true"
+            style="text-align: center"/>
+        </mat-form-field>        
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Importe Item</mat-label>
+          <input matInput readonly="true" formControlName="impneto"
+           [value]="formItfac.get('impneto')?.value | currency:'$':true"
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>
+    </div>    
+     <!-- Botonera -->
+    <div class="botonera">
+      <button
+        class="btn btn-outline-primary"
+        [disabled]="formItfac.invalid || data.accion != 'A'"
+        (click)="AgregarItemFactp()"
+      >
+        Agregar Item 
+      </button>
+   
+      <button
+        class="btn btn-outline-success"
+        [disabled]="formItfac.invalid || data.accion != 'M'"
+        (click)="ModificarItemFactp()"
+      >
+        Modificar Item
+      </button>
+      <button
+        class="btn btn-outline-secondary"
+        (click)="Anular()"
+      >
+        Cancelar
+      </button>
+    </div>  
+  </form>
+</div>
+}

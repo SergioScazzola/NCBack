@@ -59,6 +59,7 @@ export class FacTpComponent {
   cfacstp          : factpDTO[]=[];
   cdetfactp        : itfactpDTO[]=[];
   cchoferes        : choferDTO[]=[];
+  isloading        : boolean = true;
   operacion        : string;
   formFactp        : FormGroup;
   idchoferSel      : number = 1;
@@ -81,7 +82,7 @@ export class FacTpComponent {
   itemfac : itfactpDTO = {
     
     idFactura      : 0,    
-    nroitem        : 1,
+    nroitem        : 0,
     idViaje        : 0,
     idChofer       : 0,
     nomChofer      : "", 
@@ -124,7 +125,7 @@ export class FacTpComponent {
               this.cchoferes = res.choferes;
               //this.cdetfactp = res.itfac;
               this.cfacstp   = res.facturas;
-      
+             
           // 2. Ahora que tenemos los maestros, ejecutamos la lógica de negocio
        
       if (this.data.accion === "M") {
@@ -132,6 +133,7 @@ export class FacTpComponent {
            this.factpp = data4;
            this.operacion = `Modificar Factura tpte Nro. ${this.data.idFactura} - ${this.data.nrofactura}`;
            this.actualizarControles();
+           this.isloading = false;
            this.cdr.detectChanges(); // <--- Importante: fuerza la detección si sigue el error
             });
       } else { // data.accion = "A" -> Alta
@@ -143,6 +145,7 @@ export class FacTpComponent {
            this.formFactp.controls["idFactura"].setValue(this.nfactpalta);
            var indchofer = this.cchoferes.findIndex(p=>p.idChofer=this.idchoferSel);
            this.factpp.nomchofer = this.cchoferes[indchofer].nombre;   
+           this.isloading = false;
            this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
           });
       }
@@ -251,7 +254,9 @@ export class FacTpComponent {
 onSelectionChofer($event : any){
   // recibo un idChofer
  this.idchoferSel = $event.value;
- 
+ this.factpp.idChofer = this.idchoferSel;
+ var indchof = this.cchoferes.findIndex(p=>p.idChofer==this.idchoferSel);
+ this.factpp.nomchofer = this.cchoferes[indchof].nombre; 
 }
 
  onFechaChange(event: any) {
@@ -267,14 +272,14 @@ onSelectionChofer($event : any){
 agItemFactp(){
 
    const datas : intItFacTp = {
-     idFactura :  this.data.accion=="A"?this.nfactpalta :this.data.idFactura, // si es modif el nro de cobro viene en data
-     nroitem   : this.cdetfactp.length + 1,   
-     nomchof   : this.factpp.nomchofer,
+     nrofactura :   this.formFactp.controls["nrofactura"].value,
+     nroitem    : this.cdetfactp.length,   
+     nomchof    : this.factpp.nomchofer,
      accion   : "A",
      ditFac   : {   // donde se recibe  el item creado 
-      idFactura      : this.data.accion=="A"?this.nfactpalta:this.data.idFactura,
+      idFactura      : 0,
       nroitem        : this.cdetfactp.length + 1,  
-      idViaje        : 0,           
+      idViaje        : 1,           
       idChofer       : this.factpp.idChofer,
       nomChofer      : "",
       origen         : "",
@@ -310,12 +315,12 @@ agItemFactp(){
 modItemFactp(nrofac : number,nroit  : number){
  
   const datas : intItFacTp = {
-    idFactura     : nrofac, 
+    nrofactura    : this.formFactp.controls["nrofactura"].value,
     nroitem       : nroit,
     nomchof       : this.cdetfactp[nroit-1].nomChofer,
     accion        : "M",
     ditFac   : {   // donde se recibe  el item modificado    
-      idFactura      : nrofac,         
+      idFactura      : 0,         
       nroitem        : nroit,
       idViaje        : this.cdetfactp[nroit].idViaje,
       idChofer       : this.cdetfactp[nroit-1].idChofer,
@@ -346,7 +351,7 @@ modItemFactp(nrofac : number,nroit  : number){
            console.log("Modifico el item nro.: "+datas.nroitem) ;
            var indm = datas.nroitem - 1;
                                 
-           this.cdetfactp[indm].idFactura    = datas.idFactura,     
+           this.cdetfactp[indm].idFactura    =  this.formFactp.controls["nrofactura"].value
            this.cdetfactp[indm].idViaje      = datas.ditFac.idViaje,
            this.cdetfactp[indm].idChofer     = datas.ditFac.idChofer,
            this.cdetfactp[indm].nomChofer    = datas.ditFac.nomChofer,
