@@ -1,3 +1,4 @@
+@if (!isloading){
 <div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
   <h4>{{ operacion }}</h4>
   <form [formGroup]="formViaje" class="p-3">
@@ -158,3 +159,4 @@
     </div>       
   </form>
 </div>
+}

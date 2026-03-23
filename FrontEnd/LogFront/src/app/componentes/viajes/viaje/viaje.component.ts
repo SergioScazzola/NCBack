@@ -66,6 +66,7 @@ export class ViajeComponent {
   idClienteSel     : number = 1;
   idCamionSel      : number = 1;
   private viajee   : viajeDTO;  
+  isloading        : boolean = true;
   hoy              : Date = new Date();
   
   constructor(  public fb           : FormBuilder,
@@ -100,6 +101,7 @@ export class ViajeComponent {
         this.viajee = data4;
         this.operacion = `Modificar Viaje Nro. ${this.data.nroviaje} - ${this.data.descrip}`;
         this.actualizarControles();
+        this.isloading = false;
         this.cdr.detectChanges(); // <--- Importante: fuerza la detección si sigue el error
       });
     } else {
@@ -109,6 +111,7 @@ export class ViajeComponent {
         this.nviajealta = this.maxviaje + 1;
         this.operacion = "Agregar Viaje Nro. " + this.nviajealta;
         this.formViaje.controls["nroviaje"].setValue(this.nviajealta);
+        this.isloading = false;
         this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
       });
     }

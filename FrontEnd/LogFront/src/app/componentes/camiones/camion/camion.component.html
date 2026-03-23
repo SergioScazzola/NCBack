@@ -1,4 +1,5 @@
-<div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+@if (!isloading) {
+ <div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
   <h4>{{ operacion }}</h4>
   <form [formGroup]="formCamion" class="p-3">
     <!-- Primera fila -->
@@ -14,19 +15,20 @@
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Dominio Chasis</mat-label>
           <input
-            matInput   
-             (blur)="onBlurDomChasis($event)"/>       
-            formControlName="domChasis"
-            style="text-align: left"
-          />
+            matInput            
+             formControlName="domChasis"
+             style="text-align: left"
+             (blur)="onBlurDomChasis($event)"
+            />                                                  
         </mat-form-field>
       </div>
       <div class="col-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Dominio Acoplado</mat-label>
-          <input matInput 
-                 (blur)="onBlurDomAcoplado($event)"/>      
-                 formControlName="domAcoplado" />
+         <input
+            matInput formControlName="domAcoplado"
+             style="text-align: left"
+             (blur)="onBlurDomAcoplado($event)"/>    
         </mat-form-field>
       </div>
     </div>
@@ -116,3 +118,4 @@
     </div>       
   </form>
 </div>
+}

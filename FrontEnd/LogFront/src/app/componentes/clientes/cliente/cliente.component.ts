@@ -12,6 +12,7 @@ import { empTpteDTO } from '../../../../entidades/empTpteDTO';
 import { CuitFormatDirective } from '../../../Directivas/cuit-format.directive';
 import { cuitValidator } from '../../../servicios/cuit.validator';
 import { clienteDTO, intCliente } from '../../../../entidades/clienteDTO';
+import { is } from 'date-fns/locale';
 
 @Component({
   selector: 'app-cliente',
@@ -35,7 +36,7 @@ export class ClienteComponent {
   resumod          : string;
   nclialta        : number;
   maxcli           : number;
- 
+  isloading        : boolean = true;
   
   private clientee  : clienteDTO;  
   
@@ -71,6 +72,7 @@ export class ClienteComponent {
                     this.clientee = data;
                     this.operacion = "Modificar Cliente Nro. "+this.data.nrocliente+" - "+this.data.nombre;
                     this.actualizarControles();
+                    this.isloading = false;
                   })                 
             } else { // ALTA -> accion = "A"
                var subs2 : Subscription;
@@ -80,6 +82,7 @@ export class ClienteComponent {
                     this.nclialta = this.maxcli + 1;
                     this.operacion = "Agregar Cliente Nro. "+this.nclialta;
                     this.formCliente.controls["nrocliente"].setValue(this.nclialta);
+                    this.isloading = false;
                    })                                              
             }
           

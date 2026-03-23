@@ -58,19 +58,11 @@
     </div>
     <!-- Cuarta Fila   -->
     <div class="row g-3 mb-1">
-       <div class="col-md-4">
-        <mat-form-field class="w-100" appearance="fill">
-          <mat-label>Tarifa Viaje</mat-label>
-          <input matInput readonly="true" formControlName="tarifa"
-           [value]="formItfac.get('tarifa')?.value | currency:'$':true"
-            style="text-align: center"/>
-        </mat-form-field>
-      </div>
+      
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Carga (Ton)</mat-label>
-          <input matInput readonly="true" formControlName="cargaton"
-           [value]="formItfac.get('cargaton')?.value | currency:'$':true"
+          <input matInput readonly="true" formControlName="cargaton"           
             style="text-align: center"/>
         </mat-form-field>
       </div>

@@ -40,6 +40,7 @@ export class ClientesComponent {
    cuit           : string;
    notas          : string;
    saldoini       : number;   
+  
 
    colClientes : string[] = ["idCliente" , "nombre","domicilio","localidad","telefono","cuit","notas","M","B" ];
  

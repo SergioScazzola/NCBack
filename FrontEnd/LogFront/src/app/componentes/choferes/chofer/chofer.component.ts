@@ -41,6 +41,7 @@ export class ChoferComponent {
   maxchof          : number;
   cempresas        : empTpteDTO[]=[];
   idEmpresaSel     : number = 1;
+  isloading        : boolean = true;
   private choferr  : choferDTO;  
   
   constructor(  public fb           : FormBuilder,
@@ -81,6 +82,7 @@ export class ChoferComponent {
                     this.choferr = data;
                     this.operacion = "Modificar Chofer Nro. "+this.data.nrochof+" - "+this.data.nombre;
                     this.actualizarControles();
+                    this.isloading = false;
                   })
                  
             } else { // ALTA -> accion = "A"
@@ -91,6 +93,7 @@ export class ChoferComponent {
                     this.nchofalta = this.maxchof + 1;
                     this.operacion = "Agregar Chofer Nro. "+this.nchofalta;
                     this.formChofer.controls["nrochof"].setValue(this.nchofalta);
+                    this.isloading = false;
                    })                                              
             }
           })                                
