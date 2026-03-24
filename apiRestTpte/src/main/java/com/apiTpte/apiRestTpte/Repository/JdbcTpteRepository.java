@@ -20,6 +20,7 @@ import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
+import com.apiTpte.apiRestTpte.Entidades.Usuario;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
 
 @Repository
@@ -907,4 +908,11 @@ public class JdbcTpteRepository implements TpteRepository {
       String selec = "SELECT * FROM marcas ORDER BY marca";
       return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Marca.class));
     }
+
+     @Override
+      public List<Usuario> getUsuario(String usuario){
+        return jdbcTemplate.query("SELECT * FROM usuarios WHERE usuario='"+usuario+"'", 
+            BeanPropertyRowMapper.newInstance(Usuario.class) );        
+      }
+
 }

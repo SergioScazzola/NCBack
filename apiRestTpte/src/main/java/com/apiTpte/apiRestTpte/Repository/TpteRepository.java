@@ -16,10 +16,14 @@ import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
+import com.apiTpte.apiRestTpte.Entidades.Usuario;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
 
 public interface TpteRepository {
    
+    List<Usuario> getUsuario(String usuario);
+
+
     List<Camion> AllCamiones();
     int getMaxCamiones();
     Camion findCamionById(int idcamion);
