@@ -13,7 +13,7 @@ import { FacsTPComponent } from './componentes/facs-tp/facs-tp.component';
 
 export const routes: Routes = [
   // Rutas para invitados (no autenticados)
-  /*{
+  {
     path: '',
     component: GuestLayoutComponent,
     children: [
@@ -21,7 +21,7 @@ export const routes: Routes = [
       { path: 'change-password', component: ChangePasswordComponent },
       { path: '', pathMatch: 'full', redirectTo: 'login' },
     ],
-  },*/
+  },
 
   // Rutas protegidas (autenticadas)
   {
