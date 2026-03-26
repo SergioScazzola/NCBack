@@ -1,7 +1,17 @@
+
+
 spring:
-  application:
+ security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://cognito-idp.us-east-2.amazonaws
+          
+aws:
+  region: us-east-2
+application:
     name: apiRestTpte
-  datasource:
+datasource:
     url: jdbc:mysql://${HOST_DB}:${PORT_DB}/lognc?useSSL=false
     username: ${USER_DB}
     password: ${PASSWORD_DB}

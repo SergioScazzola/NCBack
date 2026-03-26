@@ -22,7 +22,7 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 
 
-@CrossOrigin(origins = "${FRONTEND_URL}")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/viaje/")
  
