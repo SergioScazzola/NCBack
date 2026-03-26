@@ -1,4 +1,4 @@
-package com.apiTpte.apiRestTpte.config;
+/*package com.apiTpte.apiRestTpte.config;
 
 
 import org.springframework.context.annotation.Bean;
@@ -29,4 +29,4 @@ public class WebConfig {
             }
         };
     }
-} 
+} */

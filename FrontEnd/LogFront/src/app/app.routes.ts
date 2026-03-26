@@ -26,6 +26,7 @@ export const routes: Routes = [
   // Rutas protegidas (autenticadas)
   {
     path: '',  
+     canActivate: [authGuard], // <-- Asegúrate de que esto esté aquí
     children: [
       { path: 'ppal', component: NavegadorComponent },     
       { path: 'choferes', component: ChoferesComponent },  
