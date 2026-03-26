@@ -24,6 +24,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -100,7 +101,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             this.timestamp = System.currentTimeMillis();
         }
         
-        /*public String getMessage() {
+        public String getMessage() {
             return message;
         }
         
@@ -110,7 +111,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         
         public long getTimestamp() {
             return timestamp;
-        }*/
+        }
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
