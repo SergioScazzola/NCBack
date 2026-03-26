@@ -1,4 +1,4 @@
-package com.Sisbul.ApiRrest.entidades;
+package com.apiTpte.apiRestTpte.Entidades;
 
 public class Usuario {
      private String usuario;
