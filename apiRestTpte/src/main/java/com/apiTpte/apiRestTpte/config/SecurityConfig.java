@@ -2,6 +2,7 @@ package com.apiTpte.apiRestTpte.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,6 +20,7 @@ import java.util.logging.Logger;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private static final Logger logger = Logger.getLogger(SecurityConfig.class.getName());
@@ -56,12 +58,13 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/**").permitAll() // Público
-            .anyRequest().authenticated() // Todo lo demás requiere Token
+            //.requestMatchers("/api/auth/**").permitAll() // Público
+            .anyRequest().permitAll() // <-- TODO abierto, sin 403
+            //.anyRequest().authenticated() // Todo lo demás requiere Token
         )
         // Insertamos tu filtro JWT antes del de usuario/password
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        
+
     return http.build();
 }        
 

@@ -24,7 +24,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
+//import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -155,8 +155,43 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return false;
         }
     }
-
     private void setUpSpringAuthentication(String token) {
+    try {
+        // Extraer el payload del token
+        String[] chunks = token.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String payload = new String(decoder.decode(chunks[1]));
+        JsonNode payloadJson = mapper.readTree(payload);
+
+        String username = payloadJson.has("username") ? 
+            payloadJson.get("username").asText() : "unknown";
+
+        // Mapeo de scopes a Spring authorities
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        if (payloadJson.has("scope")) {
+            String scope = payloadJson.get("scope").asText(); // puede ser "aws.cognito.signin.user.admin"
+            String[] scopes = scope.split(" "); // en caso de varios scopes
+            for (String s : scopes) {
+                authorities.add(new SimpleGrantedAuthority("SCOPE_" + s));
+            }
+        }
+
+        // Configuración del Authentication
+        UsernamePasswordAuthenticationToken auth = 
+            new UsernamePasswordAuthenticationToken(username, null, authorities);
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        // Log para verificar
+        log.info("USER: " + username);
+        log.info("AUTHORITIES: " + authorities);
+
+    } catch (Exception e) {
+        log.error("Error configurando la autenticación: {}", e.getMessage());
+        SecurityContextHolder.clearContext();
+    }
+}
+    /*private void setUpSpringAuthentication(String token) {
         try {
             // Extraer el email y otros datos del token
             String[] chunks = token.split("\\.");
@@ -164,10 +199,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String payload = new String(decoder.decode(chunks[1]));
             JsonNode payloadJson = mapper.readTree(payload);
             
-            String email = payloadJson.has("email") ? 
-                payloadJson.get("email").asText() : 
-                payloadJson.get("cognito:username").asText();
-            
+            //String email = payloadJson.has("email") ? 
+            //    payloadJson.get("email").asText() : 
+            //    payloadJson.get("cognito:username").asText();
+
+            String email = null;
+
+            if (payloadJson.has("email")) {
+                 email = payloadJson.get("email").asText();
+            } else if (payloadJson.has("cognito:username")) {
+                 email = payloadJson.get("cognito:username").asText();
+            } else if (payloadJson.has("username")) {
+                 email = payloadJson.get("username").asText();
+            } else {
+                 throw new RuntimeException("No se pudo extraer el usuario del token");
+            }
+            System.out.println("JWT Payload: " + payloadJson.toPrettyString());
             // Extraer roles/grupos si están disponibles en el token
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             if (payloadJson.has("cognito:groups")) {
@@ -193,5 +240,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("Error configurando la autenticación: {}", e.getMessage());
             SecurityContextHolder.clearContext();
         }
-    }
+    }*/
 } 

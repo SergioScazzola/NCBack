@@ -91,8 +91,8 @@ public class CognitoService {
                 log.info("Autenticación exitosa para el usuario: {}", authRequest.getEmail());
                 
                 return AuthResponse.builder()
-                    //.token(authenticationResult.getIdToken())
-                     .token(authenticationResult.getAccessToken()) // <--- CAMBIA IdToken por AccessToken
+                    .token(authenticationResult.getIdToken())
+                    // .token(authenticationResult.getAccessToken()) // <--- CAMBIA IdToken por AccessToken
                     .refreshToken(authenticationResult.getRefreshToken())
                     .email(authRequest.getEmail())
                     .message("Inicio de sesión exitoso")

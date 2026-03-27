@@ -21,10 +21,11 @@ import com.apiTpte.apiRestTpte.Entidades.Viaje;
 import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 
-
+// PreAuthorize("permitAll()")
+//@PreAuthorize("hasAuthority('SCOPE_aws.cognito.signin.user.admin')")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/viaje/")
+@RequestMapping("/viaje")
  
 public class ViajeController {
     @Autowired
@@ -32,6 +33,7 @@ public class ViajeController {
    
     @SuppressWarnings("null")
     @GetMapping("/viajes")
+    //@PreAuthorize("hasAuthority('SCOPE_aws.cognito.signin.user.admin')")
     public ResponseEntity<List<Viaje>> getAllViajes() {
     try {
       List<Viaje> viajes = null;
@@ -47,7 +49,7 @@ public class ViajeController {
        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
+   @SuppressWarnings("null")
    @RequestMapping(value="/viajesxchofer", params={"idchof"})
     public ResponseEntity<List<Viaje>> getViajesXChofer(@RequestParam("idchof") Integer idchofer) {
     try {
