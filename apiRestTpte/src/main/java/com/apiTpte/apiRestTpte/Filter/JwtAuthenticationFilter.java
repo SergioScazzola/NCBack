@@ -1,4 +1,4 @@
-package com.Sisbul.ApiRrest.filter;
+package com.apiTpte.apiRestTpte.Filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.Sisbul.ApiRrest.config.AwsCognitoConfig;
+import com.apiTpte.apiRestTpte.config.AwsCognitoConfig;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

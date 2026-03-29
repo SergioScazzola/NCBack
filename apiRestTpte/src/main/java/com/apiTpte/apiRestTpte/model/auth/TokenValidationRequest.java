@@ -1,4 +1,4 @@
-package com.Sisbul.ApiRrest.model.auth;
+package com.apiTpte.apiRestTpte.model.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

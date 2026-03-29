@@ -1,4 +1,4 @@
-package com.Sisbul.ApiRrest.service;
+package com.apiTpte.apiRestTpte.Servicios;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -8,9 +8,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.Sisbul.ApiRrest.config.AwsCognitoConfig;
-import com.Sisbul.ApiRrest.model.auth.AuthRequest;
-import com.Sisbul.ApiRrest.model.auth.AuthResponse;
+import com.apiTpte.apiRestTpte.config.AwsCognitoConfig;
+import com.apiTpte.apiRestTpte.model.auth.AuthRequest;
+import com.apiTpte.apiRestTpte.model.auth.AuthResponse;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.AdminInitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.AdminInitiateAuthResult;
