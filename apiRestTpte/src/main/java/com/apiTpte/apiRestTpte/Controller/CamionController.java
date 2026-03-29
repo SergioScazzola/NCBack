@@ -3,9 +3,11 @@ package com.apiTpte.apiRestTpte.Controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,13 +28,15 @@ import com.apiTpte.apiRestTpte.Repository.JdbcTpteRepository;
 @RestController
 @RequestMapping("/camion")
  
+
+@PreAuthorize("permitAll()")
 public class CamionController {
     @Autowired
     JdbcTpteRepository tpteRepository;
    
     @SuppressWarnings("null")
     @GetMapping(value="/camiones")
-    public ResponseEntity<List<Camion>> getAllCamiones() {
+    public ResponseEntity<List<Camion>> getAllCamiones() {       
        return ResponseEntity.ok(tpteRepository.AllCamiones());
    
   }

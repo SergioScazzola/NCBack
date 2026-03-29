@@ -12,7 +12,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 // import org.springframework.web.filter.CorsFilter;
 
-import com.apiTpte.apiRestTpte.Filter.JwtAuthenticationFilter; 
+import com.apiTpte.apiRestTpte.Filter.JwtAuthenticationFilter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,21 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-          /*  .cors()
-            .and()
-            .csrf().disable()
-            .authorizeHttpRequests()
-            // Permitir acceso a endpoints de autenticación sin restricción
-            .requestMatchers("/api/auth/**").permitAll()
-            // Los endpoints administrativos y todos los demás requieren autenticación
-            .requestMatchers("/api/admin/**").authenticated()
-            .anyRequest().authenticated()
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-            
-        return http.build();*/
+         
             .cors(cors -> {})
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> 
