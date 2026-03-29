@@ -1,4 +1,4 @@
-package com.apiTpte.apiRestTpte.config;
+package com.Sisbul.ApiRrest.config;
 
 import org.springframework.context.annotation.Configuration;
 

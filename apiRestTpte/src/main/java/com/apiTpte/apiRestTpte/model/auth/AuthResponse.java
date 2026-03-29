@@ -1,4 +1,4 @@
-package com.apiTpte.apiRestTpte.model.auth;
+package com.Sisbul.ApiRrest.model.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

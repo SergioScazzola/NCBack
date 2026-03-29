@@ -1,4 +1,4 @@
-package com.apiTpte.apiRestTpte.Servicios;
+package com.Sisbul.ApiRrest.service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -8,9 +8,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.apiTpte.apiRestTpte.config.AwsCognitoConfig;
-import com.apiTpte.apiRestTpte.model.auth.AuthRequest;
-import com.apiTpte.apiRestTpte.model.auth.AuthResponse;
+import com.Sisbul.ApiRrest.config.AwsCognitoConfig;
+import com.Sisbul.ApiRrest.model.auth.AuthRequest;
+import com.Sisbul.ApiRrest.model.auth.AuthResponse;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.AdminInitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.AdminInitiateAuthResult;
@@ -91,8 +91,8 @@ public class CognitoService {
                 log.info("Autenticación exitosa para el usuario: {}", authRequest.getEmail());
                 
                 return AuthResponse.builder()
-                    .token(authenticationResult.getIdToken())
-                    // .token(authenticationResult.getAccessToken()) // <--- CAMBIA IdToken por AccessToken
+                    //.token(authenticationResult.getIdToken())
+                    .token(authenticationResult.getAccessToken())
                     .refreshToken(authenticationResult.getRefreshToken())
                     .email(authRequest.getEmail())
                     .message("Inicio de sesión exitoso")
@@ -129,7 +129,7 @@ public class CognitoService {
                 
                 return AuthResponse.builder()
                     //.token(authenticationResult.getIdToken())
-                     .token(authenticationResult.getAccessToken()) // <--- CAMBIA IdToken por AccessToken
+                    .token(authenticationResult.getAccessToken())
                     .refreshToken(authenticationResult.getRefreshToken())
                     .email(authRequest.getEmail())
                     .message("Inicio de sesión exitoso")
