@@ -21,9 +21,9 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 
 
-@CrossOrigin(origins = "${FRONTEND_URL}")
+
 @RestController
-@RequestMapping("/cliente/")
+@RequestMapping("/api/cliente/")
  
 public class ClienteController {
     @Autowired

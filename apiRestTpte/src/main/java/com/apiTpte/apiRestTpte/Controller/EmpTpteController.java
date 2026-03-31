@@ -22,9 +22,9 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 
 
-@CrossOrigin(origins = "${FRONTEND_URL}")
+
 @RestController
-@RequestMapping("/empt/")
+@RequestMapping("/api/empt/")
  
 public class EmpTpteController {
     @Autowired

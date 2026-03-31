@@ -47,6 +47,7 @@ public class AwsCognitoConfig {
         // Si hay credenciales de AWS configuradas, usarlas
         if (accessKey != null && !accessKey.isEmpty() && secretKey != null && !secretKey.isEmpty()) {
             BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+            
             return AWSCognitoIdentityProviderClientBuilder.standard()
                     .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                     .withRegion(Regions.fromName(awsRegion))

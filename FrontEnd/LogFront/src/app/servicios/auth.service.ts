@@ -70,7 +70,7 @@ export class AuthService {
         console.log('AuthService - Login - Response:', response);
         if (response.token) {
           console.log(
-            'AuthService - Login - Token recibido, guardando en localStorage'
+            'AuthService - Login - Token recibido, guardando en localStorage : '+response.token
           );
           // Guardar token y datos de usuario
           localStorage.setItem('token', response.token);

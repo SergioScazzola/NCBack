@@ -21,9 +21,9 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 
 
-@CrossOrigin(origins = "${FRONTEND_URL}")
+
 @RestController
-@RequestMapping("/cobro/")
+@RequestMapping("/api/cobro/")
  
 public class CobroController {
     @Autowired

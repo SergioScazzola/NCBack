@@ -59,7 +59,7 @@ export class ViajesComponent {
                this.cantviaje = this.cviajes.length;
                 this.dataSource.data = this.cviajes;         
                 this.dataSource.filterPredicate = (dato : viajeDTO, fil : string) => {
-                     return dato.destino.toLowerCase().includes(fil);
+                     return dato.destino.toLowerCase().startsWith(fil);
                                      };    
                 // Aplica filtro si hay uno
                 if (this.filtro!=='') {                                 

@@ -60,7 +60,7 @@ export class CamionesComponent {
                this.cantcamion = this.ccamiones.length;
                 this.dataSource.data = this.ccamiones;         
                 this.dataSource.filterPredicate = (dato : camionDTO, fil : string) => {
-                     return dato.marca.toLowerCase().includes(fil);
+                     return dato.descrip.toLowerCase().startsWith(fil);
                                      };    
                 // Aplica filtro si hay uno
                 if (this.filtro!=='') {                                 
