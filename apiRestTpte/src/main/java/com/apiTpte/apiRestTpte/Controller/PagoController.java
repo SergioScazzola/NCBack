@@ -23,7 +23,7 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/pago/")
+@RequestMapping("/api/pago/")
  
 public class PagoController {
     @Autowired

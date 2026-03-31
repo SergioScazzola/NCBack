@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,18 +26,25 @@ import com.apiTpte.apiRestTpte.Repository.JdbcTpteRepository;
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/camion")
+@RequestMapping("api/camion")
  
 
-@PreAuthorize("permitAll()")
+
 public class CamionController {
     @Autowired
     JdbcTpteRepository tpteRepository;
    
     @SuppressWarnings("null")
     @GetMapping(value="/camiones")
-    public ResponseEntity<List<Camion>> getAllCamiones() {       
-       return ResponseEntity.ok(tpteRepository.AllCamiones());
+    public ResponseEntity<List<Camion>> getAllCamiones() {   
+      try {
+        List<Camion> camiones = tpteRepository.AllCamiones();
+        return ResponseEntity.ok(camiones);
+    } catch (Exception e) {
+        e.printStackTrace(); // esto imprimirá el error real en tu consola
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body(null);
+    }
    
   }
 

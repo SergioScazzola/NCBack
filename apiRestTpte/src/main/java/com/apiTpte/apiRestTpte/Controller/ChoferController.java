@@ -24,7 +24,7 @@ import com.apiTpte.apiRestTpte.Repository.JdbcTpteRepository;
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/chofer")
+@RequestMapping("/api/chofer")
  
 public class ChoferController {
     @Autowired

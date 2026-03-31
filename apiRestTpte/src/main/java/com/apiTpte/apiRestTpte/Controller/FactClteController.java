@@ -25,7 +25,7 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/faccl/")
+@RequestMapping("/api/faccl/")
  
 public class FactClteController {
     @Autowired

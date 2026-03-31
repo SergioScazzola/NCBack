@@ -25,7 +25,7 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 //@PreAuthorize("hasAuthority('SCOPE_aws.cognito.signin.user.admin')")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/viaje")
+@RequestMapping("/api/viaje")
  
 public class ViajeController {
     @Autowired

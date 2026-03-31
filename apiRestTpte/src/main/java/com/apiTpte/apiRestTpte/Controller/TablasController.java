@@ -21,7 +21,7 @@ import com.apiTpte.apiRestTpte.Repository.JdbcTpteRepository;
 
 @CrossOrigin(origins = "${FRONTEND_URL}")
 @RestController
-@RequestMapping("/tablas")
+@RequestMapping("/api/tablas")
  
 public class TablasController {
     @Autowired

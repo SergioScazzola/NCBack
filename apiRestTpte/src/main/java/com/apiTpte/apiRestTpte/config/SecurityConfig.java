@@ -12,7 +12,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 // import org.springframework.web.filter.CorsFilter;
 
-import com.apiTpte.apiRestTpte.Filter.JwtAuthenticationFilter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,13 +23,10 @@ public class SecurityConfig {
 
     // private static final Logger logger = Logger.getLogger(SecurityConfig.class.getName());
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
+   
+  
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
-        this.jwtAuthFilter = jwtAuthFilter;
-    }
-
-    @Bean
+   /* @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
          
@@ -43,12 +39,31 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/admin/**").authenticated()
                 .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            );
+            //.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 
-    }
+    }*/
+   @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .cors(cors -> {})
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/admin/**").hasRole("ADMIN") // opcional
+            .anyRequest().authenticated()
+        )
+        .oauth2ResourceServer(oauth -> oauth
+           .jwt(jwt -> {})
+        );
+
+    return http.build();
+}
     /**
      * Spring Security detecta automáticamente este bean y aplica CORS
      */
