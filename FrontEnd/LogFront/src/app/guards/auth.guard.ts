@@ -1,4 +1,4 @@
-import { inject } from '@angular/core';
+/*import { inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -45,4 +45,41 @@ export const authGuard: CanActivateFn = (route, state) => {
       return of(false);
     })
   );
-};
+};*/
+
+import { Injectable } from '@angular/core';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { AuthService } from '../servicios/auth.service';
+import { catchError, map } from 'rxjs/operators';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean | UrlTree> {
+    //const token = this.authService.getToken();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // No hay token: redirigir al login
+      console.warn('AuthGuard - No hay token, redirigiendo a login');
+      return of(this.router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } }));
+    }
+
+    // Validar token en backend (opcional, pero recomendable)
+    return this.authService.validateToken().pipe(
+      map(() => true),
+      catchError((err) => {
+        console.warn('AuthGuard - Token inválido, cerrando sesión y redirigiendo al login', err);
+        this.authService.logout();
+        return of(this.router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } }));
+      })
+    );
+  }
+}
+

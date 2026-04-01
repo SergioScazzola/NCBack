@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
-  onSubmit(): void {
+  /*onSubmit(): void {
     this.submitted = true;
     this.error = '';
     this.debugMessage = '';
@@ -147,5 +147,80 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         },
       });
+  }*/
+  onSubmit(): void {
+  this.submitted = true;
+  this.error = '';
+  this.debugMessage = '';
+
+  if (this.loginForm.invalid) {
+    return;
   }
+
+  this.loading = true;
+  this.debugMessage = 'Iniciando proceso de login...';
+  console.log('Iniciando login con:', this.f['email'].value);
+
+  // Limpiar tokens antiguos
+  localStorage.removeItem('token');
+  localStorage.removeItem('refreshToken');
+
+  this.authService
+    .login(this.f['email'].value, this.f['password'].value)
+    .subscribe({
+      next: (response) => {
+        console.log('Login exitoso, respuesta:', response);
+
+        if (!response.token) {
+          console.error('No se recibió accessToken desde el backend');
+          this.error = 'Error: no se recibió token válido.';
+          this.loading = false;
+          return;
+        }
+
+        // Guardar tokens correctos
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('refreshToken', response.refreshToken);
+
+        if (response.needsPasswordChange) {
+          this.loading = false;
+          const dialogRef = this.dialogService.showPasswordChangeDialog(
+            response.email,
+            response.message ||
+              'Necesitas cambiar tu contraseña temporal. Por favor, establece una nueva contraseña permanente.'
+          );
+
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result && result.success) {
+              this.dialogService.showErrorDialog(
+                'Éxito',
+                'Tu contraseña ha sido cambiada correctamente. Por favor, inicia sesión nuevamente.'
+              );
+            }
+          });
+        } else {
+          console.log('Redirigiendo a:', this.returnUrl);
+          this.router
+            .navigate([this.returnUrl])
+            .then(() => console.log('Navegación exitosa'))
+            .catch((err) => {
+              console.error('Error en navegación:', err);
+              this.error = 'Error al redireccionar: ' + (err.message || 'Desconocido');
+              this.loading = false;
+            });
+        }
+      },
+      error: (error) => {
+        console.error('Error en login:', error);
+        this.loading = false;
+        this.error =
+          error.error?.message || 'Error al iniciar sesión. Por favor, verifique sus credenciales.';
+        this.debugMessage = `Error: ${JSON.stringify(error.error || error)}`;
+      },
+      complete: () => {
+        console.log('Login observable completado');
+        this.loading = false;
+      },
+    });
+}  
 }
