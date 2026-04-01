@@ -1,4 +1,4 @@
-package comapiTpte.apiRestTpte.model.auth;
+package com.apiTpte.apiRestTpte.model.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
