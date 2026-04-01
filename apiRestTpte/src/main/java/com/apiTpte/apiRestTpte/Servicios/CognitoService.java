@@ -89,7 +89,6 @@ public class CognitoService {
                 AuthenticationResultType authenticationResult = initiateAuthResult.getAuthenticationResult();
                 
                 log.info("Autenticación exitosa para el usuario: {}", authRequest.getEmail());
-                
                 return AuthResponse.builder()                   
                     .token(authenticationResult.getAccessToken())
                     .refreshToken(authenticationResult.getRefreshToken())

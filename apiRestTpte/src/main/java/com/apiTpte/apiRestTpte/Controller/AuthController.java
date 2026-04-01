@@ -43,7 +43,10 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
         log.info("Intento de inicio de sesión para: {}", authRequest.getEmail());
         AuthResponse response = cognitoService.login(authRequest);
-        
+        log.info("Login response completo: {}", response);
+        if (response.getToken() != null) {
+           log.info("TOKEN DEVUELTO: {}", response.getToken());
+        }
         // Si el token es nulo pero hay un mensaje, podría ser un error o la necesidad de cambiar contraseña
         if (response.getToken() == null) {
             if (response.isNeedsPasswordChange()) {
