@@ -39,7 +39,21 @@ public class AuthController {
     @Autowired
     private AwsCognitoConfig cognitoConfig;
 
-    @PostMapping("/login")
+@PostMapping("/login")
+public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
+    // Esto asegura que siempre se imprime en stdout de EB
+    System.out.println(">> LOGIN LLEGÓ AL BACK PARA: " + authRequest.getEmail());
+    
+    log.info("Intento de inicio de sesión para: {}", authRequest.getEmail());
+
+    AuthResponse response = cognitoService.login(authRequest);
+
+    // Forzar que devuelva ambos tokens
+    System.out.println(">> RESPONSE BACK: token=" + response.getToken() + ", tokenid=" + response.getTokenid());
+
+    return ResponseEntity.ok(response);
+}
+   /* @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
         log.info("Intento de inicio de sesión para: {}", authRequest.getEmail());
         AuthResponse response = cognitoService.login(authRequest);
@@ -61,7 +75,7 @@ public class AuthController {
         }
         
         return ResponseEntity.ok(response);
-    }
+    }*/
     
     @PostMapping("/change-password")
     public ResponseEntity<Map<String, String>> changePassword(@Valid @RequestBody ChangePasswordRequest request) {

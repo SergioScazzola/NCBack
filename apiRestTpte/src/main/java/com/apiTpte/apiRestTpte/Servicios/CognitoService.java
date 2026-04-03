@@ -88,9 +88,12 @@ public class CognitoService {
                 // Si llegamos aquí, la autenticación fue exitosa
                 AuthenticationResultType authenticationResult = initiateAuthResult.getAuthenticationResult();
                 
-                log.info("Autenticación exitosa para el usuario: {}", authRequest.getEmail());
+                
+                System.out.println("ACCESS TOKEN: " + authenticationResult.getAccessToken());
+                System.out.println("ID TOKEN: " + authenticationResult.getIdToken());
                 return AuthResponse.builder()                   
                     .token(authenticationResult.getAccessToken())
+                    .tokenid(authenticationResult.getIdToken())
                     .refreshToken(authenticationResult.getRefreshToken())
                     .email(authRequest.getEmail())
                     .message("Inicio de sesión exitoso")
@@ -124,9 +127,10 @@ public class CognitoService {
                 AuthenticationResultType authenticationResult = adminAuthResult.getAuthenticationResult();
                 
                 log.info("Autenticación exitosa para el usuario: {}", authRequest.getEmail());
-                
+                System.out.println("Supuestamente token de acceso : {}"+authenticationResult.getAccessToken());
                 return AuthResponse.builder()                    
                     .token(authenticationResult.getAccessToken())
+                    .tokenid(authenticationResult.getIdToken())
                     .refreshToken(authenticationResult.getRefreshToken())
                     .email(authRequest.getEmail())
                     .message("Inicio de sesión exitoso")
