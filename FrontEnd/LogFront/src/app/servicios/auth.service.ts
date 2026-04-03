@@ -20,6 +20,7 @@ interface TokenValidationRequest {
 
 interface AuthResponse {
   token: string;
+  tokenid: string;
   refreshToken: string;
   email: string;
   nombre: string;
@@ -68,12 +69,12 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.API_URL}/login`, request).pipe(
       tap((response) => {
         console.log('AuthService - Login - Response:', response);
-        if (response.token) {
-          console.log(
-            'AuthService - Login - Token recibido, guardando en localStorage : '+response.token
-          );
+        if (response.token && response.tokenid) {
+          console.log('Token de acceso:', response.token);         
+        
           // Guardar token y datos de usuario
           localStorage.setItem('token', response.token);
+          localStorage.setItem('tokenid', response.tokenid);
           localStorage.setItem('email', response.email);
           this.currentUserSubject.next(response.email);
           this.loginStateSubject.next(true);

@@ -181,7 +181,7 @@ export class LoginComponent implements OnInit {
         // Guardar tokens correctos
         localStorage.setItem('token', response.token);
         localStorage.setItem('refreshToken', response.refreshToken);
-
+       
         if (response.needsPasswordChange) {
           this.loading = false;
           const dialogRef = this.dialogService.showPasswordChangeDialog(

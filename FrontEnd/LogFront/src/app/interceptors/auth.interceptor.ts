@@ -33,6 +33,7 @@ export const authInterceptor: HttpInterceptorFn = (
         // Si obtenemos un 401 (No autorizado), redirigir al login
         if (error.status === 401) {
           localStorage.removeItem('token');
+          localStorage.removeItem('tokenid');
           localStorage.removeItem('email');
           router.navigate(['/login']);
         }
