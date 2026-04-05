@@ -332,6 +332,18 @@ public class JdbcTpteRepository implements TpteRepository {
         String selec = "SELECT * FROM viajes WHERE idChofer=? ORDER BY fecha DESC";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Viaje.class),idchofer);
       }
+
+       @Override
+      public int getCantViajesXChofer(int idchofer){
+        String consulta = "SELECT COUNT(*) FROM viajes WHERE idChofer=?";
+     
+        Object obj = jdbcTemplate.queryForObject(consulta,Integer.class,idchofer);    
+        if (obj==null){
+          return 0;
+        } else {
+          return ((int)obj);
+        }         
+      }   
       @Override
       public int getMaxViajes(){
         String consulta = "SELECT MAX(idViaje) FROM viajes";
@@ -441,29 +453,29 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("UPDATE facstpte SET nrofactura=?,facndc=?,fecha=?,"+
-                                    "idChofer=?,nomchofer=?,cantit=?,impneto=?,tasaiva=?,"+
+                                    "idChofer=?,nomchofer=?,cantit=?,impneto=?,"+
                                     "impiva=?,totalfac=? WHERE idFactura=?",
                     new Object[] {fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
                                   fac.getIdChofer(),fac.getNomchofer(),fac.getCantit(),fac.getImpneto(),
-                                  fac.getTasaiva(),fac.getImpiva(),fac.getTotalfac(),fac.getIdFactura()
+                                  fac.getImpiva(),fac.getTotalfac(),fac.getIdFactura()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
       }
       return resu; 
     }
- 
+
     @Override
       public int saveFactp(FactTpte fac){     
       // Graba nueva Factura del Transporte 
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("INSERT facstpte(idFactura,nrofactura,facndc,fecha,"+
-                                    "idChofer,nomchofer,cantit,impneto,tasaiva,"+
-                                    "impiva,totalfac VALUES(?,?,?,?,?,?,?,?,?,?,?) ",
+                                    "idChofer,nomchofer,cantit,impneto,"+
+                                    "impiva,totalfac) VALUES(?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {fac.getIdFactura(),fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
                                   fac.getIdChofer(),fac.getNomchofer(),fac.getCantit(),
-                                  fac.getImpneto(),fac.getTasaiva(),fac.getImpiva(),fac.getTotalfac()
+                                  fac.getImpneto(),fac.getImpiva(),fac.getTotalfac()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -485,19 +497,21 @@ public class JdbcTpteRepository implements TpteRepository {
        String selec = "SELECT * FROM dfacstp WHERE idFactura=? ORDER BY nroitem";         
        return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(ItfactT.class),nrofac);      
     }
+
     @Override
     public int saveItemFactp(ItfactT itfac){
     // Graba nuevo Item de Factura del Transporte 
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("INSERT dfacstp(idFactura,nroitem,idViaje,idChofer,"+
-                                    "nomchofer,origen,destino,tarifa,cargaton,impneto,tasaiva,"+
-                                    "impiva,totalitem VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ",
+                                    "nomChofer,origen,destino,tarifa,cargaton,cantkm,ltsgasoil,impneto,"+
+                                    "impiva,totalitem) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {itfac.getIdFactura(),itfac.getNroitem(),itfac.getIdViaje(),itfac.getIdChofer(),
                                   itfac.getNomChofer(),itfac.getOrigen(),itfac.getDestino(),
-                                  itfac.getTarifa(),itfac.getCargaton(),itfac.getImpneto(),itfac.getTasaiva(),
-                                  itfac.getImpiva(),itfac.getTotalitem()
+                                  itfac.getTarifa(),itfac.getCargaton(),itfac.getCantkm(),itfac.getLtsgasoil(),
+                                  itfac.getImpneto(),itfac.getImpiva(),itfac.getTotalitem()
                                 });
+ 
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
       }
@@ -508,12 +522,12 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("UPDATE dfacstp SET idViaje=?,idChofer=?,"+
-                                    "nomchofer=?,origen=?,destino=?,tarifa=?,cargaton=?,"+
-                                    "impneto=?,tasaiva=?,impiva=?,totalitem=? "+
+                                    "nomChofer=?,origen=?,destino=?,tarifa=?,cargaton=?,"+
+                                    "impneto=?,impiva=?,totalitem=? "+
                                     "WHERE idFactura=? AND nroitem=?",
                     new Object[] {itfac.getIdViaje(),itfac.getIdChofer(),itfac.getNomChofer(),
                                   itfac.getOrigen(),itfac.getDestino(),itfac.getTarifa(),
-                                  itfac.getCargaton(),itfac.getImpneto(),itfac.getTasaiva(),itfac.getImpiva(),
+                                  itfac.getCargaton(),itfac.getImpneto(),itfac.getImpiva(),
                                   itfac.getTotalitem(),itfac.getIdFactura(),itfac.getNroitem()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
@@ -568,11 +582,11 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("UPDATE facscl SET nrofactura=?,facndc=?,fecha=?,cantit=?,"+
-                                    "idCliente=?,nomcliente=?,impneto=?,tasaiva=?,"+
+                                    "idCliente=?,nomcliente=?,impneto=?,"+
                                     "impiva=?,totalfac=? WHERE idFactura=?",
                     new Object[] {fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),fac.getCantit(),
                                   fac.getIdCliente(),fac.getNomcliente(),fac.getImpneto(),
-                                  fac.getTasaiva(),fac.getImpiva(),fac.getTotalfac(),fac.getIdFactura()
+                                  fac.getImpiva(),fac.getTotalfac(),fac.getIdFactura()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -586,11 +600,11 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("INSERT facscl(idfactura,nrofactura,facndc,fecha,cantit,"+
-                                     "idCliente,nomcliente,impneto,tasaiva,"+
-                                     "impiva=?,totalfac VALUES(?,?,?,?,?,?,?,?,?,?,?) ",
+                                     "idCliente,nomcliente,impneto,"+
+                                     "impiva=?,totalfac VALUES(?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {fac.getIdFactura(),fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
                                   fac.getCantit(),fac.getIdCliente(),fac.getNomcliente(),
-                                  fac.getImpneto(),fac.getTasaiva(),fac.getImpiva(),fac.getTotalfac()
+                                  fac.getImpneto(),fac.getImpiva(),fac.getTotalfac()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -621,12 +635,12 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
     
       try {                   
-          resu = jdbcTemplate.update("INSERT dfacstp(idFactura,nroitem,idViaje,idChofer,"+
-                                    "nomchofer,idEmptpte,nomemptpte,ctg,tarifap,cargaton,impneto,tasaiva,"+
+          resu = jdbcTemplate.update("INSERT dfacscl(idFactura,nroitem,idViaje,idChofer,"+
+                                    "nomchofer,origen,destino,tarifa,cargaton,cantkm,ltsgasoil,impneto"+
                                     "impiva,totalitem VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {itfac.getIdFactura(),itfac.getNroitem(),itfac.getIdViaje(),itfac.getIdChofer(),
-                                  itfac.getNomChofer(),itfac.getIdEmptpte(),itfac.getNomemptpte(),itfac.getCtg(),
-                                  itfac.getTarifap(),itfac.getCargaton(),itfac.getImpneto(),itfac.getTasaiva(),
+                                  itfac.getNomChofer(),itfac.getOrigen(),itfac.getDestino(),
+                                  itfac.getTarifap(),itfac.getCargaton(),itfac.getCantkm(),itfac.getLtsgasoil(),itfac.getImpneto(),
                                   itfac.getImpiva(),itfac.getTotalitem()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
@@ -639,12 +653,12 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("UPDATE dfacscl SET idViaje=?,idChofer=?,"+
-                                    "nomchofer=?,idEmptpte=?,nomemptpte=?,ctg=?,tarifap=?,cargaton=?,"+
-                                    "impneto=?,tasaiva=?,impiva=?,totalitem=? "+
+                                    "nomchofer=?,origen=?,destino=?,tarifap=?,cargaton=?,cantkm=?,ltsgasoil=?,"+
+                                    "impneto=?,impiva=?,totalitem=? "+
                                     "WHERE idFactura=? AND nroitem=?",
                     new Object[] {itfac.getIdViaje(),itfac.getIdChofer(),itfac.getNomChofer(),
-                                  itfac.getIdEmptpte(),itfac.getNomemptpte(),itfac.getCtg(),itfac.getTarifap(),
-                                  itfac.getCargaton(),itfac.getImpneto(),itfac.getTasaiva(),itfac.getImpiva(),
+                                itfac.getOrigen(),itfac.getDestino(),itfac.getTarifap(),
+                                  itfac.getCargaton(),itfac.getCantkm(),itfac.getLtsgasoil(),itfac.getImpneto(),itfac.getImpiva(),
                                   itfac.getTotalitem(),itfac.getIdFactura(),itfac.getNroitem()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {

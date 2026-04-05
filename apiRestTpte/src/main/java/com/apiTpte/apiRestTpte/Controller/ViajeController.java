@@ -67,8 +67,15 @@ public class ViajeController {
   public int getCantViajes(){
      int cantv = tpteRepository.getMaxViajes();
      return cantv;
+  }  
+
+  @RequestMapping(value="/cantViajesxChofer", params={"idchof"})
+   public int getCantViajesXChofer(@RequestParam("idchof") Integer idchofer){
+     int cantv = tpteRepository.getCantViajesXChofer(idchofer);
+     return cantv;
   }
-  
+
+
   @RequestMapping(value ="/viaje" , params={"id"} )
   public ResponseEntity<Viaje> getViajeById(@RequestParam("id") Integer idviaje) {
     Viaje viaje = tpteRepository.findViajeById(idviaje);

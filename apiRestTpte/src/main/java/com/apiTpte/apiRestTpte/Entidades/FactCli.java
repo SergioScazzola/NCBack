@@ -11,7 +11,6 @@ public class FactCli {
      private int    idCliente;
      private String nomcliente;
      private double impneto;
-     private float  tasaiva;
      private double impiva;
      private double totalfac;
 
@@ -76,13 +75,6 @@ public class FactCli {
          this.impneto = impneto;
      }
 
-     public float getTasaiva() {
-         return tasaiva;
-     }
-
-     public void setTasaiva(float tasaiva) {
-         this.tasaiva = tasaiva;
-     }
 
      public double getImpiva() {
          return impiva;

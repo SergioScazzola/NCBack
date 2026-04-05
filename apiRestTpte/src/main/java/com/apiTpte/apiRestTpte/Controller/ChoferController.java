@@ -34,19 +34,7 @@ public class ChoferController {
     @GetMapping("/choferes")
     public ResponseEntity<List<Chofer>> getAllChoferes() {
         return ResponseEntity.ok(tpteRepository.AllChoferes());
-    /*try {
-      List<Chofer> choferes = null;
-            
-      choferes = tpteRepository.AllChoferes();
-    
-      if (choferes.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      } else {
-         return new ResponseEntity<>(choferes, HttpStatus.OK);
-      }
-    } catch (Exception e) {
-       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    }*/
+   
   }
 
   @RequestMapping(value="/max")

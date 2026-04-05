@@ -35,7 +35,8 @@ public class FactTpteController {
     @SuppressWarnings("null")
     @GetMapping("/facstp")
     public ResponseEntity<List<FactTpte>> getAllFacstp() {
-    try {
+        return ResponseEntity.ok(tpteRepository.AllFacstp());
+    /*try {
       List<FactTpte> facs = null;
             
       facs = tpteRepository.AllFacstp();
@@ -47,7 +48,7 @@ public class FactTpteController {
       }
     } catch (Exception e) {
        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
   }
 
   @RequestMapping(value="/max")
@@ -116,7 +117,7 @@ public class FactTpteController {
        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  @PostMapping(value="/factp/detalle/nuevo")
+  @PostMapping(value="/detalle/nuevo")
     // Graba un nuevo Item de Factura de Transporte
     public ResponseEntity<String> crearItemFactp(@RequestBody ItfactT itfac) {
        try {
@@ -127,7 +128,7 @@ public class FactTpteController {
       }
     }
 
-    @PutMapping(value="/factp/detalle/actualizar")
+    @PutMapping(value="/detalle/actualizar")
     public ResponseEntity<String> updateItemFactp(@RequestBody ItfactT itfac){
       try {
         int resultado = tpteRepository.actualizarItemFactp(itfac);    
@@ -137,7 +138,7 @@ public class FactTpteController {
      
       } 
     }
-     @DeleteMapping(value="/factp/detalle/borrar", params={"idfac","nroitem"})    
+     @DeleteMapping(value="/detalle/borrar", params={"idfac","nroitem"})    
     public ResponseEntity<String> borrarItemFactp(@RequestParam("idfac")   Integer nrofac,
                                                   @RequestParam("nroitem") Integer nroit){
                                                

@@ -23,7 +23,7 @@ public class WebConfig {
                 System.out.println("CORS FRONTEND_URL: " + frontendUrl); // debug opcional
 
                 registry.addMapping("/**")
-                        .allowedOriginPatterns(frontendUrl) // ✔ correcto                        
+                        .allowedOriginPatterns(frontendUrl,"http://localhost:4200/*") // ✔ correcto                        
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*") // 🔥 IMPORTANTE
                         .exposedHeaders("Authorization") // opcional (si usás JWT en headers)

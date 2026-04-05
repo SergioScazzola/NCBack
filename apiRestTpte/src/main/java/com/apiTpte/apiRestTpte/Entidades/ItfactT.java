@@ -13,8 +13,9 @@ public class ItfactT {
      private String destino;     
      private double tarifa;  // tarifa del tpte = 0.9 * tarifa plena
      private float  cargaton;
-     private double impneto;
-     private float  tasaiva;
+     private float  cantkm;
+     private float  ltsgasoil;
+     private double impneto;    
      private double impiva;
      private double totalitem;
 
@@ -94,6 +95,22 @@ public class ItfactT {
          this.cargaton = cargaton;
      }
 
+        public float getCantkm() {
+            return cantkm;
+        }
+
+        public void setCantkm(float cantkm) {
+            this.cantkm = cantkm;
+        }
+
+        public float getLtsgasoil() {
+            return ltsgasoil;
+        }
+
+        public void setLtsgasoil(float ltsgasoil) {
+            this.ltsgasoil = ltsgasoil;
+        }
+
      public double getImpneto() {
          return impneto;
      }
@@ -101,15 +118,7 @@ public class ItfactT {
      public void setImpneto(double impneto) {
          this.impneto = impneto;
      }
-
-     public float getTasaiva() {
-         return tasaiva;
-     }
-
-     public void setTasaiva(float tasaiva) {
-         this.tasaiva = tasaiva;
-     }
-
+     
      public double getImpiva() {
          return impiva;
      }

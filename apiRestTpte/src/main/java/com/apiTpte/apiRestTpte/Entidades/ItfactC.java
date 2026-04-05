@@ -7,14 +7,14 @@ public class ItfactC {
      private int    nroitem;
      private int    idViaje;
      private int    idChofer;
-     private String nomChofer;
-     private int    idEmptpte;
-     private String nomemptpte;
-     private String ctg;
+     private String nomChofer;   
+     private String origen;
+     private String destino;      
      private double tarifap;  // tarifa plena del viaje
      private float  cargaton;
+     private float  cantkm;
+     private float  ltsgasoil;
      private double impneto;
-     private float  tasaiva;
      private double impiva;
      private double totalitem;
 
@@ -61,28 +61,20 @@ public class ItfactC {
          this.nomChofer = nomChofer;
      }
 
-     public int getIdEmptpte() {
-         return idEmptpte;
+     public String getOrigen() {
+         return origen;
      }
 
-     public void setIdEmptpte(int idEmptpte) {
-         this.idEmptpte = idEmptpte;
+     public void setOrigen(String origen) {
+         this.origen = origen;
      }
 
-     public String getNomemptpte() {
-         return nomemptpte;
+     public String getDestino() {
+         return destino;
      }
 
-     public void setNomemptpte(String nomemptpte) {
-         this.nomemptpte = nomemptpte;
-     }
-
-     public String getCtg() {
-         return ctg;
-     }
-
-     public void setCtg(String ctg) {
-         this.ctg = ctg;
+     public void setDestino(String destino) {
+         this.destino = destino;
      }
 
      public double getTarifap() {
@@ -101,6 +93,22 @@ public class ItfactC {
          this.cargaton = cargaton;
      }
 
+        public float getCantkm() {
+            return cantkm;
+        }
+
+        public void setCantkm(float cantkm) {
+            this.cantkm = cantkm;
+        }
+        
+        public float getLtsgasoil() {
+            return ltsgasoil;
+        }
+
+        public void setLtsgasoil(float ltsgasoil) {
+            this.ltsgasoil = ltsgasoil;
+        }
+
      public double getImpneto() {
          return impneto;
      }
@@ -109,14 +117,7 @@ public class ItfactC {
          this.impneto = impneto;
      }
 
-     public float getTasaiva() {
-         return tasaiva;
-     }
-
-     public void setTasaiva(float tasaiva) {
-         this.tasaiva = tasaiva;
-     }
-
+   
      public double getImpiva() {
          return impiva;
      }

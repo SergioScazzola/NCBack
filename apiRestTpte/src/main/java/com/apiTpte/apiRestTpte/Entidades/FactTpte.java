@@ -10,8 +10,7 @@ public class FactTpte {
      private int    idChofer;
      private String nomchofer;
      private int    cantit;        
-     private double impneto;
-     private float  tasaiva;
+     private double impneto;   
      private double impiva;
      private double totalfac;
   
@@ -75,13 +74,7 @@ public class FactTpte {
          this.impneto = impneto;
      }
 
-     public float getTasaiva() {
-         return tasaiva;
-     }
-
-     public void setTasaiva(float tasaiva) {
-         this.tasaiva = tasaiva;
-     }
+  
 
      public double getImpiva() {
          return impiva;
