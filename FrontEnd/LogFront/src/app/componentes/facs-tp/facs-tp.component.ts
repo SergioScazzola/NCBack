@@ -38,16 +38,7 @@ export class FacsTPComponent {
  
    colfactp : string[] = ["idFactura" , "nrofactura","facndc","fecha","nomchofer","impneto","impiva","totalfac","M","B" ];
  
-  /*      idFactura      : number;
-     nrofactura     : string;
-     facndc         : string;  // fac : suma, ndc : resta
-     fecha          : Date;
-     idChofer       : number;
-     nomchofer      : string;
-     cantit         : number;        
-     impneto        : number; 
-     impiva         : number;
-     totalfac       : number;*/
+
    constructor(     private servicio     : ServiciosService,               
                     private rutaActiva   : ActivatedRoute,
                     private router       : Router,

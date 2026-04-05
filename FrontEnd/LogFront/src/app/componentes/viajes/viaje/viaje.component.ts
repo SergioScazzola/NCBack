@@ -306,6 +306,7 @@ onSelectionCamion($event : any){
     
     var tarifav  =  this.redondearAdos(tarifap * 0.90); // tarifa del viaje
     var valorviaje = this.redondearAdos(ckm * tarifav);
+    this.formViaje.controls["impneto"].setValue(this.redondearAdos(valorviaje));
     var netociva = valorviaje * (1+tiva);   
     this.formViaje.controls["impviaje"].setValue(this.redondearAdos(netociva))
   }
@@ -319,6 +320,7 @@ onSelectionCamion($event : any){
     
     var tarifav  =  this.redondearAdos(tarifap * 0.90); // tarifa del viaje
     var valorviaje = this.redondearAdos(ckm * tarifav);
+    this.formViaje.controls["impneto"].setValue(this.redondearAdos(valorviaje));
     var netociva = valorviaje * (1+tiva);   
     this.formViaje.controls["impviaje"].setValue(this.redondearAdos(netociva))
   }

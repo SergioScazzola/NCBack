@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, EventEmitter, Inject, Input, Output, viewChild, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, Inject, Input, Output, viewChild, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { ServiciosService } from '../../../servicios/service';
@@ -47,6 +47,7 @@ export class ChoferComponent {
   constructor(  public fb           : FormBuilder,
                 public servicio     : ServiciosService,
                 public dialogRef    : MatDialogRef<ChoferComponent>,
+                private cdr         : ChangeDetectorRef,
                 @Inject(MAT_DIALOG_DATA) public data: intChofer,  
                 private notiService : NotiserviceService )
    { effect(() => {
@@ -83,6 +84,7 @@ export class ChoferComponent {
                     this.operacion = "Modificar Chofer Nro. "+this.data.nrochof+" - "+this.data.nombre;
                     this.actualizarControles();
                     this.isloading = false;
+                    this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
                   })
                  
             } else { // ALTA -> accion = "A"
@@ -94,6 +96,7 @@ export class ChoferComponent {
                     this.operacion = "Agregar Chofer Nro. "+this.nchofalta;
                     this.formChofer.controls["nrochof"].setValue(this.nchofalta);
                     this.isloading = false;
+                    this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
                    })                                              
             }
           })                                
