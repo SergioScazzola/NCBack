@@ -19,11 +19,15 @@ export class ServiciosService {
   usuario?: string;
   subscri?: Subscription;
   private apiUrl: string;
+  private tasaiva: number = 21;
 
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.apiUrl = this.configService.getApiUrl();
   }
 
+  public getTasaIVA() {
+    return this.tasaiva;
+  }
   public getChoferes() {
     return this.http.get<choferDTO[]>(this.apiUrl + `chofer/choferes`);
   }
@@ -176,6 +180,12 @@ export class ServiciosService {
    public getViajesxChofer(nrochof : number) {
     return this.http.get<viajeDTO[]>(this.apiUrl + `viaje/viajesxchofer?idchof=`+nrochof);
   }
+
+   public getCantViajesxChofer(nrochof : number) {
+    return this.http.get<number>(this.apiUrl + `viaje/cantViajesxChofer?idchof=`+nrochof);
+  }
+
+
   public leerViaje(nroviaje: number) {
     return this.http.get<viajeDTO>(
       this.apiUrl + `viaje/viaje?id=` + nroviaje

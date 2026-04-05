@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, effect, ElementRef, Inject, NgZone, viewC
 import { FormGroup, FormBuilder, Validators,FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription, finalize, forkJoin } from 'rxjs';
 import { empTpteDTO } from '../../../../entidades/empTpteDTO';
@@ -44,7 +44,7 @@ export const DATE_FORMATS : MatDateFormats = {
     CommonModule,
     DragDropModule,
     FormsModule, SelecTextDirective],
-   providers : [
+   providers : [ DecimalPipe,
     { provide : DateAdapter, useClass: DateFnsAdapter },
     { provide : MAT_DATE_FORMATS, useValue: DATE_FORMATS},
     { provide : MAT_DATE_LOCALE, useValue: es}
@@ -73,6 +73,7 @@ export class ViajeComponent {
                 public servicio     : ServiciosService,
                 public dialogRef    : MatDialogRef<ViajeComponent>,
                 private cdr         : ChangeDetectorRef,
+                private decimalPipe : DecimalPipe,
                 private zone        : NgZone,
                 @Inject(MAT_DIALOG_DATA) public data: intViaje,  
                 private notiService : NotiserviceService )
@@ -134,6 +135,7 @@ export class ViajeComponent {
        cargaton     : [0],
        tarifap      : [0],
        ltsgasoil    : [0],
+       impneto      : [0],
        impviaje     : [0],
        facturado    : [0],
     })
@@ -154,6 +156,7 @@ export class ViajeComponent {
     this.formViaje.controls["cargaton"].setValue(this.viajee.cargaton), 
     this.formViaje.controls["tarifap"].setValue(this.viajee.tarifap),
     this.formViaje.controls["ltsgasoil"].setValue(this.viajee.ltsgasoil),
+    this.formViaje.controls["impneto"].setValue(this.viajee.impneto),  
     this.formViaje.controls["impviaje"].setValue(this.viajee.impviaje),
     this.formViaje.controls["facturado"].setValue(this.viajee.facturado),     
              
@@ -185,6 +188,7 @@ export class ViajeComponent {
         cargaton    : this.formViaje.controls["cargaton"].value,
         tarifap     : this.formViaje.controls["tarifap"].value,
         ltsgasoil   : this.formViaje.controls["ltsgasoil"].value,
+        impneto     : this.formViaje.controls["impneto"].value,
         impviaje    : this.formViaje.controls["impviaje"].value,
         facturado   : 0,
     }   
@@ -225,6 +229,7 @@ export class ViajeComponent {
         cargaton    : this.formViaje.controls["cargaton"].value,
         tarifap     : this.formViaje.controls["tarifap"].value,
         ltsgasoil   : this.formViaje.controls["ltsgasoil"].value,
+        impneto     : this.formViaje.controls["impneto"].value,
         impviaje    : this.formViaje.controls["impviaje"].value,
         facturado   : 0,
     }   
@@ -297,7 +302,7 @@ onSelectionCamion($event : any){
     
     var ckm      = this.formViaje.controls["cantkm"].value;
     var tarifap  =  this.formViaje.controls["tarifap"].value; // tarifa plena
-    var tiva     =  0.21;
+    var tiva     =  this.servicio.getTasaIVA() / 100; // tasa de IVA obtenida del servicio
     
     var tarifav  =  this.redondearAdos(tarifap * 0.90); // tarifa del viaje
     var valorviaje = this.redondearAdos(ckm * tarifav);
@@ -310,7 +315,7 @@ onSelectionCamion($event : any){
     
     var ckm      = this.formViaje.controls["cantkm"].value;
     var tarifap  =  this.formViaje.controls["tarifap"].value; // tarifa plena
-    var tiva     =  0.21;
+    var tiva     =  this.servicio.getTasaIVA() / 100; // tasa de IVA obtenida del servicio
     
     var tarifav  =  this.redondearAdos(tarifap * 0.90); // tarifa del viaje
     var valorviaje = this.redondearAdos(ckm * tarifav);

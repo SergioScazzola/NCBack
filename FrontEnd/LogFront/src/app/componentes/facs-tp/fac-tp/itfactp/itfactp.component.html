@@ -12,9 +12,6 @@
         </mat-form-field>
       </div>     
 
-
-    <!-- Segunda fila -->
-    <!--div class="row g-3 mb-3"-->
       <div class="col-md-8">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Viajes de {{this.data.nomchof}}</mat-label>
@@ -51,14 +48,13 @@
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Tarifa Viaje</mat-label>
           <input matInput readonly="true" formControlName="tarifa"
-           [value]="formItfac.get('tarifa')?.value | currency:'$':true"
-            style="text-align: center"/>
+           [value]="formItfac.get('tarifa')?.value | currency:'ARS':'symbol':'1.2-2'"
+            style="text-align: right"/>
         </mat-form-field>
       </div>
     </div>
-    <!-- Cuarta Fila   -->
-    <div class="row g-3 mb-1">
-      
+    <!-- Tercera Fila   -->
+    <div class="row g-3 mb-1">      
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Carga (Ton)</mat-label>
@@ -66,39 +62,46 @@
             style="text-align: center"/>
         </mat-form-field>
       </div>
+        <div class="col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Cant.KM</mat-label>
+            <input matInput readonly="true" formControlName="cantkm"           
+              style="text-align: center"/>
+          </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Litros Gasoil</mat-label>
+          <input matInput readonly="true" formControlName="ltsgasoil"           
+            style="text-align: center"/>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Cuarta Fila -->
+    <div class="row g-3 mb-1">    
        <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe Neto</mat-label>
           <input matInput readonly="true" formControlName="impneto"
-           [value]="formItfac.get('impneto')?.value | currency:'$':true"
-            style="text-align: center"/>
+           [value]="formItfac.get('impneto')?.value | currency:'ARS':'symbol':'1.2-2'"
+            style="text-align: right"/>
         </mat-form-field>
       </div>
-      </div>
-      <!-- Quinta Fila -->
-    <div class="row g-3 mb-1">
-      <div class="col-md-3">
-        <mat-form-field class="w-100" appearance="fill">
-          <mat-label>Tasa IVA</mat-label>
-          <input matInput readonly="true" formControlName="tasaiva"
-           [value]="formItfac.get('tasaiva')?.value" 
-            style="text-align: center"/>
-        </mat-form-field>
-      </div>
+                  
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe IVA</mat-label>
           <input matInput readonly="true" formControlName="impiva"
-           [value]="formItfac.get('impiva')?.value | currency:'$':true"
-            style="text-align: center"/>
+           [value]="formItfac.get('impiva')?.value | currency:'ARS':'symbol':'1.2-2'"
+            style="text-align: right"/>
         </mat-form-field>        
       </div>
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe Item</mat-label>
-          <input matInput readonly="true" formControlName="impneto"
-           [value]="formItfac.get('impneto')?.value | currency:'$':true"
-            style="text-align: center"/>
+          <input matInput readonly="true" formControlName="totalitem"
+           [value]="formItfac.get('totalitem')?.value | currency:'ARS':'symbol':'1.2-2'"
+            style="text-align: right"/>
         </mat-form-field>
       </div>
     </div>    

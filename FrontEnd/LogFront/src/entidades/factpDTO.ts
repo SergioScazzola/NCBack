@@ -8,7 +8,6 @@ export interface factpDTO {
      nomchofer      : string;
      cantit         : number;        
      impneto        : number; 
-     tasaiva        : number;
      impiva         : number;
      totalfac       : number;
         

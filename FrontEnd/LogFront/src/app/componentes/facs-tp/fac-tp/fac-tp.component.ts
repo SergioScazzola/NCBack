@@ -5,7 +5,7 @@ import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input'
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
-import { Subscription, finalize, forkJoin } from 'rxjs';
+import { Subscription, finalize, forkJoin, max } from 'rxjs';
 import { CurrencyPipe,DatePipe,DecimalPipe} from '@angular/common';
 import { NotiserviceService } from '../../../servicios/notiservice.service';
 import { ServiciosService } from '../../../servicios/service';
@@ -75,7 +75,6 @@ export class FacTpComponent {
      nomchofer      : "",
      cantit         : 0,        
      impneto        : 0, 
-     tasaiva        : 0,
      impiva         : 0,
      totalfac       : 0
   };  
@@ -90,8 +89,9 @@ export class FacTpComponent {
     destino        : "",
     tarifa         : 0,  // tarifa del tpte = 0.9 * tarifa plena
     cargaton       : 0,
+    cantkm         : 0,
+    ltsgasoil      : 0,    
     impneto        : 0,
-    tasaiva        : 0,
     impiva         : 0,
     totalitem      : 0
   };
@@ -109,58 +109,65 @@ export class FacTpComponent {
    { effect(() => {
             this.nameInput()?.nativeElement.focus(); //enfoca  iniciar
         });
-
+    
   }
-  colDFactp : string[] = ["nroitem","idViaje","origen","destino","nomchofer","totalitem","M"]
+  colDFactp : string[] = ["nroitem","idViaje","origen","destino","cantkm","ltsgasoil","totalitem","M"]
   ngOnInit(){             
-      this.cdetfactp.push(this.itemfac);
-     
+      //this.cdetfactp.push(this.itemfac);    
+
       this.initFormulario();
-          // 1. Lanzamos las peticiones base en paralelo
-      forkJoin({
-              choferes: this.servicio.getChoferes(),
-              //itfac   : this.servicio.getItemsFacsTP(this.data.idFactura),
-              facturas: this.servicio.getFacsTP()
-      }).subscribe(res => {
-              this.cchoferes = res.choferes;
-              //this.cdetfactp = res.itfac;
-              this.cfacstp   = res.facturas;
-             
-          // 2. Ahora que tenemos los maestros, ejecutamos la lógica de negocio
-       
+          // 1. Lanzamos las peticiones base en paralelo             
       if (this.data.accion === "M") {
-         this.servicio.leerFacTP(this.data.idFactura).subscribe(data4 => {
-           this.factpp = data4;
-           this.operacion = `Modificar Factura tpte Nro. ${this.data.idFactura} - ${this.data.nrofactura}`;
+        forkJoin({
+             choferes: this.servicio.getChoferes(),    
+
+          // lee factura y detalle en paralelo para mostrar en el formulario
+          factura: this.servicio.leerFacTP(this.data.idFactura),
+          detalle: this.servicio.getItemsFacsTP(this.data.idFactura),
+        }).subscribe(res2 => {
+           this.cchoferes = res2.choferes;
+           this.factpp     = res2.factura;
+           this.cdetfactp  = res2.detalle;
+
+                 
+           this.operacion = `Modificar Factura tpte Nro. ${this.factpp.idFactura} - ${this.factpp.nrofactura}`;
            this.actualizarControles();
            this.isloading = false;
            this.cdr.detectChanges(); // <--- Importante: fuerza la detección si sigue el error
-            });
-      } else { // data.accion = "A" -> Alta
-           this.mostrarHora();
-           this.servicio.getCantFacsTP().subscribe(max => {
-           this.maxfactp = max;
-           this.nfactpalta = this.maxfactp + 1;
-           this.operacion = "Agregar Factura tpte. Nro. " + this.nfactpalta;
-           this.formFactp.controls["idFactura"].setValue(this.nfactpalta);
-           var indchofer = this.cchoferes.findIndex(p=>p.idChofer=this.idchoferSel);
-           this.factpp.nomchofer = this.cchoferes[indchofer].nombre;   
-           this.isloading = false;
-           this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
-          });
+        });
       }
-      });                                                                               
+      if (this.data.accion === "A") { // data.accion = "A" -> Alta
+          var subs : Subscription 
+          subs = this.servicio.getChoferes()
+              .pipe(finalize(()=> {
+                this.mostrarHora();
+                //this.servicio.getCantFacsTP().subscribe(max => {           
+                this.nfactpalta = this.data.idFactura;
+                console.log("Factura para alta: " + this.nfactpalta);
+                this.operacion = "Agregar Factura tpte. Nro. " + this.nfactpalta;
+                this.formFactp.controls["idFactura"].setValue(this.nfactpalta);
+                var indchofer = this.cchoferes.findIndex(p=>p.idChofer=this.idchoferSel);
+                this.factpp.nomchofer = this.cchoferes[indchofer].nombre;  
+          // if (this.hayViajesChofer(this.idchoferSel)) {
+                this.isloading = false;
+                this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
+            }))
+
+          .subscribe(datas => {
+            this.cchoferes = datas;
+          })
+           
+      }                           
    }
-   
+
    initFormulario() {
      this.formFactp = this.fb.group({        
-             idFactura    : [''], 
+             idFactura    : [0], 
              nrofactura   : ['',[Validators.required]],
              facndc       : ['FAC',[Validators.required, Validators.pattern(/^(FAC|NDC)$/)]],
              fecha        : [new Date()],
              idChofer     : [1],
-             impneto      : [0],
-             tasaiva      : [21,[Validators.required,Validators.pattern("^[1-9]+([.]?[0-9]{1,2})?$")]],
+             impneto      : [0],           
              impiva       : [0],       
              totalfac     : [0],
              cantit       : [0]   
@@ -176,7 +183,6 @@ export class FacTpComponent {
     this.formFactp.controls["fecha"].setValue(this.factpp.fecha), 
     this.formFactp.controls["idChofer"].setValue(this.factpp.idChofer), 
     this.formFactp.controls["impneto"].setValue(this.factpp.impneto), 
-    this.formFactp.controls["tasaiva"].setValue(this.factpp.tasaiva), 
     this.formFactp.controls["impiva"].setValue(this.factpp.impiva), 
     this.formFactp.controls["totalfac"].setValue(this.factpp.totalfac), 
     this.formFactp.controls["cantit"].setValue(this.factpp.cantit), 
@@ -185,39 +191,7 @@ export class FacTpComponent {
                            
    }
 
-   AgregarFactp(){
 
-    var indchof = this.cchoferes.findIndex(p=>p.idChofer==this.idchoferSel);
-    
-    
-    var factp : factpDTO = {
-        idFactura     : this.formFactp.controls["idFactura"].value,
-        nrofactura    : this.formFactp.controls["nrofactura"].value,   
-        facndc        : this.formFactp.controls["facndc"].value,   
-        fecha         : this.formFactp.controls["fecha"].value,   
-        idChofer      : this.formFactp.controls["idChofer"].value,   
-        nomchofer     : this.cchoferes[indchof].nombre,
-        impneto       : this.formFactp.controls["impneto"].value,   
-        tasaiva       : this.formFactp.controls["tasaiva"].value,   
-        impiva        : this.formFactp.controls["impiva"].value,   
-        totalfac      : this.formFactp.controls["totalfac"].value,   
-        cantit        : this.formFactp.controls["cantit"].value,   
-        
-    }   
-    
-        
-    var subscri : Subscription;
-    var resu    : string;
-    subscri = this.servicio.grabarFacTP(factp)  
-            .pipe(finalize(() => {   
-             console.log("Error : "+resu);
-             this.notiService.showNotification("La Factura de tpte Nro. "+factp.idFactura+" - "+
-                                        factp.nrofactura+" se ha agregado con éxito",'Aceptar','mensaje',500); 
-                subscri.unsubscribe();
-                this.dialogRef.close({ clicked : "Alta"})
-                }))                  
-           .subscribe((data : any): void => { resu = data });   
-    }
     
     
     ModificarFactp(){
@@ -231,8 +205,7 @@ export class FacTpComponent {
         fecha         : this.formFactp.controls["fecha"].value,   
         idChofer      : this.formFactp.controls["idChofer"].value,   
         nomchofer     : this.cchoferes[indchof].nombre,
-        impneto       : this.formFactp.controls["impneto"].value,   
-        tasaiva       : this.formFactp.controls["tasaiva"].value,   
+        impneto       : this.formFactp.controls["impneto"].value,        
         impiva        : this.formFactp.controls["impiva"].value,   
         totalfac      : this.formFactp.controls["totalfac"].value,   
         cantit        : this.formFactp.controls["cantit"].value,   
@@ -270,15 +243,15 @@ onSelectionChofer($event : any){
     this.formFactp.controls['fecha'].setValue(nuevaFecha);
   }
 agItemFactp(){
-
+   console.log("Tamaño array detalle: " + this.cdetfactp.length);
    const datas : intItFacTp = {
      nrofactura :   this.formFactp.controls["nrofactura"].value,
-     nroitem    : this.cdetfactp.length,   
+     nroitem    :   this.cdetfactp.length+1,   
      nomchof    : this.factpp.nomchofer,
      accion   : "A",
      ditFac   : {   // donde se recibe  el item creado 
-      idFactura      : 0,
-      nroitem        : this.cdetfactp.length + 1,  
+      idFactura      : this.formFactp.controls["idFactura"].value,      
+      nroitem        : this.cdetfactp.length+1,  
       idViaje        : 1,           
       idChofer       : this.factpp.idChofer,
       nomChofer      : "",
@@ -286,8 +259,9 @@ agItemFactp(){
       destino        : "",
       tarifa         : 0,
       cargaton       : 0,
+      cantkm         : 0,
+      ltsgasoil      : 0,
       impneto        : 0,
-      tasaiva        : 0,
       impiva         : 0,
       totalitem      : 0
 
@@ -303,14 +277,97 @@ agItemFactp(){
    dialogConfig.panelClass = 'custom-dialog-container';
    dialogConfig.disableClose =  false; // opcional según necesidad
    const dialogRef =  this.dialog.open(ItfactpComponent, dialogConfig);
-   dialogRef.afterClosed().subscribe( // 
-      (data:any) => { if (data.accion === 'Alta'){        // Agregó un item  de cobro - agregarlo al detalle
-                
-        this.cdetfactp = [...this.cdetfactp, datas.ditFac]; // forzar la creacion del array para que detecte el cambio                           
-        this.totalizarFactura();                                                                
-    }})
-         
-}
+   dialogRef.afterClosed().subscribe((datai: any) => {
+            console.log("DATAI:", datai);
+     
+     if (datai?.clicked === 'Alta') {
+
+        const nuevoItem = {
+           idFactura:    datai.item.idFactura,
+           nroitem:      datai.item.nroitem,
+           idViaje:      datai.item.idViaje,
+           idChofer:     datai.item.idChofer,
+           nomChofer:    datai.item.nomChofer,
+           origen:       datai.item.origen,
+           destino:      datai.item.destino,
+           tarifa:       datai.item.tarifa,
+           cargaton:     datai.item.cargaton,
+           cantkm:       datai.item.cantkm,
+           ltsgasoil:    datai.item.ltsgasoil,
+           impneto:      datai.item.impneto,
+           impiva:       datai.item.impiva,
+           totalitem:    datai.item.totalitem
+        };
+
+      this.cdetfactp = [...this.cdetfactp, nuevoItem];
+
+      this.totalizarFactura();
+      console.log("Long.Array: " + this.cdetfactp.length);
+    }});
+}   
+          
+ GrabarFacturaTP() {
+  // Graba cabecera y detalle de la factura
+   var grabo : boolean  = false;
+   var indchof = this.cchoferes.findIndex(p=>p.idChofer==this.idchoferSel);   
+   var factp : factpDTO = {
+        idFactura     : this.formFactp.controls["idFactura"].value,
+        nrofactura    : this.formFactp.controls["nrofactura"].value,   
+        facndc        : this.formFactp.controls["facndc"].value,   
+        fecha         : this.formFactp.controls["fecha"].value,   
+        idChofer      : this.formFactp.controls["idChofer"].value,   
+        nomchofer     : this.cchoferes[indchof].nombre,
+        impneto       : this.formFactp.controls["impneto"].value,   
+        impiva        : this.formFactp.controls["impiva"].value,   
+        totalfac      : this.formFactp.controls["totalfac"].value,   
+        cantit        : this.formFactp.controls["cantit"].value,   
+        
+  }   
+   
+  var resu : number;
+  var subs : Subscription;  
+      subs = this.servicio.grabarFacTP(factp)
+         .pipe(finalize(() => {        
+           this.notiService.showNotification("La Factura Nro : "+factp.nrofactura+" del chofer "+factp.nomchofer+"("+resu+
+                                        ") se ha agregado con éxito",'Aceptar','mensaje',500);     
+           grabo  = true;
+           
+           const observables = this.cdetfactp.map(item => {
+               const itfactp: itfactpDTO = {    
+                  idFactura      : item.idFactura,    
+                  nroitem        : item.nroitem,
+                  idViaje        : item.idViaje,
+                  idChofer       : item.idChofer,
+                  nomChofer      : item.nomChofer, 
+                  origen         : item.origen,
+                  destino        : item.destino,
+                  tarifa         : item.tarifa,
+                  cargaton       : item.cargaton,
+                  cantkm         : item.cantkm,
+                  ltsgasoil      : item.ltsgasoil,    
+                  impneto        : item.impneto,
+                  impiva         : item.impiva,
+                  totalitem      : item.totalitem
+               };
+            return this.servicio.grabarItemFacTP(itfactp)});
+            forkJoin(observables).subscribe({
+                next: (results) => {
+                  console.log('Todos los items grabados:', results);     
+                  this.dialogRef.close({ clicked : "Alta"}) // grabé un nuevo cobro
+                  }, 
+                error: (err) => {
+                  console.error('Error al grabar items:', err);
+                }
+            });
+          }))
+         .subscribe((datas:any):void =>{
+              resu = datas
+      })
+  }
+      
+
+
+
 
 modItemFactp(nrofac : number,nroit  : number){
  
@@ -329,8 +386,9 @@ modItemFactp(nrofac : number,nroit  : number){
       destino        : this.cdetfactp[nroit-1].destino,
       tarifa         : this.cdetfactp[nroit-1].tarifa,
       cargaton       : this.cdetfactp[nroit-1].cargaton,
+      cantkm         : this.cdetfactp[nroit-1].cantkm,
+      ltsgasoil      : this.cdetfactp[nroit-1].ltsgasoil,
       impneto        : this.cdetfactp[nroit-1].impneto,
-      tasaiva        : this.cdetfactp[nroit-1].tasaiva,
       impiva         : this.cdetfactp[nroit-1].impiva,
       totalitem      : this.cdetfactp[nroit-1].totalitem
 
@@ -360,7 +418,6 @@ modItemFactp(nrofac : number,nroit  : number){
            this.cdetfactp[indm].tarifa       = datas.ditFac.tarifa,
            this.cdetfactp[indm].cargaton     = datas.ditFac.cargaton,
            this.cdetfactp[indm].impneto      = datas.ditFac.impneto,
-           this.cdetfactp[indm].tasaiva      = datas.ditFac.tasaiva,
            this.cdetfactp[indm].impiva       = datas.ditFac.impiva,
            this.cdetfactp[indm].totalitem    = datas.ditFac.totalitem,
      
@@ -373,14 +430,22 @@ modItemFactp(nrofac : number,nroit  : number){
 }
 
 totalizarFactura(){
-  this.totfactura = 0;
+  // Recalcula totales despues de agregar o modificar un item de factura
+  var totfactura = 0;
+  var totneto    = 0;
+  var totiva     = 0;
+
   for (let i=0;i<this.cdetfactp.length;i++){
-    this.totfactura += this.cdetfactp[i].totalitem
+    totfactura += this.cdetfactp[i].totalitem;
+    totneto   += this.cdetfactp[i].impneto;
+    totiva    += this.cdetfactp[i].impiva;
   }
-  var importe = this.currencyPipe.transform(this.totfactura, '$', 'symbol', '1.2-2', 'es-AR');
-  this.formFactp.controls['totalfac'].setValue(importe);
+  //var importe = this.currencyPipe.transform(this.totfactura, '$', 'symbol', '1.2-2', 'es-AR');
+  this.formFactp.controls['totalfac'].setValue(this.totfactura);
   this.formFactp.controls['cantit'].setValue(this.cdetfactp.length);
-  
+  this.formFactp.controls['impneto'].setValue(totneto);
+  this.formFactp.controls['impiva'].setValue(totiva);
+  this.formFactp.controls['totalfac'].setValue(totfactura);
 }
 
 mostrarHora() {
@@ -402,6 +467,7 @@ mostrarHora() {
     }, 1000);
   }) 
   }
+
 
 Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})

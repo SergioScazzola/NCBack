@@ -161,7 +161,9 @@ export class ClientesComponent {
      }
     }
 
- 
+  volver(){
+    this.router.navigate(['/ppal']);
+ }
    aplicarFiltro(valor : string)  {
     this.dataSource.filter = valor.trim().toLowerCase();
  }

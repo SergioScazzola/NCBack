@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { camionDTO } from '../../../entidades/camionDTO';
 
 import { ServiciosService } from '../../servicios/service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
 import { SinoService } from '../../servicios/sino.service';
@@ -149,7 +149,10 @@ export class CamionesComponent {
      }
     }
 
- 
+ volver(){
+    this.router.navigate(['/ppal']);
+ }
+
    aplicarFiltro(valor : string)  {
     this.dataSource.filter = valor.trim().toLowerCase();
  }

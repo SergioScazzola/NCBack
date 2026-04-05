@@ -8,8 +8,9 @@ export interface itfactpDTO {
     destino        : string;
     tarifa         : number;  // tarifa del tpte = 0.9 * tarifa plena
     cargaton       : number;
+    cantkm         : number;
+    ltsgasoil      : number;
     impneto        : number;
-    tasaiva        : number;
     impiva         : number;
     totalitem      : number;
         

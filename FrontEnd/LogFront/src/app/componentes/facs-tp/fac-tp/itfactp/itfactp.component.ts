@@ -1,16 +1,20 @@
-import { ChangeDetectorRef, Component, effect, ElementRef, Inject, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, Inject, viewChild,LOCALE_ID } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input';
 import { viajeDTO } from '../../../../../entidades/viajeDTO';
 import { FormBuilder, FormGroup,Validators,FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { registerLocaleData } from '@angular/common';
+import localeEsAr from '@angular/common/locales/es-AR';
 import { choferDTO } from '../../../../../entidades/choferDTO';
 import { ServiciosService } from '../../../../servicios/service';
-import { intItFacTp } from '../../../../../entidades/itfactpDTO';
+import { intItFacTp, itfactpDTO } from '../../../../../entidades/itfactpDTO';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { NotiserviceService } from '../../../../servicios/notiservice.service';
 import { forkJoin } from 'rxjs';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+
+registerLocaleData(localeEsAr);
 
 @Component({
   selector: 'app-itfactp',
@@ -22,8 +26,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
                  CommonModule,
                  DragDropModule,
                  FormsModule,],
-  providers : [
-    CurrencyPipe ],
+  providers : [ CurrencyPipe,{ provide: LOCALE_ID, useValue: 'es-AR' }
+    ],
   templateUrl: './itfactp.component.html',
   styleUrl: './itfactp.component.css',
 })
@@ -66,14 +70,22 @@ export class ItfactpComponent {
            this.actualizarControles();
            this.cdr.detectChanges(); // <--- Importante: fuerza la detección si sigue el error
             });*/
-            } else { // data.accion = "A" -> Alta
+            } else if (this.data.accion === "A") { // data.accion = "A" -> Alta
            
-             
-              this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Chofer: "+this.data.nomchof;    
-              this.formItfac.controls["nroitem"].setValue(this.data.nroitem)
-              this.isloading = false;
-              this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
-              this.onSelectionViaje(0);
+                 this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Chofer: "+this.data.nomchof;    
+                 this.formItfac.controls["nroitem"].setValue(this.data.nroitem);
+                 this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje)
+                 this.seleccionoViaje(0);
+                 if (this.cviajes.length > 0) {
+                   this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje);
+                   this.seleccionoViaje(0);
+                  
+                 } else {
+                    this.notiService.showNotification("El chofer seleccionado no tiene viajes disponibles", "Cerrar", "error", 5000);
+                 };
+                 this.isloading = false;
+                 this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
+
             };
       })
       
@@ -83,14 +95,15 @@ export class ItfactpComponent {
   initFormulario() {
        this.formItfac = this.fb.group({        
              nroitem      : [this.data.nroitem], 
-             idViaje      : [1],
+             idViaje      : [0],
              idChofer     : [this.data.ditFac.idChofer],
              origen       : [''],
              destino      : [''],
              tarifa       : [0],        
              cargaton     : [0],
-             impneto      : [0],
-             tasaiva      : [0],
+             cantkm       : [0],
+             ltsgasoil    : [0],
+             impneto      : [0],            
              impiva       : [0],       
              totalitem    : [0],             
       })    
@@ -111,42 +124,47 @@ export class ItfactpComponent {
      this.formItfac.controls['destino'].setValue(this.cviajes[indv].destino);
      this.formItfac.controls['tarifa'].setValue(this.redondearAdos(this.cviajes[indv].tarifap*0.9));
      this.formItfac.controls['cargaton'].setValue(this.cviajes[indv].cargaton);
+     this.formItfac.controls['cantkm'].setValue(this.cviajes[indv].cantkm);
+     this.formItfac.controls['ltsgasoil'].setValue(this.cviajes[indv].ltsgasoil);
      var cantkm = this.cviajes[indv].cantkm;
-     var tarifa = this.redondearAdos(this.cviajes[indv].tarifap * 0.9);
-     this.formItfac.controls['impneto'].setValue(this.cviajes[indv].cargaton);
-     var importeneto = this.redondearAdos(cantkm * tarifa);
-     var impo = this.currencyPipe.transform(importeneto, '$', 'symbol', '1.2-2', 'es-AR');
-     this.formItfac.controls['impneto'].setValue(impo);
-     var tiva = this.formItfac.controls['tasaiva'].value / 100;
-     var impiva = this.redondearAdos(importeneto * tiva);
-     var impo = this.currencyPipe.transform(impiva, '$', 'symbol', '1.2-2', 'es-AR');
-     this.formItfac.controls['impiva'].setValue(impo);
-     var totitem = importeneto + impiva;
-     var impo = this.currencyPipe.transform(totitem, '$', 'symbol', '1.2-2', 'es-AR');
-     this.formItfac.controls['totalitem'].setValue(impo);
-
+     var tarifa = this.redondearAdos(this.cviajes[indv].tarifap * 0.9);// el viaje se carga con tarifa plena
+     var importe = cantkm * tarifa
+     var importeneto = this.redondearAdos(importe);
+     // var impo = this.currencyPipe.transform(importeneto, '$', 'symbol', '1.2-2', 'es-AR');
+     this.formItfac.controls['impneto'].setValue(importeneto);
+  
+     var impiva = importeneto * (this.servicio.getTasaIVA() / 100);
+     var impivaa = this.redondearAdos(impiva);
+     //var impo = this.currencyPipe.transform(impiva, '$', 'symbol', '1.2-2', 'es-AR');
+     this.formItfac.controls['impiva'].setValue(impivaa);
+     var totitem = importeneto + impivaa;
+     //var impo = this.currencyPipe.transform(totitem, '$', 'symbol', '1.2-2', 'es-AR');
+     this.formItfac.controls['totalitem'].setValue(totitem);
 
     }
-    selectionoViaje(nroviaje : number){
-      // Selecciono un viaje, calcular datos del item                      
-     this.formItfac.controls['origen'].setValue(this.cviajes[nroviaje].origen);
-     this.formItfac.controls['destino'].setValue(this.cviajes[nroviaje].destino);
-     this.formItfac.controls['tarifa'].setValue(this.redondearAdos(this.cviajes[nroviaje].tarifap*0.9));
-     this.formItfac.controls['cargaton'].setValue(this.cviajes[nroviaje].cargaton);
-     var cantkm = this.cviajes[nroviaje].cantkm;
-     var tarifa = this.redondearAdos(this.cviajes[nroviaje].tarifap * 0.9);
-     this.formItfac.controls['impneto'].setValue(this.cviajes[nroviaje].cargaton);
-     var importeneto = this.redondearAdos(cantkm * tarifa);
-     var impo = this.currencyPipe.transform(importeneto, '$', 'symbol', '1.2-2', 'es-AR');
-     this.formItfac.controls['impneto'].setValue(impo);
-     var tiva = this.formItfac.controls['tasaiva'].value / 100;
-     var impiva = this.redondearAdos(importeneto * tiva);
-     var impo = this.currencyPipe.transform(impiva, '$', 'symbol', '1.2-2', 'es-AR');
-     this.formItfac.controls['impiva'].setValue(impo);
-     var totitem = importeneto + impiva;
-     var impo = this.currencyPipe.transform(totitem, '$', 'symbol', '1.2-2', 'es-AR');
-     this.formItfac.controls['totalitem'].setValue(impo);
-
+    seleccionoViaje(indv : number){
+      // Selecciono el primer viaje de la lista, calcular datos del item       
+                    
+     this.formItfac.controls['origen'].setValue(this.cviajes[indv].origen);
+     this.formItfac.controls['destino'].setValue(this.cviajes[indv].destino);
+     this.formItfac.controls['tarifa'].setValue(this.redondearAdos(this.cviajes[indv].tarifap*0.9));
+     this.formItfac.controls['cargaton'].setValue(this.cviajes[indv].cargaton);
+     this.formItfac.controls['cantkm'].setValue(this.cviajes[indv].cantkm);
+     this.formItfac.controls['ltsgasoil'].setValue(this.cviajes[indv].ltsgasoil);
+     var cantkm = this.cviajes[indv].cantkm;
+     var tarifa = this.redondearAdos(this.cviajes[indv].tarifap * 0.9);// el viaje se carga con tarifa plena
+     var importe = cantkm * tarifa
+     var importeneto = this.redondearAdos(importe);
+     // var impo = this.currencyPipe.transform(importeneto, '$', 'symbol', '1.2-2', 'es-AR');
+     this.formItfac.controls['impneto'].setValue(importeneto);
+               
+     var impiva = importeneto * (this.servicio.getTasaIVA() / 100);
+     var impivaa = this.redondearAdos(impiva);
+     //var impo = this.currencyPipe.transform(impiva, '$', 'symbol', '1.2-2', 'es-AR');
+     this.formItfac.controls['impiva'].setValue(impivaa);
+     var totitem = importeneto + impivaa;
+     //var impo = this.currencyPipe.transform(totitem, '$', 'symbol', '1.2-2', 'es-AR');
+     this.formItfac.controls['totalitem'].setValue(totitem);
 
     }
 
@@ -160,11 +178,34 @@ export class ItfactpComponent {
     return numero
   }  
 
-  AgregarItemFactp(){
+AgregarItemFactp(){
+  // Completa los datos del item agregado 
+   
+    var iteem : itfactpDTO = {
+       idFactura    : this.data.ditFac.idFactura,
+       nroitem      : this.formItfac.controls["nroitem"].value,      
+       idViaje      : this.formItfac.controls["idViaje"].value,
+       idChofer     : this.formItfac.controls["idChofer"].value,
+       nomChofer    : this.cviajes[0].nomchofer, // el nombre del chofer lo saco del viaje seleccionado
+       origen       : this.formItfac.controls["origen"].value,
+       destino      : this.formItfac.controls["destino"].value,
+       tarifa       : this.formItfac.controls["tarifa"].value,
+       cargaton     : this.formItfac.controls["cargaton"].value,
+       cantkm       : this.formItfac.controls["cantkm"].value,
+       ltsgasoil    : this.formItfac.controls["ltsgasoil"].value,
+       impneto      : this.formItfac.controls["impneto"].value,
+       impiva       : this.formItfac.controls["impiva"].value,
+       totalitem    : this.formItfac.controls["totalitem"].value,
+    }          
+    this.dialogRef.close( {clicked : "Alta",
+                           item: { ...iteem }
+                          }) // Devuelvo el item creado al componente padre para que lo agregue al detalle
 
-  }
 
-  ModificarItemFactp(){
+}
+
+
+ModificarItemFactp(){
 
   }
 

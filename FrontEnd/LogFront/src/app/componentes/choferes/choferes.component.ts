@@ -151,7 +151,9 @@ export class ChoferesComponent {
      }
     }
 
- 
+  volver(){
+    this.router.navigate(['/ppal']);
+ }
    aplicarFiltro(valor : string)  {
     this.dataSource.filter = valor.trim().toLowerCase();
  }

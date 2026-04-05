@@ -38,7 +38,16 @@ export class FacsTPComponent {
  
    colfactp : string[] = ["idFactura" , "nrofactura","facndc","fecha","nomchofer","impneto","impiva","totalfac","M","B" ];
  
-   
+  /*      idFactura      : number;
+     nrofactura     : string;
+     facndc         : string;  // fac : suma, ndc : resta
+     fecha          : Date;
+     idChofer       : number;
+     nomchofer      : string;
+     cantit         : number;        
+     impneto        : number; 
+     impiva         : number;
+     totalfac       : number;*/
    constructor(     private servicio     : ServiciosService,               
                     private rutaActiva   : ActivatedRoute,
                     private router       : Router,
@@ -80,14 +89,14 @@ export class FacsTPComponent {
     
      } 
    agFacTP(){
-     const data = {
-          idFactura    : 0,  
+     const data1 = {
+          idFactura    : this.cantfactp + 1,  
           nrofactura   : "",
           accion       : "A",
      }
     const dialogConfig = new MatDialogConfig();   
     dialogConfig.autoFocus = false;
-    dialogConfig.data = data;
+    dialogConfig.data = data1;
     dialogConfig.width =  '900';         // ancho máximo de la ventana
     dialogConfig.maxWidth = '95vw';      
     dialogConfig.height   = 'auto';        // altura se ajusta al contenido
@@ -96,7 +105,7 @@ export class FacsTPComponent {
   
      const dialogRef =  this.dialog.open(FacTpComponent, dialogConfig);
      dialogRef.afterClosed().subscribe( // 
-        (data:any) => { if (data.clicked === 'Alta'){                   
+        (datass:any) => { if (datass.clicked === 'Alta'){                   
           this.leerFacsTP();
          }})
      this.formFactp = true;
@@ -157,7 +166,9 @@ export class FacsTPComponent {
      }
     }
 
- 
+  volver(){
+    this.router.navigate(['/ppal']);
+ }
    aplicarFiltro(valor : string)  {
     this.dataSource.filter = valor.trim().toLowerCase();
  }

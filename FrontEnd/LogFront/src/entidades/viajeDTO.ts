@@ -14,6 +14,7 @@ export interface viajeDTO {
     cargaton       : number;
     tarifap        : number;
     ltsgasoil      : number;
+    impneto        : number;
     impviaje       : number;
     facturado      : number;
 }

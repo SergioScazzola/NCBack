@@ -97,20 +97,20 @@
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Cant.KM</mat-label>
-          <input matInput selecText formControlName="cantkm"
+          <input matInput selecText formControlName="cantkm"         
              (blur)="onBlurCantKm($event)"/>        
         </mat-form-field>
       </div>
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Carga (Toneladas)</mat-label>
-          <input matInput selecText formControlName="cargaton"/>        
+          <input matInput selecText formControlName="cargaton"/>         
         </mat-form-field>
       </div>
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Tarifa Plena</mat-label>
-          <input matInput selecText formControlName="tarifap"
+          <input matInput selecText formControlName="tarifap"         
              (blur)="onBlurTarifaP($event)"/>        
         </mat-form-field>
       </div>
@@ -120,14 +120,23 @@
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Litros Gasoil</mat-label>
-          <input matInput selecText formControlName="ltsgasoil"/>        
-        </mat-form-field>
+          <input matInput selecText formControlName="ltsgasoil"  
+              />  
+          </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Importe Neto</mat-label>
+          <input matInput [readonly]="true" formControlName="impneto"
+                 [value]="formViaje.get('impneto')?.value | currency:'$':'symbol':'1.2-2'"
+                 style="text-align: right;">	
+         </mat-form-field>   
       </div>
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe del Viaje</mat-label>
           <input matInput [readonly]="true" formControlName="impviaje"
-                 [value]="formViaje.get('impviaje')?.value | currency:'$':true"
+                 [value]="formViaje.get('impviaje')?.value  | currency:'$':'symbol':'1.2-2'"
                  style="text-align: right;">	
          </mat-form-field>   
       </div>
