@@ -10,7 +10,7 @@ public class ItfactC {
      private String nomChofer;   
      private String origen;
      private String destino;      
-     private double tarifap;  // tarifa plena del viaje
+     private double tarifa;  // tarifa plena del viaje
      private float  cargaton;
      private float  cantkm;
      private float  ltsgasoil;
@@ -77,12 +77,12 @@ public class ItfactC {
          this.destino = destino;
      }
 
-     public double getTarifap() {
-         return tarifap;
+     public double getTarifa() {
+         return tarifa;
      }
 
-     public void setTarifap(double tarifap) {
-         this.tarifap = tarifap;
+     public void setTarifa(double tarifap) {
+         this.tarifa = tarifap;
      }
 
      public float getCargaton() {
@@ -133,10 +133,5 @@ public class ItfactC {
      public void setTotalitem(double totalitem) {
          this.totalitem = totalitem;
      }
-
-
-    
-   
-     
-     
+                 
 }
