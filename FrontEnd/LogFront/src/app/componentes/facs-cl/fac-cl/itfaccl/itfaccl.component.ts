@@ -17,7 +17,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 registerLocaleData(localeEsAr);
 
 @Component({
-  selector: 'app-itfactp',
+  selector: 'app-itfaccl',
   imports: [    MatFormField,
                  MatLabel,   
                  MatInputModule,      
@@ -28,11 +28,11 @@ registerLocaleData(localeEsAr);
                  FormsModule,],
   providers : [ CurrencyPipe,{ provide: LOCALE_ID, useValue: 'es-AR' }
     ],
-  templateUrl: './itfactp.component.html',
-  styleUrl: './itfactp.component.css',
+  templateUrl: './itfaccl.component.html',
+  styleUrl: './itfaccl.component.css',
 })
 
-export class ItfactpComponent {
+export class ItfacclComponent {
  //public nameInput = viewChild<ElementRef>('idViaje');
  isloading        : boolean = true;
  cviajes          : viajeDTO[]=[];
@@ -43,7 +43,7 @@ export class ItfactpComponent {
 
    constructor( public fb           : FormBuilder,
                 public servicio     : ServiciosService,
-                public dialogRef    : MatDialogRef<ItfactpComponent>,
+                public dialogRef    : MatDialogRef<ItfacclComponent>,
                 private currencyPipe: CurrencyPipe,
                 public  dialog      : MatDialog,  
                 private cdr         : ChangeDetectorRef,         

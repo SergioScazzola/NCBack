@@ -19,7 +19,7 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats, MatNativ
 import { intItFacTp, itfactpDTO } from '../../../../entidades/itfactpDTO';
 import {MatDatepickerModule,MatDatepickerInputEvent} from '@angular/material/datepicker';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
-import { ItfactpComponent } from '../../facs-tp/fac-tp/itfactp/itfactp.component'
+import { ItfacclComponent } from '../../facs-cl/fac-cl/itfaccl/itfaccl.component'
 
 export const DATE_FORMATS : MatDateFormats = {
   
@@ -33,7 +33,7 @@ export const DATE_FORMATS : MatDateFormats = {
  
 }
 @Component({
-  selector: 'app-fac-tp',
+  selector: 'app-fac-cl',
  imports: [    MatFormField,
                  MatLabel,   
                  MatInputModule,      
@@ -51,10 +51,10 @@ export const DATE_FORMATS : MatDateFormats = {
     { provide : MAT_DATE_LOCALE, useValue: es},
     
   ],                 
-  templateUrl: './fac-tp.component.html',
-  styleUrl: './fac-tp.component.css',
+  templateUrl: './fac-cl.component.html',
+  styleUrl: './fac-cl.component.css',
 })
-export class FacTpComponent {
+export class FacClComponent {
   public nameInput = viewChild<ElementRef>('nrofactura');
   isloading        : boolean = true;
   cfacstp          : factpDTO[]=[];
@@ -100,7 +100,7 @@ export class FacTpComponent {
   
   constructor(  public fb           : FormBuilder,
                 public servicio     : ServiciosService,
-                public dialogRef    : MatDialogRef<FacTpComponent>,              
+                public dialogRef    : MatDialogRef<FacClComponent>,              
                 public  dialog      : MatDialog,
                 private cdr         : ChangeDetectorRef,
                 private zone        : NgZone,
@@ -253,7 +253,7 @@ agItemFactp(){ // Se llama unicamente en alta de factura
    dialogConfig.panelClass   = 'custom-dialog-container';
    dialogConfig.disableClose =  false; // opcional según necesidad
 
-   const dialogRef =  this.dialog.open(ItfactpComponent, dialogConfig);
+   const dialogRef =  this.dialog.open(ItfacclComponent, dialogConfig);
    dialogRef.afterClosed().subscribe((datai: any) => {
             console.log("DATAI:", datai);
      
@@ -382,7 +382,7 @@ verItemFactp(nroit  : number){ // prepara datos y los manda al componente "itfac
     dialogConfig.panelClass = 'custom-dialog-container';
     dialogConfig.disableClose =  false; // opcional según necesidad
   
-     const dialogRef =  this.dialog.open(ItfactpComponent, dialogConfig);
+     const dialogRef =  this.dialog.open(ItfacclComponent, dialogConfig);
      dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Ver'){                   
            console.log("Modifico el item nro.: "+datas.nroitem) ;                                                    

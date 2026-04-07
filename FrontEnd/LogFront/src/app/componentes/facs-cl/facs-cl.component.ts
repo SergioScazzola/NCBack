@@ -9,19 +9,19 @@ import { finalize, Subscription } from 'rxjs';
 import { DatePipe,DecimalPipe} from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { factpDTO } from '../../../entidades/factpDTO';
-import { FacTpComponent } from './fac-tp/fac-tp.component';
+import { FacClComponent } from './fac-cl/fac-cl.component';
 import { MatDateFormats } from '@angular/material/core';
 
 
 
 
 @Component({
-  selector: 'app-facs-tp',
+  selector: 'app-facs-cl',
   imports: [ CommonModule,DatePipe,DecimalPipe,MatTableModule],
-  templateUrl: './facs-tp.component.html',
-  styleUrl: './facs-tp.component.css',
+  templateUrl: './facs-cl.component.html',
+  styleUrl: './facs-cl.component.css',
 })
-export class FacsTPComponent {
+export class FacsClComponent {
 @ViewChild('filtroInput') inputRef!: ElementRef<HTMLInputElement>;
    
    
@@ -98,7 +98,7 @@ export class FacsTPComponent {
     dialogConfig.panelClass       = 'custom-dialog-container';
     dialogConfig.disableClose     =  false; // opcional según necesidad
   
-     const dialogRef =  this.dialog.open(FacTpComponent, dialogConfig);
+     const dialogRef =  this.dialog.open(FacClComponent, dialogConfig);
      dialogRef.afterClosed().subscribe(
         (datass:any) => { if (datass.clicked === 'Alta'){                   
                              this.leerFacsTP();
@@ -124,7 +124,7 @@ export class FacsTPComponent {
     dialogConfig.autoFocus = false;
     dialogConfig.data = data;
     
-    const dialogRef =  this.dialog.open(FacTpComponent, dialogConfig);
+    const dialogRef =  this.dialog.open(FacClComponent, dialogConfig);
     dialogRef.afterClosed().subscribe( // 
           (data:any) => { if (data.clicked === 'Ver'){                   
               this.leerFacsTP(); // refrescar lista
