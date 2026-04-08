@@ -333,6 +333,12 @@ public class JdbcTpteRepository implements TpteRepository {
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Viaje.class),idchofer);
       }
 
+      @Override
+      public List<Viaje> ViajesXCliente(int idclte){
+        String selec = "SELECT * FROM viajes WHERE idCliente=? ORDER BY fecha DESC LIMIT 100";
+        return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Viaje.class),idclte);
+      }
+
        @Override
       public int getCantViajesXChofer(int idchofer){
         String consulta = "SELECT COUNT(*) FROM viajes WHERE idChofer=?";
@@ -344,6 +350,19 @@ public class JdbcTpteRepository implements TpteRepository {
           return ((int)obj);
         }         
       }   
+
+      @Override
+      public int getCantViajesXCliente(int idclte){
+        String consulta = "SELECT COUNT(*) FROM viajes WHERE idCliente=?";
+     
+        Object obj = jdbcTemplate.queryForObject(consulta,Integer.class,idclte);    
+        if (obj==null){
+          return 0;
+        } else {
+          return ((int)obj);
+        }         
+      }   
+
       @Override
       public int getMaxViajes(){
         String consulta = "SELECT MAX(idViaje) FROM viajes";
@@ -551,12 +570,12 @@ public class JdbcTpteRepository implements TpteRepository {
      
       @Override
       public List<FactCli> AllFacscl() {   
-        String selec = "SELECT * FROM facscl ORDER BY fecha DES LIMIT 150";
+        String selec = "SELECT * FROM facscli ORDER BY fecha DES LIMIT 150";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactCli.class));
       }
       @Override
       public int getMaxFacscl(){
-        String consulta = "SELECT MAX(idFactura) FROM facscl";
+        String consulta = "SELECT MAX(idFactura) FROM facscli";
      
         Object obj = jdbcTemplate.queryForObject(consulta,Integer.class);    
         if (obj==null){
@@ -567,7 +586,7 @@ public class JdbcTpteRepository implements TpteRepository {
       }   
       @Override
       public FactCli findFacclById(int idfac) {
-        String q = "SELECT * FROM facscl WHERE idFactura=?";
+        String q = "SELECT * FROM facscli WHERE idFactura=?";
         try {
           FactCli fac = jdbcTemplate.queryForObject(q,
               BeanPropertyRowMapper.newInstance(FactCli.class), idfac);          
@@ -581,7 +600,7 @@ public class JdbcTpteRepository implements TpteRepository {
       public int actualizarFaccl(int nrof, FactCli fac){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE facscl SET nrofactura=?,facndc=?,fecha=?,"+
+          resu = jdbcTemplate.update("UPDATE facscli SET nrofactura=?,facndc=?,fecha=?,"+
                                     "idCliente=?,nomCliente=?,cantit=?,impneto,=?,"+
                                     "impiva=?,totalfac=? WHERE idFactura=?",
                     new Object[] {fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
@@ -599,9 +618,9 @@ public class JdbcTpteRepository implements TpteRepository {
       // Graba nueva Factura al Cliente 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT facscl(idFactura,nrofactura,facndc,fecha,"+
+          resu = jdbcTemplate.update("INSERT facscli(idFactura,nrofactura,facndc,fecha,"+
                                      "idCliente,nomCliente,cantit,impneto,"+
-                                     "impiva=?,totalfac) VALUES(?,?,?,?,?,?,?,?,?,?) ",
+                                     "impiva,totalfac) VALUES(?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {fac.getIdFactura(),fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
                                   fac.getIdCliente(),fac.getNomcliente(),fac.getCantit(),
                                   fac.getImpneto(),fac.getImpiva(),fac.getTotalfac()
@@ -615,7 +634,7 @@ public class JdbcTpteRepository implements TpteRepository {
     public int deleteFaccl(int nrofac){
       int resu = 0;
       try {
-        resu = jdbcTemplate.update("DELETE FROM facscl WHERE idFactura="+nrofac);
+        resu = jdbcTemplate.update("DELETE FROM facscli WHERE idFactura="+nrofac);
       } catch (DataAccessException dae){
         resu = -5;   
       }
@@ -636,7 +655,7 @@ public class JdbcTpteRepository implements TpteRepository {
     
       try {                   
           resu = jdbcTemplate.update("INSERT dfacscl(idFactura,nroitem,idViaje,idChofer,"+
-                                    "nomChofer,origen,destino,tarifa,cargaton,cantkm,ltsgasoil,impneto"+
+                                    "nomChofer,origen,destino,tarifa,cargaton,cantkm,ltsgasoil,impneto,"+
                                     "impiva,totalitem) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {itfac.getIdFactura(),itfac.getNroitem(),itfac.getIdViaje(),itfac.getIdChofer(),
                                   itfac.getNomChofer(),itfac.getOrigen(),itfac.getDestino(),

@@ -59,6 +59,8 @@ public interface TpteRepository {
     int saveViaje(Viaje viaje);
     int actualizarViaje(int idviaje, Viaje viaje);    
     int getCantViajesXChofer(int idchofer);
+    int getCantViajesXCliente(int idclte);
+    List<Viaje> ViajesXCliente(int idclte);
     int deleteViaje(int idviaje);
 
     // FACTURA DEL TRANSPORTE

@@ -115,7 +115,7 @@ public class FactClteController {
        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  @PostMapping(value="/faccl/detalle/nuevo")
+  @PostMapping(value="/detalle/nuevo")
     // Graba un nuevo Item de Factura al Cliente
     public ResponseEntity<String> crearItemFaccl(@RequestBody ItfactC itfac) {
        try {
@@ -126,7 +126,7 @@ public class FactClteController {
       }
     }
 
-    @PutMapping(value="/faccl/detalle/actualizar")
+    @PutMapping(value="/detalle/actualizar")
     public ResponseEntity<String> updateItemFaccl(@RequestBody ItfactC itfac){
       try {
         int resultado = tpteRepository.actualizarItemFaccl(itfac);    
@@ -135,7 +135,7 @@ public class FactClteController {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);     
       } 
     }
-     @DeleteMapping(value="/faccl/detalle/borrar", params={"idfac","nroitem"})    
+     @DeleteMapping(value="/detalle/borrar", params={"idfac","nroitem"})    
     public ResponseEntity<String> borrarItemFactp(@RequestParam("idfac")   Integer nrofac,
                                                   @RequestParam("nroitem") Integer nroit){
                                                

@@ -63,6 +63,24 @@ public class ViajeController {
     }
   }
 
+   @SuppressWarnings("null")
+   @RequestMapping(value="/viajesxcliente", params={"idcliente"})
+    public ResponseEntity<List<Viaje>> getViajesXCliente(@RequestParam("idcliente") Integer idclte) {
+    try {
+      List<Viaje> viajes = null;
+            
+      viajes = tpteRepository.ViajesXCliente(idclte);
+    
+      if (viajes.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } else {
+         return new ResponseEntity<>(viajes, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @RequestMapping(value="/max")
   public int getCantViajes(){
      int cantv = tpteRepository.getMaxViajes();
@@ -75,6 +93,11 @@ public class ViajeController {
      return cantv;
   }
 
+   @RequestMapping(value="/cantViajesxCliente", params={"idcliente"})
+   public int getCantViajesXCliente(@RequestParam("idcliente") Integer idclte){
+     int cantv = tpteRepository.getCantViajesXCliente(idclte);
+     return cantv;     
+  }
 
   @RequestMapping(value ="/viaje" , params={"id"} )
   public ResponseEntity<Viaje> getViajeById(@RequestParam("id") Integer idviaje) {
