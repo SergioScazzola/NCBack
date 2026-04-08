@@ -11,7 +11,7 @@ import { NotiserviceService } from '../../../servicios/notiservice.service';
 import { ServiciosService } from '../../../servicios/service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SelecTextDirective } from "../../../Directivas/selec-text.directive";
-import { factpDTO, intFacTp } from '../../../../entidades/factpDTO';
+
 import { choferDTO } from '../../../../entidades/choferDTO';
 import { DateFnsAdapter } from '@angular/material-date-fns-adapter';
 import {es} from 'date-fns/locale';
@@ -20,6 +20,9 @@ import { intItFacTp, itfactpDTO } from '../../../../entidades/itfactpDTO';
 import {MatDatepickerModule,MatDatepickerInputEvent} from '@angular/material/datepicker';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
 import { ItfacclComponent } from '../../facs-cl/fac-cl/itfaccl/itfaccl.component'
+import { facclDTO, intFacCl } from '../../../../entidades/facclDTO';
+import { intItFacCl, itfacclDTO } from '../../../../entidades/itfacclDTO';
+import { clienteDTO } from '../../../../entidades/clienteDTO';
 
 export const DATE_FORMATS : MatDateFormats = {
   
@@ -57,29 +60,29 @@ export const DATE_FORMATS : MatDateFormats = {
 export class FacClComponent {
   public nameInput = viewChild<ElementRef>('nrofactura');
   isloading        : boolean = true;
-  cfacstp          : factpDTO[]=[];
-  cdetfactp        : itfactpDTO[]=[];
-  cchoferes        : choferDTO[]=[];
+  cfacscl          : facclDTO[]=[];
+  cdetfaccl        : itfacclDTO[]=[];
+  cclientes        : clienteDTO[]=[];
   
   operacion        : string;
-  formFactp        : FormGroup;
-  idchoferSel      : number = 1;
-  maxfactp         : number;
-  nfactpalta       : number;
+  formFaccl        : FormGroup;
+  idclienteSel     : number = 1;
+  maxfaccl         : number;
+  nfaccpalta       : number;
   totfactura       : number;
-  factpp           : factpDTO = {
+  factpp           : facclDTO = {
      idFactura      : 0,
      nrofactura     : "",
      facndc         : "FAC",  // fac : suma, ndc : resta
      fecha          : new Date(),
-     idChofer       : 1,
-     nomchofer      : "",
+     idCliente      : 1,
+     nomCliente     : "",
      cantit         : 0,        
      impneto        : 0, 
      impiva         : 0,
      totalfac       : 0
   };  
-  itemfac : itfactpDTO = {
+  itemfac : itfacclDTO = {
     
     idFactura      : 0,    
     nroitem        : 0,
@@ -104,34 +107,34 @@ export class FacClComponent {
                 public  dialog      : MatDialog,
                 private cdr         : ChangeDetectorRef,
                 private zone        : NgZone,
-                @Inject(MAT_DIALOG_DATA) public data: intFacTp,  
+                @Inject(MAT_DIALOG_DATA) public data: intFacCl,  
                 private notiService : NotiserviceService )
    { effect(() => {
             this.nameInput()?.nativeElement.focus(); //enfoca  iniciar
         });
     
   }
-  colDFactp : string[] = ["nroitem","idViaje","origen","destino","cantkm","ltsgasoil","totalitem","M"]
+  colDFaccl : string[] = ["nroitem","idViaje","origen","destino","cantkm","ltsgasoil","totalitem","M"]
 
   ngAfterViewInit(){
     this.isloading = false
   }
   ngOnInit(){             
     
-     //setTimeout(() => {
+      //setTimeout(() => {
       this.initFormulario();
           // 1. Lanzamos las peticiones base en paralelo             
       if (this.data.accion === "V") {
         forkJoin({
-             choferes: this.servicio.getChoferes(),    
+             clientes: this.servicio.getClientes(),    
 
           // lee factura y detalle en paralelo para mostrar en el formulario
-          factura: this.servicio.leerFacTP(this.data.idFactura),
-          detalle: this.servicio.getItemsFacsTP(this.data.idFactura),
+          factura: this.servicio.leerFacCL(this.data.idFactura),
+          detalle: this.servicio.getItemsFacsCL(this.data.idFactura),
         }).subscribe(res2 => {
-           this.cchoferes = res2.choferes;
+           this.cclientes  = res2.clientes;
            this.factpp     = res2.factura;
-           this.cdetfactp  = res2.detalle;
+           this.cdetfaccl  = res2.detalle;
 
                  
            this.operacion = `Consulta Factura tpte Nro. ${this.factpp.idFactura} - ${this.factpp.nrofactura}`;
@@ -142,24 +145,22 @@ export class FacClComponent {
       }
       if (this.data.accion === "A") { // data.accion = "A" -> Alta
           var subs : Subscription 
-          subs = this.servicio.getChoferes()
+          subs = this.servicio.getClientes()
               .pipe(finalize(()=> {
                 this.mostrarHora();
                 //this.servicio.getCantFacsTP().subscribe(max => {           
-                this.nfactpalta = this.data.idFactura;
-                console.log("Factura para alta: " + this.nfactpalta);
-                this.operacion = "Agregar Factura tpte. Nro. " + this.nfactpalta;
-                this.formFactp.controls["idFactura"].setValue(this.nfactpalta);
+                this.nfaccpalta = this.data.idFactura;
+                console.log("Factura para alta: " + this.nfaccpalta);
+                this.operacion = "Agregar Factura Cliente Nro. " + this.nfaccpalta;
+                this.formFaccl.controls["idFactura"].setValue(this.nfaccpalta);
                 console.log("Datos Recibidos : " + JSON.stringify(this.data));
-                var indchofer = this.cchoferes.findIndex(p=>p.idChofer=this.idchoferSel);
-                this.factpp.nomchofer = this.cchoferes[indchofer].nombre;                            
+                var indcliente = this.cclientes.findIndex(p=>p.idCliente=this.idclienteSel);
+                this.factpp.nomCliente = this.cclientes[indcliente].nombre;                            
                 this.isloading = false;
                 this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores
             }))
 
-          .subscribe(datas => {
-            this.cchoferes = datas;
-          })
+            .subscribe(datas => { this.cclientes = datas })
            
       }                           
       //},100);
@@ -167,12 +168,12 @@ export class FacClComponent {
    }
 
    initFormulario() {
-     this.formFactp = this.fb.group({        
+     this.formFaccl = this.fb.group({        
              idFactura    : [0], 
              nrofactura   : ['',[Validators.required]],
              facndc       : ['FAC',[Validators.required, Validators.pattern(/^(FAC|NDC)$/)]],
              fecha        : [new Date()],
-             idChofer     : [1],
+             idCliente    : [1],
              impneto      : [0],           
              impiva       : [0],       
              totalfac     : [0],
@@ -181,29 +182,29 @@ export class FacClComponent {
 
     }
   actualizarFormulario(){
-    var indchofer = this.cchoferes.findIndex(p=>p.idChofer=this.idchoferSel);
-    this.factpp.nomchofer = this.cchoferes[indchofer].nombre;
-    this.formFactp.controls["idFactura"].setValue(this.factpp.idFactura), 
-    this.formFactp.controls["nrofactura"].setValue(this.factpp.nrofactura),              
-    this.formFactp.controls["facndc"].setValue(this.factpp.facndc), 
-    this.formFactp.controls["fecha"].setValue(this.factpp.fecha), 
-    this.formFactp.controls["idChofer"].setValue(this.factpp.idChofer), 
-    this.formFactp.controls["impneto"].setValue(this.factpp.impneto), 
-    this.formFactp.controls["impiva"].setValue(this.factpp.impiva), 
-    this.formFactp.controls["totalfac"].setValue(this.factpp.totalfac), 
-    this.formFactp.controls["cantit"].setValue(this.factpp.cantit), 
-    this.idchoferSel = this.factpp.idChofer;
-    this.factpp.nomchofer = this.cchoferes[indchofer].nombre;
+    var indcliente = this.cclientes.findIndex(p=>p.idCliente=this.idclienteSel);
+    this.factpp.nomCliente = this.cclientes[indcliente].nombre;
+    this.formFaccl.controls["idFactura"].setValue(this.factpp.idFactura), 
+    this.formFaccl.controls["nrofactura"].setValue(this.factpp.nrofactura),              
+    this.formFaccl.controls["facndc"].setValue(this.factpp.facndc), 
+    this.formFaccl.controls["fecha"].setValue(this.factpp.fecha), 
+    this.formFaccl.controls["idCliente"].setValue(this.factpp.idCliente), 
+    this.formFaccl.controls["impneto"].setValue(this.factpp.impneto), 
+    this.formFaccl.controls["impiva"].setValue(this.factpp.impiva), 
+    this.formFaccl.controls["totalfac"].setValue(this.factpp.totalfac), 
+    this.formFaccl.controls["cantit"].setValue(this.factpp.cantit), 
+    this.idclienteSel = this.factpp.idCliente;
+    this.factpp.nomCliente = this.cclientes[indcliente].nombre;
                            
    }
        
              
-onSelectionChofer($event : any){
+onSelectionCliente($event : any){
   // recibo un idChofer
- this.idchoferSel = $event.value;
- this.factpp.idChofer = this.idchoferSel;
- var indchof = this.cchoferes.findIndex(p=>p.idChofer==this.idchoferSel);
- this.factpp.nomchofer = this.cchoferes[indchof].nombre; 
+ this.idclienteSel = $event.value;
+ this.factpp.idCliente = this.idclienteSel;
+ var indcli = this.cclientes.findIndex(p=>p.idCliente==this.idclienteSel);
+ this.factpp.nomCliente = this.cclientes[indcli].nombre; 
 }
 
  onFechaChange(event: any) {
@@ -214,21 +215,22 @@ onSelectionChofer($event : any){
     nuevaFecha.setHours(ahora.getHours(), ahora.getMinutes(), ahora.getSeconds(), 0);
   
     // Establecer la fecha con hora en el form
-    this.formFactp.controls['fecha'].setValue(nuevaFecha);
+    this.formFaccl.controls['fecha'].setValue(nuevaFecha);
   }
 
-agItemFactp(){ // Se llama unicamente en alta de factura
-   console.log("Tamaño array detalle: " + this.cdetfactp.length);
-   const datas : intItFacTp = {
-     nrofactura :   this.formFactp.controls["nrofactura"].value,
-     nroitem    :   this.cdetfactp.length+1,   
-     nomchof    :   this.factpp.nomchofer,
+agItemFaccl(){ // Se llama unicamente en alta de factura
+   console.log("Tamaño array detalle: " + this.cdetfaccl.length);
+   const datas : intItFacCl = {
+     nrofactura :   this.formFaccl.controls["nrofactura"].value,
+     nroitem    :   this.cdetfaccl.length+1,   
+     nrocli     :   this.factpp.idCliente,
+     nomcli     :   this.factpp.nomCliente,
      accion     : "A",
      ditFac     : {   // donde se recibe  el item creado 
-      idFactura      : this.formFactp.controls["idFactura"].value,      
-      nroitem        : this.cdetfactp.length+1,  
+      idFactura      : this.formFaccl.controls["idFactura"].value,      
+      nroitem        : this.cdetfaccl.length+1,  
       idViaje        : 1,           
-      idChofer       : this.factpp.idChofer,
+      idChofer       : 1,
       nomChofer      : "",
       origen         : "",
       destino        : "",
@@ -276,41 +278,41 @@ agItemFactp(){ // Se llama unicamente en alta de factura
            totalitem:    datai.item.totalitem
         };
 
-      this.cdetfactp = [...this.cdetfactp, nuevoItem];
+      this.cdetfaccl = [...this.cdetfaccl, nuevoItem];
 
       this.totalizarFactura();
-      console.log("Long.Array: " + this.cdetfactp.length);
+      console.log("Long.Array: " + this.cdetfaccl.length);
     }});
 }   
           
- GrabarFacturaTP() { // Graba Sólo nueva factura con el detalle incluído en cdetfactp
+ GrabarFacturaCL() { // Graba Sólo nueva factura con el detalle incluído en cdetfactp
   // Graba cabecera y detalle de la factura
    var grabo : boolean  = false;
-   var indchof = this.cchoferes.findIndex(p=>p.idChofer==this.idchoferSel);   
-   var factp : factpDTO = {
-        idFactura     : this.formFactp.controls["idFactura"].value,
-        nrofactura    : this.formFactp.controls["nrofactura"].value,   
-        facndc        : this.formFactp.controls["facndc"].value,   
-        fecha         : this.formFactp.controls["fecha"].value,   
-        idChofer      : this.formFactp.controls["idChofer"].value,   
-        nomchofer     : this.cchoferes[indchof].nombre,
-        impneto       : this.formFactp.controls["impneto"].value,   
-        impiva        : this.formFactp.controls["impiva"].value,   
-        totalfac      : this.formFactp.controls["totalfac"].value,   
-        cantit        : this.formFactp.controls["cantit"].value,   
+   var indcli = this.cclientes.findIndex(p=>p.idCliente==this.idclienteSel);   
+   var faccl : facclDTO = {
+        idFactura     : this.formFaccl.controls["idFactura"].value,
+        nrofactura    : this.formFaccl.controls["nrofactura"].value,   
+        facndc        : this.formFaccl.controls["facndc"].value,   
+        fecha         : this.formFaccl.controls["fecha"].value,   
+        idCliente     : this.formFaccl.controls["idCliente"].value,   
+        nomCliente    : this.cclientes[indcli].nombre,
+        impneto       : this.formFaccl.controls["impneto"].value,   
+        impiva        : this.formFaccl.controls["impiva"].value,   
+        totalfac      : this.formFaccl.controls["totalfac"].value,   
+        cantit        : this.formFaccl.controls["cantit"].value,   
         
   }   
    
   var resu : number;
   var subs : Subscription;  
-      subs = this.servicio.grabarFacTP(factp)
+      subs = this.servicio.grabarFacCL(faccl)
          .pipe(finalize(() => {        
-           this.notiService.showNotification("La Factura Nro : "+factp.nrofactura+" del chofer "+factp.nomchofer+"("+resu+
+           this.notiService.showNotification("La Factura Nro : "+faccl.nrofactura+" del chofer "+faccl.nomCliente+"("+resu+
                                         ") se ha agregado con éxito",'Aceptar','mensaje',500);     
            grabo  = true;
            
-           const observables = this.cdetfactp.map(item => {
-               const itfactp: itfactpDTO = {    
+           const observables = this.cdetfaccl.map(item => {
+               const itfaccl: itfacclDTO = {    
                   idFactura      : item.idFactura,    
                   nroitem        : item.nroitem,
                   idViaje        : item.idViaje,
@@ -326,7 +328,7 @@ agItemFactp(){ // Se llama unicamente en alta de factura
                   impiva         : item.impiva,
                   totalitem      : item.totalitem
                };
-            return this.servicio.grabarItemFacTP(itfactp)});
+            return this.servicio.grabarItemFacCL(itfaccl)});
             forkJoin(observables).subscribe({
                 next: (results) => {
                   console.log('Todos los items grabados:', results);     
@@ -349,27 +351,28 @@ agItemFactp(){ // Se llama unicamente en alta de factura
 verItemFactp(nroit  : number){ // prepara datos y los manda al componente "itfactp" para visualizar el item
  
   var nroitem = nroit;
-  console.log("item : "+nroitem+" nro.factura : "+this.cdetfactp[nroitem-1].idFactura)
-  const datas : intItFacTp = {
-    nrofactura    : this.formFactp.controls["nrofactura"].value,
+  console.log("item : "+nroitem+" nro.factura : "+this.cdetfaccl[nroitem-1].idFactura)
+  const datas : intItFacCl = {
+    nrofactura    : this.formFaccl.controls["nrofactura"].value,
     nroitem       : nroitem,
-    nomchof       : this.cdetfactp[nroitem-1].nomChofer,
+    nrocli        : this.factpp.idCliente,
+    nomcli        : this.factpp.nomCliente,
     accion        : "V",
     ditFac   : {   // donde se envia el item a modificar    
-      idFactura      : this.formFactp.controls["idFactura"].value,         
+      idFactura      : this.formFaccl.controls["idFactura"].value,         
       nroitem        : nroitem,
-      idViaje        : this.cdetfactp[nroitem-1].idViaje,
-      idChofer       : this.cdetfactp[nroitem-1].idChofer,
-      nomChofer      : this.cdetfactp[nroitem-1].nomChofer,
-      origen         : this.cdetfactp[nroitem-1].origen,
-      destino        : this.cdetfactp[nroitem-1].destino,
-      tarifa         : this.cdetfactp[nroitem-1].tarifa,
-      cargaton       : this.cdetfactp[nroitem-1].cargaton,
-      cantkm         : this.cdetfactp[nroitem-1].cantkm,
-      ltsgasoil      : this.cdetfactp[nroitem-1].ltsgasoil,
-      impneto        : this.cdetfactp[nroitem-1].impneto,
-      impiva         : this.cdetfactp[nroitem-1].impiva,
-      totalitem      : this.cdetfactp[nroitem-1].totalitem
+      idViaje        : this.cdetfaccl[nroitem-1].idViaje,
+      idChofer       : this.cdetfaccl[nroitem-1].idChofer,
+      nomChofer      : this.cdetfaccl[nroitem-1].nomChofer,
+      origen         : this.cdetfaccl[nroitem-1].origen,
+      destino        : this.cdetfaccl[nroitem-1].destino,
+      tarifa         : this.cdetfaccl[nroitem-1].tarifa,
+      cargaton       : this.cdetfaccl[nroitem-1].cargaton,
+      cantkm         : this.cdetfaccl[nroitem-1].cantkm,
+      ltsgasoil      : this.cdetfaccl[nroitem-1].ltsgasoil,
+      impneto        : this.cdetfaccl[nroitem-1].impneto,
+      impiva         : this.cdetfaccl[nroitem-1].impiva,
+      totalitem      : this.cdetfaccl[nroitem-1].totalitem
 
      }
   }       
@@ -396,24 +399,24 @@ totalizarFactura(){  // Unicamente para Alta de Factura
   var totneto    = 0;
   var totiva     = 0;
 
-  for (let i=0;i<this.cdetfactp.length;i++){
-    totfactura += this.cdetfactp[i].totalitem;
-    totneto   += this.cdetfactp[i].impneto;
-    totiva    += this.cdetfactp[i].impiva;
+  for (let i=0;i<this.cdetfaccl.length;i++){
+    totfactura += this.cdetfaccl[i].totalitem;
+    totneto   += this.cdetfaccl[i].impneto;
+    totiva    += this.cdetfaccl[i].impiva;
   }
   //var importe = this.currencyPipe.transform(this.totfactura, '$', 'symbol', '1.2-2', 'es-AR');
-  this.formFactp.controls['totalfac'].setValue(this.totfactura);
-  this.formFactp.controls['cantit'].setValue(this.cdetfactp.length);
-  this.formFactp.controls['impneto'].setValue(totneto);
-  this.formFactp.controls['impiva'].setValue(totiva);
-  this.formFactp.controls['totalfac'].setValue(totfactura);
+  this.formFaccl.controls['totalfac'].setValue(this.totfactura);
+  this.formFaccl.controls['cantit'].setValue(this.cdetfaccl.length);
+  this.formFaccl.controls['impneto'].setValue(totneto);
+  this.formFaccl.controls['impiva'].setValue(totiva);
+  this.formFaccl.controls['totalfac'].setValue(totfactura);
 }
 
 mostrarHora() {
    this.zone.runOutsideAngular(() => {
     setInterval(() => {
       const hoy = new Date();
-      const valorControl = this.formFactp.controls['fecha'].value;
+      const valorControl = this.formFaccl.controls['fecha'].value;
       
       if (valorControl) {
         const fechaform = new Date(valorControl);
@@ -421,7 +424,7 @@ mostrarHora() {
 
         // Volvemos a la zona de Angular solo para actualizar el valor
         this.zone.run(() => {
-          this.formFactp.controls['fecha'].setValue(fechaform, { emitEvent: false });
+          this.formFaccl.controls['fecha'].setValue(fechaform, { emitEvent: false });
           this.cdr.detectChanges(); // Forzamos la actualización sin romper el ciclo
         });
       }

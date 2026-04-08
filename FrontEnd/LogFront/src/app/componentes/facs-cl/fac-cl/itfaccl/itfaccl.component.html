@@ -16,7 +16,7 @@
 
       <div class="col-md-8">
         <mat-form-field class="w-100" appearance="fill">
-          <mat-label>Viajes de {{this.data.nomchof}}</mat-label>
+          <mat-label>Viajes de {{data.nomcli}}</mat-label>
           <mat-select
             formControlName="idViaje"
             (selectionChange)="onSelectionViaje($event)">
@@ -30,6 +30,16 @@
       </div>
     </div>
     <!-- Segunda Fila -->
+    <div class="row g-3 mb-1">
+      <div class="col-md-2">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Chofer</mat-label>
+          <input matInput readonly="true" formControlName="nomchofer"
+            style="text-align: left"/>
+        </mat-form-field>
+      </div>     
+    </div>
+    <!-- Tercera Fila -->
     <div class="row g-3 mb-1">
        <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
@@ -55,7 +65,7 @@
         </mat-form-field>
       </div>
     </div>
-    <!-- Tercera Fila   -->
+    <!-- Cuarta Fila   -->
     <div class="row g-3 mb-1">      
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
@@ -79,7 +89,7 @@
         </mat-form-field>
       </div>
     </div>
-    <!-- Cuarta Fila -->
+    <!-- Quinta Fila -->
     <div class="row g-3 mb-1">    
        <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">

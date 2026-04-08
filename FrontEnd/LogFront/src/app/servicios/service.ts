@@ -9,8 +9,10 @@ import { camionDTO } from '../../entidades/camionDTO';
 import { marcaDTO } from '../../entidades/marcaDTO';
 import { clienteDTO } from '../../entidades/clienteDTO';
 import { viajeDTO } from '../../entidades/viajeDTO';
-import { factpDTO } from '../../entidades/factpDTO';
+import { factpDTO} from '../../entidades/factpDTO';
+import { facclDTO } from '../../entidades/facclDTO';
 import { itfactpDTO } from '../../entidades/itfactpDTO';
+import { itfacclDTO } from '../../entidades/itfacclDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -185,6 +187,13 @@ export class ServiciosService {
     return this.http.get<number>(this.apiUrl + `viaje/cantViajesxChofer?idchof=`+nrochof);
   }
 
+   public getViajesxCliente(nrocli : number) {
+    return this.http.get<viajeDTO[]>(this.apiUrl + `viaje/viajesxcliente?idcliente=`+nrocli);
+  }
+  
+  public getCantViajesxCliente(nrocliente : number) {
+    return this.http.get<number>(this.apiUrl + `viaje/cantViajesxCliente?idcliente=`+nrocliente);
+  }
 
   public leerViaje(nroviaje: number) {
     return this.http.get<viajeDTO>(
@@ -205,6 +214,60 @@ export class ServiciosService {
   public elimViaje(nroviaje : number) {
     return this.http.delete(
       environment.apiUrl + `viaje/viaje?id=` + nroviaje);
+  }
+
+   // ** Facturas al Cliente ** //
+
+   public getFacsCL() {
+    return this.http.get<factpDTO[]>(this.apiUrl + `factp/facstp`);
+  }
+
+  public getCantFacsCL() {
+    return this.http.get<number>(this.apiUrl + `faccl/max`);
+  }
+
+  public leerFacCL(nrof: number) {
+    return this.http.get<facclDTO>(
+      this.apiUrl + `faccl/faccl?id=` + nrof
+    );
+  }
+  
+  public grabarFacCL(faccl : facclDTO) {
+    return this.http.post<facclDTO>(
+      this.apiUrl + `faccl/faccl/nuevo`, faccl);
+  }
+
+  public updateFacCL(nrofaccl : number, faccl : facclDTO) {
+    return this.http.put<facclDTO>(
+      environment.apiUrl + `faccl/faccl/actualizar?id=` + nrofaccl, faccl);
+  }
+
+  public elimFacCL(nrofaccl : number) {
+    return this.http.delete(
+      environment.apiUrl + `faccl/faccl?id=` + nrofaccl);
+  }
+
+   // ** Items de Facturas al Cliente ** //
+    
+   public getItemsFacsCL(idfactura : number) {
+    return this.http.get<itfacclDTO[]>(this.apiUrl + `faccl/faccl/detalle?idfac=`+idfactura);
+  }
+
+      
+  
+  public grabarItemFacCL(itfaccl : itfacclDTO) {
+    return this.http.post<itfacclDTO>(
+      this.apiUrl + `faccl/detalle/nuevo`, itfaccl);
+  }
+
+  public updateItFacCL(itfaccl : itfacclDTO) {
+    return this.http.put<itfacclDTO>(
+      environment.apiUrl + `faccl/detalle/actualizar`,itfaccl);
+  }
+
+  public elimItFacCL(nrofac : number,nroitem : number) {
+    return this.http.delete(
+      environment.apiUrl + `faccl/detalle/borrar=idfac=`+nrofac+`&&nroitem=`+nroitem);
   }
 
    // ** Facturas de Transporte ** //

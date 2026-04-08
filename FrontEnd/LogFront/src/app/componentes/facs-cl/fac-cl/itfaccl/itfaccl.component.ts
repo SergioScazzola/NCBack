@@ -7,12 +7,13 @@ import { registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
 import { choferDTO } from '../../../../../entidades/choferDTO';
 import { ServiciosService } from '../../../../servicios/service';
-import { intItFacTp, itfactpDTO } from '../../../../../entidades/itfactpDTO';
+import { intItFacTp } from '../../../../../entidades/itfactpDTO';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { NotiserviceService } from '../../../../servicios/notiservice.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { intItFacCl, itfacclDTO } from '../../../../../entidades/itfacclDTO';
 
 registerLocaleData(localeEsAr);
 
@@ -39,7 +40,7 @@ export class ItfacclComponent {
  cchoferes        : choferDTO[]=[];
  operacion        : string;
  formItfac        : FormGroup;
- idchoferSel      : number = 1;
+ idviajeSel      : number = 1;
 
    constructor( public fb           : FormBuilder,
                 public servicio     : ServiciosService,
@@ -47,7 +48,7 @@ export class ItfacclComponent {
                 private currencyPipe: CurrencyPipe,
                 public  dialog      : MatDialog,  
                 private cdr         : ChangeDetectorRef,         
-                @Inject(MAT_DIALOG_DATA) public data: intItFacTp,  
+                @Inject(MAT_DIALOG_DATA) public data: intItFacCl,  
                 private notiService : NotiserviceService )
   { /*effect(() => {
             this.nameInput()?.nativeElement.focus(); //enfoca  iniciar
@@ -63,27 +64,29 @@ export class ItfacclComponent {
      this.initFormulario();        
       
       // 1. Lanzamos las peticiones base en paralelo
-      forkJoin({
-              viajes: this.servicio.getViajesxChofer(this.data.ditFac.idChofer),                          
-      }).subscribe(res => {         
-            this.cviajes   = res.viajes;      
+    forkJoin({
+              viajes: this.servicio.getViajesxCliente(this.data.nrocli),                          
+            }).subscribe(res => {         
+             this.cviajes   = res.viajes;            
              this.isloading = false;
              this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores  //        
             if (this.data.accion === "V") {  // sólo visualizar item
-                 this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Chofer: "+this.data.nomchof;    
+                 this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Chofer: "+this.data.nomcli;                    
+                 this.idviajeSel = this.data.ditFac.idViaje;
                  this.actualizarFormulario();
             } else if (this.data.accion === "A") { // data.accion = "A" -> Alta
            
-                 this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Chofer: "+this.data.nomchof;    
+                 this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Chofer: "+this.data.nomcli;    
                  this.formItfac.controls["nroitem"].setValue(this.data.nroitem);
-                 this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje)
+                 this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje);
+                 this.formItfac.controls["nomchofer"].setValue(this.cviajes[0].nomchofer);
                  this.seleccionoViaje(0);
                  if (this.cviajes.length > 0) {
                    this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje);
                    this.seleccionoViaje(0);
                   
                  } else {
-                    this.notiService.showNotification("El chofer seleccionado no tiene viajes disponibles", "Cerrar", "error", 5000);
+                    this.notiService.showNotification("El cliente seleccionado no tiene viajes disponibles", "Cerrar", "error", 5000);
                     
                  };
                 
@@ -95,10 +98,11 @@ export class ItfacclComponent {
             
 
   initFormulario() {
+      
        this.formItfac = this.fb.group({        
              nroitem      : [this.data.nroitem], 
              idViaje      : [0],
-             idChofer     : [this.data.ditFac.idChofer],
+             nomchofer    : [''],
              origen       : [''],
              destino      : [''],
              tarifa       : [0],        
@@ -111,9 +115,10 @@ export class ItfacclComponent {
       })    
     }   
 actualizarFormulario(){
+       var indv = this.cviajes.findIndex(p=>p.idViaje == this.idviajeSel);
        this.formItfac.controls['nroitem'].setValue(this.data.ditFac.nroitem);
        this.formItfac.controls['idViaje'].setValue(this.data.ditFac.idViaje);
-       this.formItfac.controls['idChofer'].setValue(this.data.ditFac.idChofer);
+       this.formItfac.controls['nomchofer'].setValue(this.cviajes[indv].nomchofer);
        this.formItfac.controls['origen'].setValue(this.data.ditFac.origen);
        this.formItfac.controls['destino'].setValue(this.data.ditFac.destino);
        this.formItfac.controls['tarifa'].setValue(this.data.ditFac.tarifa);
@@ -133,17 +138,18 @@ actualizarFormulario(){
          indv = 0;
       } else { // recibi un evento
          nroviaje = event.value;
+         this.idviajeSel = nroviaje;
          indv = this.cviajes.findIndex(p=>p.idViaje==nroviaje);
       }
-            
+     this.formItfac.controls['nomchofer'].setValue(this.cviajes[indv].nomchofer);        
      this.formItfac.controls['origen'].setValue(this.cviajes[indv].origen);
      this.formItfac.controls['destino'].setValue(this.cviajes[indv].destino);
-     this.formItfac.controls['tarifa'].setValue(this.redondearAdos(this.cviajes[indv].tarifap*0.9));
+     this.formItfac.controls['tarifa'].setValue(this.redondearAdos(this.cviajes[indv].tarifap));
      this.formItfac.controls['cargaton'].setValue(this.cviajes[indv].cargaton);
      this.formItfac.controls['cantkm'].setValue(this.cviajes[indv].cantkm);
      this.formItfac.controls['ltsgasoil'].setValue(this.cviajes[indv].ltsgasoil);
      var cantkm = this.cviajes[indv].cantkm;
-     var tarifa = this.redondearAdos(this.cviajes[indv].tarifap * 0.9);// el viaje se carga con tarifa plena
+     var tarifa = this.redondearAdos(this.cviajes[indv].tarifap);// el viaje se carga con tarifa plena
      var importe = cantkm * tarifa
      var importeneto = this.redondearAdos(importe);
      // var impo = this.currencyPipe.transform(importeneto, '$', 'symbol', '1.2-2', 'es-AR');
@@ -160,7 +166,7 @@ actualizarFormulario(){
     }
     seleccionoViaje(indv : number){
       // Selecciono el primer viaje de la lista, calcular datos del item       
-                    
+     this.formItfac.controls['nomchofer'].setValue(this.cviajes[indv].nomchofer);              
      this.formItfac.controls['origen'].setValue(this.cviajes[indv].origen);
      this.formItfac.controls['destino'].setValue(this.cviajes[indv].destino);
      this.formItfac.controls['tarifa'].setValue(this.redondearAdos(this.cviajes[indv].tarifap*0.9));
@@ -168,7 +174,7 @@ actualizarFormulario(){
      this.formItfac.controls['cantkm'].setValue(this.cviajes[indv].cantkm);
      this.formItfac.controls['ltsgasoil'].setValue(this.cviajes[indv].ltsgasoil);
      var cantkm = this.cviajes[indv].cantkm;
-     var tarifa = this.redondearAdos(this.cviajes[indv].tarifap * 0.9);// el viaje se carga con tarifa plena
+     var tarifa = this.redondearAdos(this.cviajes[indv].tarifap);// el viaje se carga con tarifa plena
      var importe = cantkm * tarifa
      var importeneto = this.redondearAdos(importe);
      // var impo = this.currencyPipe.transform(importeneto, '$', 'symbol', '1.2-2', 'es-AR');
@@ -196,13 +202,13 @@ actualizarFormulario(){
 
 retornarItemFactp(){ // Devuelve un objeto "itfactpDTO" para que el componente padre lo agregue a la lista
   // Completa los datos del item agregado 
-   
-    var iteem : itfactpDTO = {
+    var indv = this.cviajes.findIndex(p=>p.idViaje == this.idviajeSel);
+    var iteem : itfacclDTO = {
        idFactura    : this.data.ditFac.idFactura,
        nroitem      : this.formItfac.controls["nroitem"].value,      
        idViaje      : this.formItfac.controls["idViaje"].value,
-       idChofer     : this.formItfac.controls["idChofer"].value,
-       nomChofer    : this.cviajes[0].nomchofer, // el nombre del chofer lo saco del viaje seleccionado
+       idChofer     : this.cviajes[indv].idChofer,
+       nomChofer    : this.cviajes[indv].nomchofer, // el nombre del chofer lo saco del viaje seleccionado
        origen       : this.formItfac.controls["origen"].value,
        destino      : this.formItfac.controls["destino"].value,
        tarifa       : this.formItfac.controls["tarifa"].value,
@@ -223,8 +229,5 @@ retornarItemFactp(){ // Devuelve un objeto "itfactpDTO" para que el componente p
 aceptarItemFactp(){
     this.dialogRef.close({ clicked : "Ver"})
 }
-
-
- 
 
 }

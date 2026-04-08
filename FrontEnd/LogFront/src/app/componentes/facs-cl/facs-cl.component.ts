@@ -8,7 +8,7 @@ import { NotiserviceService } from '../../servicios/notiservice.service';
 import { finalize, Subscription } from 'rxjs';
 import { DatePipe,DecimalPipe} from '@angular/common';
 import { CommonModule } from '@angular/common';
-import { factpDTO } from '../../../entidades/factpDTO';
+import { facclDTO } from '../../../entidades/facclDTO';
 import { FacClComponent } from './fac-cl/fac-cl.component';
 import { MatDateFormats } from '@angular/material/core';
 
@@ -29,14 +29,14 @@ export class FacsClComponent {
    public filtro       : string;
   
    isloading             : boolean = true;
-   cantfactp             : number;
-   formFactp             : boolean;
+   cantfaccl             : number;
+   formFaccl             : boolean;
    factpmod              : number; 
-   cfacsTP               : factpDTO[]=[];
+   cfacsCL               : facclDTO[]=[];
    dataSource            = new MatTableDataSource<any>();
 
  
-   colfactp : string[] = ["idFactura" , "nrofactura","facndc","fecha","nomchofer","impneto","impiva","totalfac","M","B" ];
+   colfaccl : string[] = ["idFactura" , "nrofactura","facndc","fecha","nomCliente","impneto","impiva","totalfac","M","B" ];
  
 
    constructor(     private servicio     : ServiciosService,               
@@ -55,19 +55,19 @@ export class FacsClComponent {
       if (this.inputRef) {
           this.inputRef.nativeElement.value = this.filtro;   
       }             
-      this.leerFacsTP();        
+      this.leerFacsCL();        
       })       
        
  }
        
-   leerFacsTP(){
+   leerFacsCL(){
       var subs : Subscription;
-      subs = this.servicio.getFacsTP()
+      subs = this.servicio.getFacsCL()
            .pipe(finalize(()=> {
-               this.cantfactp = this.cfacsTP.length;
-                this.dataSource.data = this.cfacsTP;         
-                this.dataSource.filterPredicate = (dato : factpDTO, fil : string) => {
-                     return dato.nomchofer.toLowerCase().includes(fil);
+               this.cantfaccl = this.cfacsCL.length;
+                this.dataSource.data = this.cfacsCL;         
+                this.dataSource.filterPredicate = (dato : facclDTO, fil : string) => {
+                     return dato.nomCliente.toLowerCase().includes(fil);
                                      };    
                 // Aplica filtro si hay uno
                 if (this.filtro!=='') {                                 
@@ -79,13 +79,13 @@ export class FacsClComponent {
                subs.unsubscribe();
            }))
            .subscribe((data : any): void => {
-                            this.cfacsTP = data});      
+                            this.cfacsCL = data});      
     
    } 
 
-   agFacTP(){
+   agFacCL(){
      const data1 = {
-          idFactura    : this.cantfactp + 1,  
+          idFactura    : this.cantfaccl + 1,  
           nrofactura   : "",
           accion       : "A",
      }
@@ -101,13 +101,13 @@ export class FacsClComponent {
      const dialogRef =  this.dialog.open(FacClComponent, dialogConfig);
      dialogRef.afterClosed().subscribe(
         (datass:any) => { if (datass.clicked === 'Alta'){                   
-                             this.leerFacsTP();
+                             this.leerFacsCL();
                         }})
-     this.formFactp = true;
+     this.formFaccl = true;
      this.factpmod  = 0; 
    }
   
-   verFacTP(idfac : number,nrof : string){      
+   verFacCL(idfac : number,nrof : string){      
     const data = {
       idFactura     : idfac,        
       nrofactura    : nrof,
@@ -127,22 +127,22 @@ export class FacsClComponent {
     const dialogRef =  this.dialog.open(FacClComponent, dialogConfig);
     dialogRef.afterClosed().subscribe( // 
           (data:any) => { if (data.clicked === 'Ver'){                   
-              this.leerFacsTP(); // refrescar lista
+              this.leerFacsCL(); // refrescar lista
           }})
  
    }
-   borrarFacTP(idfac : number, nrofac : string){
+   borrarFacCL(idfac : number, nrofac : string){
      var resu : string;
       this.sinoServicio.abrirSiNoDialogo("Confirmación",
                                "¿ Está seguro de quiere borrar Definitivamente la Factura Nro."+idfac+"-"+nrofac+" ?")
         .then(result => {
            if (result) {
                var subscri : Subscription;
-               subscri = this.servicio.elimFacTP(idfac)               
+               subscri = this.servicio.elimFacCL(idfac)               
                   .pipe(finalize(() => {
                      this.notiServicio.showNotification("La Factura Nro "+idfac+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
                      subscri.unsubscribe();
-                    this.leerFacsTP(); // refrescar lista
+                    this.leerFacsCL(); // refrescar lista
  
                    }))
                    .subscribe((data : any): void => {
@@ -155,14 +155,14 @@ export class FacsClComponent {
   
    manejarOperacion($event:any){
      if ($event==="Alta" || $event==="Modi"){
-         this.formFactp = false;
-         this.leerFacsTP(); // refrescar lista
+         this.formFaccl = false;
+         this.leerFacsCL(); // refrescar lista
      } else {
-       this.formFactp = false;
+       this.formFaccl = false;
      }
     }
 
-  volver(){
+ volver(){
     this.router.navigate(['/ppal']);
  }
    aplicarFiltro(valor : string)  {

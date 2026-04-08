@@ -1,11 +1,11 @@
-export interface factpDTO {
-     // Factura emitida por el chofer por uno o mas viajes
+export interface facclDTO {
+     // Factura emitida al Cliente por uno o mas viajes
      idFactura      : number;
      nrofactura     : string;
      facndc         : string;  // fac : suma, ndc : resta
      fecha          : Date;
-     idChofer       : number;
-     nomchofer      : string;
+     idCliente      : number;
+     nomCliente     : string;
      cantit         : number;        
      impneto        : number; 
      impiva         : number;
@@ -13,7 +13,7 @@ export interface factpDTO {
         
 }
      
-export interface intFacTp {
+export interface intFacCl {
     idFactura    : number,  
     nrofactura   : string;
     accion       : string,

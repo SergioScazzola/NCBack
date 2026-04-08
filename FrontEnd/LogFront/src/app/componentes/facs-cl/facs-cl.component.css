@@ -1,5 +1,5 @@
 /* Contenedor principal */
-.factp-container {
+.faccl-container {
   width: 100%;
   height: calc(100vh - 70px); /* Restar altura de navbar */
   display: flex;

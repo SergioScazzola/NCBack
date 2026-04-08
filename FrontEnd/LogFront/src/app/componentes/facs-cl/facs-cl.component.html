@@ -1,18 +1,18 @@
 @if (!isloading){
-<div class="factp-container">
+<div class="faccl-container">
   <div class="row">
     <div class="col-md-4">
        <div class="header">
-         <h4>Facturas de Transporte</h4>
+         <h4>Facturas al Cliente</h4>
        </div>
     </div>  
     <div class="col-md-4">
-       <input #filtroInput (keyup)="aplicarFiltro(filtroInput.value)" placeholder="Filtrar por chofer">
+       <input #filtroInput (keyup)="aplicarFiltro(filtroInput.value)" placeholder="Filtrar por cliente">
     </div>        
  
     
     <div class="col-md-2">
-      <button class="btn btn-primary add-button" (click)="agFacTP()">
+      <button class="btn btn-primary add-button" (click)="agFacCL()">
         <i class="bi bi-plus-circle me-1"></i>Agregar
       </button>
     </div>      
@@ -54,9 +54,9 @@
         <td mat-cell *matCellDef="let renFac">{{ renFac.fecha | date : "dd/MM/yyyy" }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="nomchofer">
-        <th mat-header-cell *matHeaderCellDef>Chofer</th>
-        <td mat-cell *matCellDef="let renFac">{{ renFac.nomchofer }}</td>
+      <ng-container matColumnDef="nomCliente">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let renFac">{{ renFac.nomCliente }}</td>
       </ng-container>
 
       <ng-container matColumnDef="impneto">
@@ -85,8 +85,8 @@
             <button
               mat-icon-button
               class="action-btn"
-              title="modificar Factura de tpte"
-              (click)="verFacTP(renFac.idFactura, renFac.nrofactura)"
+              title="ver Factura del cliente"
+              (click)="verFacCL(renFac.idFactura, renFac.nrofactura)"
             >
              <i class="bi bi-search"></i>
             </button>
@@ -102,8 +102,8 @@
             <button
               mat-icon-button
               class="action-btn"
-              title="borrar Factura de tpte"
-              (click)="borrarFacTP(renFac.idFactura,renFac.nrofactura)"
+              title="borrar Factura del cliente"
+              (click)="borrarFacCL(renFac.idFactura,renFac.nrofactura)"
             >
               <i class="bi bi-trash-fill"></i>
             </button>
@@ -112,8 +112,8 @@
       </ng-container>
      
       <!-- Definición de filas -->
-      <tr mat-header-row *matHeaderRowDef="colfactp; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; let index; columns: colfactp"></tr>
+      <tr mat-header-row *matHeaderRowDef="colfaccl; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; let index; columns: colfaccl"></tr>
     </table>
   </div>
 </div>
