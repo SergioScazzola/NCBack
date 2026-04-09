@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apiTpte.apiRestTpte.Entidades.Camion;
 import com.apiTpte.apiRestTpte.Entidades.FactCli;
 import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Repository.TpteRepository;
@@ -32,10 +33,16 @@ public class FactClteController {
     TpteRepository tpteRepository;
    
     @SuppressWarnings("null")
-    @GetMapping("/facscl")
+    @GetMapping(value="/facscl")
     public ResponseEntity<List<FactCli>> getAllFacscl() {
-        return ResponseEntity.ok(tpteRepository.AllFacscl());
-  
+      try {
+        List<FactCli> facscli = tpteRepository.AllFacscl();
+        return ResponseEntity.ok(facscli);
+    } catch (Exception e) {
+        e.printStackTrace(); // esto imprimirá el error real en tu consola
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body(null);
+    }       
     }
 
   @RequestMapping(value="/max")
