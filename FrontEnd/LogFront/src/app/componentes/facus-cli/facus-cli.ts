@@ -1,4 +1,3 @@
-
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { ServiciosService } from '../../servicios/service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -44,8 +43,7 @@ export class FacusCli {
                     private sinoServicio : SinoService,
                     private cdr          : ChangeDetectorRef,     
                     private notiServicio : NotiserviceService
-                               ) {    
-   }     
+                               ) {    }     
   
  ngOnInit(){         
      this.rutaActiva.queryParamMap.subscribe((params) => { // lee el parametro de ruteo y lo asigna al filtro
@@ -54,39 +52,38 @@ export class FacusCli {
       if (this.inputRef) {
           this.inputRef.nativeElement.value = this.filtro;   
       }             
-      this.leerFacsCL();        
+      this.leerFacsCL;  
       })       
        
  }
          
  leerFacsCL(){
-      var subs : Subscription;
-      subs = this.servicio.getFacsCL()
-           .pipe(finalize(()=> {
-               this.isloading = false;
-               this.cdr.detectChanges();  
-               this.cantfaccl = this.cfacsCL.length;
-               console.log("Cant : "+this.cfacsCL.length);
-               console.log("Cli1 : "+this.cfacsCL[0].nomcliente);
-                console.log("Cli2 : "+this.cfacsCL[1].nomcliente);
-               this.dataSource.data = this.cfacsCL;         
-                this.dataSource.filterPredicate = (dato : facclDTO, fil : string) => {
-                     return dato.nomcliente.toLowerCase().includes(fil);
-                                     };    
-                // Aplica filtro si hay uno
-                if (this.filtro!=='') {                                 
-                    this.dataSource.filter = this.filtro;                                                                       
-                    this.inputRef.nativeElement.value = this.filtro;//setAttribute('value', this.filtro);
-                }
-                             
-               subs.unsubscribe();
-           }))
-           .subscribe((data : any): void => {
-                            this.cfacsCL = data});      
-    
+    var subs : Subscription;
+    subs = this.servicio.getFacsCL()
+        .pipe(finalize(()=> {
+            this.cantfaccl = this.cfacsCL.length;
+            this.dataSource.data = this.cfacsCL;         
+            this.dataSource.filterPredicate = (dato : facclDTO, fil : string) => {
+                return dato.nomcliente.toLowerCase().startsWith(fil);
+            };    
+            // Aplica filtro si hay uno
+            if (this.filtro!=='') {                                 
+               this.dataSource.filter = this.filtro;                                                                       
+               this.inputRef.nativeElement.value = this.filtro;//setAttribute('value', this.filtro);
+            }
+            if (this.cantfaccl == 0){
+                this.notiServicio.showNotification("No existen Facturas emitidas al Cliente",'Aceptar','mensaje',500)
+            }
+            this.isloading = false;
+            this.cdr.detectChanges();
+            subs.unsubscribe();
+       }))
+       .subscribe((data : any): void => {
+           this.cfacsCL = data});                 
    } 
 
    agFacCL(){
+    console.log("CCCCCCCCCCCCCCCCCCCC : "+this.cantfaccl);
      const data1 = {
           idFactura    : this.cantfaccl + 1,  
           nrofactura   : "",
@@ -104,7 +101,7 @@ export class FacusCli {
      const dialogRef =  this.dialog.open(Factcli, dialogConfig);
      dialogRef.afterClosed().subscribe(
         (datass:any) => { if (datass.clicked === 'Alta'){               
-                             console.log("Evento recibido en FacsCLComponent:");    
+                             console.log("Evento recibido de Factcli:");    
                              this.leerFacsCL();
                         }})
      this.formFaccl = true;

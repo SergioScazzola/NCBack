@@ -132,7 +132,7 @@ export class Factcli {
            this.cdetfaccl  = res2.detalle;
 
              
-           this.operacion = `Consulta Factura tpte Nro. ${this.factpp.idFactura} - ${this.factpp.nrofactura}`;
+           this.operacion = `Consulta Factura Cliente Nro. ${this.factpp.idFactura} - ${this.factpp.nrofactura}`;
            this.actualizarFormulario();
            this.isloading = false;
            this.cdr.markForCheck()// <--- Importante: fuerza la detección si sigue el error    
@@ -147,7 +147,7 @@ export class Factcli {
                 //this.servicio.getCantFacsTP().subscribe(max => {           
                 this.nfaccpalta = this.data.idFactura;
                 console.log("Factura para alta: " + this.nfaccpalta);
-                this.operacion = "Agregar Factura Cliente Nro. " + this.nfaccpalta;
+                this.operacion = "Agregar Factura Nro. " + this.nfaccpalta;
                 this.formFaccl.controls["idFactura"].setValue(this.nfaccpalta);
                 console.log("Datos Recibidos : " + JSON.stringify(this.data));
                 var indcliente = this.cclientes.findIndex(p=>p.idCliente=this.idclienteSel);

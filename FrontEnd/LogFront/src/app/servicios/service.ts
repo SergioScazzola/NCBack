@@ -219,7 +219,7 @@ export class ServiciosService {
    // ** Facturas al Cliente ** //
 
    public getFacsCL() {
-    return this.http.get<factpDTO[]>(this.apiUrl + `factp/facstp`);
+    return this.http.get<facclDTO[]>(this.apiUrl + `faccl/facscl`);
   }
 
   public getCantFacsCL() {
