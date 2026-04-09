@@ -8,7 +8,7 @@ public class FactCli {
      private String facndc; // fac : suma, ndc : resta
      private Date   fecha;        
      private int    idCliente;
-     private String nomCliente;
+     private String nomcliente;
      private int    cantit;
      private double impneto;
      private double impiva;
@@ -60,11 +60,11 @@ public class FactCli {
      }
 
      public String getNomcliente() {
-         return nomCliente;
+         return nomcliente;
      }
 
-     public void setNomcliente(String nomcliente) {
-         this.nomCliente = nomcliente;
+     public void setNomcliente(String nomcli) {
+         this.nomcliente = nomcli;
      }
 
      public double getImpneto() {

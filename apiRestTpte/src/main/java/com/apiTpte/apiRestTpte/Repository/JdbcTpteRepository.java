@@ -441,7 +441,7 @@ public class JdbcTpteRepository implements TpteRepository {
 
        @Override
       public List<FactTpte> AllFacstp() {   
-        String selec = "SELECT * FROM facstpte ORDER BY fecha DESC";
+        String selec = "SELECT * FROM facstpte ORDER BY fecha DESC LIMIT 150";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class));
       }
       @Override
@@ -570,7 +570,7 @@ public class JdbcTpteRepository implements TpteRepository {
      
       @Override
       public List<FactCli> AllFacscl() {   
-        String selec = "SELECT * FROM facscli ORDER BY fecha DES LIMIT 150";
+        String selec = "SELECT * FROM facscli ORDER BY fecha DESC LIMIT 150";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactCli.class));
       }
       @Override
@@ -601,7 +601,7 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("UPDATE facscli SET nrofactura=?,facndc=?,fecha=?,"+
-                                    "idCliente=?,nomCliente=?,cantit=?,impneto,=?,"+
+                                    "idCliente=?,nomcliente=?,cantit=?,impneto,=?,"+
                                     "impiva=?,totalfac=? WHERE idFactura=?",
                     new Object[] {fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
                                   fac.getIdCliente(),fac.getNomcliente(),fac.getCantit(),fac.getImpneto(),
@@ -619,7 +619,7 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("INSERT facscli(idFactura,nrofactura,facndc,fecha,"+
-                                     "idCliente,nomCliente,cantit,impneto,"+
+                                     "idCliente,nomcliente,cantit,impneto,"+
                                      "impiva,totalfac) VALUES(?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {fac.getIdFactura(),fac.getNrofactura(),fac.getFacndc(),fac.getFecha(),
                                   fac.getIdCliente(),fac.getNomcliente(),fac.getCantit(),

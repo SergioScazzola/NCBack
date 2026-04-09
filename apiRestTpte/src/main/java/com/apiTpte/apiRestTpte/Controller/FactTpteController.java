@@ -36,19 +36,7 @@ public class FactTpteController {
     @GetMapping("/facstp")
     public ResponseEntity<List<FactTpte>> getAllFacstp() {
         return ResponseEntity.ok(tpteRepository.AllFacstp());
-    /*try {
-      List<FactTpte> facs = null;
-            
-      facs = tpteRepository.AllFacstp();
-    
-      if (facs.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      } else {
-         return new ResponseEntity<>(facs, HttpStatus.OK);
-      }
-    } catch (Exception e) {
-       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    }*/
+   
   }
 
   @RequestMapping(value="/max")
