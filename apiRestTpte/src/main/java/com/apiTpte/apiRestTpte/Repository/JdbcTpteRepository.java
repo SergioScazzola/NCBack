@@ -570,7 +570,7 @@ public class JdbcTpteRepository implements TpteRepository {
      
       @Override
       public List<FactCli> AllFacscl() {   
-        String selec = "SELECT * FROM facscli ORDER BY fecha DESC LIMIT 150";
+        String selec = "SELECT * FROM facscli ORDER BY fecha DESC";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactCli.class));
       }
       @Override
