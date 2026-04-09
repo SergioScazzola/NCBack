@@ -11,18 +11,16 @@ import { NotiserviceService } from '../../../servicios/notiservice.service';
 import { ServiciosService } from '../../../servicios/service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SelecTextDirective } from "../../../Directivas/selec-text.directive";
-
-import { choferDTO } from '../../../../entidades/choferDTO';
 import { DateFnsAdapter } from '@angular/material-date-fns-adapter';
 import {es} from 'date-fns/locale';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats, MatNativeDateModule} from '@angular/material/core';
 import { intItFacTp, itfactpDTO } from '../../../../entidades/itfactpDTO';
 import {MatDatepickerModule,MatDatepickerInputEvent} from '@angular/material/datepicker';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
-import { ItfacclComponent } from '../../facs-cl/fac-cl/itfaccl/itfaccl.component'
 import { facclDTO, intFacCl } from '../../../../entidades/facclDTO';
 import { intItFacCl, itfacclDTO } from '../../../../entidades/itfacclDTO';
 import { clienteDTO } from '../../../../entidades/clienteDTO';
+import { Itfaccli } from './itfaccli/itfaccli';
 
 export const DATE_FORMATS : MatDateFormats = {
   
@@ -36,8 +34,8 @@ export const DATE_FORMATS : MatDateFormats = {
  
 }
 @Component({
-  selector: 'app-fac-cl',
- imports: [    MatFormField,
+  selector: 'app-factcli',
+  imports: [     MatFormField,
                  MatLabel,   
                  MatInputModule,      
                  MatSelectModule,
@@ -46,18 +44,18 @@ export const DATE_FORMATS : MatDateFormats = {
                  MatTableModule,                      
                  CommonModule,
                  DragDropModule,
-                 FormsModule,],
+                 FormsModule],
  providers : [
     CurrencyPipe,
     { provide : DateAdapter, useClass: DateFnsAdapter },
     { provide : MAT_DATE_FORMATS, useValue: DATE_FORMATS},
     { provide : MAT_DATE_LOCALE, useValue: es},
     
-  ],                 
-  templateUrl: './fac-cl.component.html',
-  styleUrl: './fac-cl.component.css',
+  ],                    
+  templateUrl: './factcli.html',
+  styleUrl: './factcli.css',
 })
-export class FacClComponent {
+export class Factcli {
   public nameInput = viewChild<ElementRef>('nrofactura');
   isloading        : boolean = true;
   cfacscl          : facclDTO[]=[];
@@ -103,7 +101,7 @@ export class FacClComponent {
   
   constructor(  public fb           : FormBuilder,
                 public servicio     : ServiciosService,
-                public dialogRef    : MatDialogRef<FacClComponent>,              
+                public dialogRef    : MatDialogRef<Factcli>,              
                 public  dialog      : MatDialog,
                 private cdr         : ChangeDetectorRef,
                 private zone        : NgZone,
@@ -119,16 +117,13 @@ export class FacClComponent {
   ngAfterViewInit(){
     this.isloading = false
   }
-  ngOnInit(){             
-    
+  ngOnInit(){                 
       //setTimeout(() => {
       this.initFormulario();
           // 1. Lanzamos las peticiones base en paralelo             
       if (this.data.accion === "V") {
         forkJoin({
-             clientes: this.servicio.getClientes(),    
-
-          // lee factura y detalle en paralelo para mostrar en el formulario
+          clientes: this.servicio.getClientes(),    
           factura: this.servicio.leerFacCL(this.data.idFactura),
           detalle: this.servicio.getItemsFacsCL(this.data.idFactura),
         }).subscribe(res2 => {
@@ -136,17 +131,18 @@ export class FacClComponent {
            this.factpp     = res2.factura;
            this.cdetfaccl  = res2.detalle;
 
-                 
+             
            this.operacion = `Consulta Factura tpte Nro. ${this.factpp.idFactura} - ${this.factpp.nrofactura}`;
            this.actualizarFormulario();
            this.isloading = false;
-           this.cdr.markForCheck()// <--- Importante: fuerza la detección si sigue el error
+           this.cdr.markForCheck()// <--- Importante: fuerza la detección si sigue el error    
+          
         });
       }
-      if (this.data.accion === "A") { // data.accion = "A" -> Alta
-          var subs : Subscription 
-          subs = this.servicio.getClientes()
-              .pipe(finalize(()=> {
+      if (this.data.accion === "A") { // data.accion = "A" -> Alta          
+          this.servicio.getClientes()
+            .subscribe((data3:any):void => {    
+                this.cclientes = data3;                    
                 this.mostrarHora();
                 //this.servicio.getCantFacsTP().subscribe(max => {           
                 this.nfaccpalta = this.data.idFactura;
@@ -158,10 +154,7 @@ export class FacClComponent {
                 this.factpp.nomcliente = this.cclientes[indcliente].nombre;                            
                 this.isloading = false;
                 this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores
-            }))
-
-            .subscribe(datas => { this.cclientes = datas })
-           
+          })                       
       }                           
       //},100);
    
@@ -255,7 +248,7 @@ agItemFaccl(){ // Se llama unicamente en alta de factura
    dialogConfig.panelClass   = 'custom-dialog-container';
    dialogConfig.disableClose =  false; // opcional según necesidad
 
-   const dialogRef =  this.dialog.open(ItfacclComponent, dialogConfig);
+   const dialogRef =  this.dialog.open(Itfaccli, dialogConfig);
    dialogRef.afterClosed().subscribe((datai: any) => {
             console.log("DATAI:", datai);
      
@@ -386,7 +379,7 @@ verItemFactp(nroit  : number){ // prepara datos y los manda al componente "itfac
     dialogConfig.panelClass = 'custom-dialog-container';
     dialogConfig.disableClose =  false; // opcional según necesidad
   
-     const dialogRef =  this.dialog.open(ItfacclComponent, dialogConfig);
+     const dialogRef =  this.dialog.open(Itfaccli, dialogConfig);
      dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Ver'){                   
            console.log("Modifico el item nro.: "+datas.nroitem) ;                                                    
@@ -438,3 +431,5 @@ Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})
      }
 }
+
+

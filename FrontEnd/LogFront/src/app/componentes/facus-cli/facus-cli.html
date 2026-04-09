@@ -8,9 +8,7 @@
     </div>  
     <div class="col-md-4">
        <input #filtroInput (keyup)="aplicarFiltro(filtroInput.value)" placeholder="Filtrar por cliente">
-    </div>        
- 
-    
+    </div>            
     <div class="col-md-2">
       <button class="btn btn-primary add-button" (click)="agFacCL()">
         <i class="bi bi-plus-circle me-1"></i>Agregar
@@ -54,7 +52,7 @@
         <td mat-cell *matCellDef="let renFac">{{ renFac.fecha | date : "dd/MM/yyyy" }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="nomCliente">
+      <ng-container matColumnDef="nomcliente">
         <th mat-header-cell *matHeaderCellDef>Cliente</th>
         <td mat-cell *matCellDef="let renFac">{{ renFac.nomcliente }}</td>
       </ng-container>

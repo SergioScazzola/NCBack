@@ -10,7 +10,7 @@ import { CamionesComponent } from './componentes/camiones/camiones.component';
 import { ClientesComponent } from './componentes/clientes/clientes.component';
 import { ViajesComponent } from './componentes/viajes/viajes.component';
 import { FacsTPComponent } from './componentes/facs-tp/facs-tp.component';
-import { FacsClComponent } from './componentes/facs-cl/facs-cl.component';
+import { FacusCli } from './componentes/facus-cli/facus-cli';
 
 export const routes: Routes = [
   // Rutas para invitados (no autenticados)
@@ -35,7 +35,7 @@ export const routes: Routes = [
       { path: 'clientes', component: ClientesComponent },     
       { path: 'viajes', component: ViajesComponent },     
       { path: 'factpte', component: FacsTPComponent },    
-      { path: 'faccli', component: FacsClComponent },    
+      { path: 'faccli', component: FacusCli },    
       { path: '', pathMatch: 'full', redirectTo: 'ppal' },
     ],
   },

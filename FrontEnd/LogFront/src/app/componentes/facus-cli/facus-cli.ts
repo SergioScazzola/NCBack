@@ -1,3 +1,4 @@
+
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { ServiciosService } from '../../servicios/service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,19 +10,16 @@ import { finalize, Subscription } from 'rxjs';
 import { DatePipe,DecimalPipe} from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { facclDTO } from '../../../entidades/facclDTO';
-import { FacClComponent } from './fac-cl/fac-cl.component';
+import { Factcli } from './factcli/factcli';
 import { MatDateFormats } from '@angular/material/core';
 
-
-
-
 @Component({
-  selector: 'app-facs-cl',
+  selector: 'app-facus-cli',
   imports: [ CommonModule,DatePipe,DecimalPipe,MatTableModule],
-  templateUrl: './facs-cl.component.html',
-  styleUrl: './facs-cl.component.css',
+  templateUrl: './facus-cli.html',
+  styleUrl: './facus-cli.css',
 })
-export class FacsClComponent {
+export class FacusCli {
 @ViewChild('filtroInput') inputRef!: ElementRef<HTMLInputElement>;
    
    
@@ -48,9 +46,7 @@ export class FacsClComponent {
                     private notiServicio : NotiserviceService
                                ) {    
    }     
-ngAfterViewInit(){
-  this.isloading = false;
-}    
+  
  ngOnInit(){         
      this.rutaActiva.queryParamMap.subscribe((params) => { // lee el parametro de ruteo y lo asigna al filtro
         var fil  = params.get('filtro')||'';     
@@ -67,6 +63,8 @@ ngAfterViewInit(){
       var subs : Subscription;
       subs = this.servicio.getFacsCL()
            .pipe(finalize(()=> {
+               this.isloading = false;
+               this.cdr.detectChanges();  
                this.cantfaccl = this.cfacsCL.length;
                console.log("Cant : "+this.cfacsCL.length);
                console.log("Cli1 : "+this.cfacsCL[0].nomcliente);
@@ -80,8 +78,7 @@ ngAfterViewInit(){
                     this.dataSource.filter = this.filtro;                                                                       
                     this.inputRef.nativeElement.value = this.filtro;//setAttribute('value', this.filtro);
                 }
-                this.isloading = false;
-                this.cdr.markForCheck();                
+                             
                subs.unsubscribe();
            }))
            .subscribe((data : any): void => {
@@ -104,7 +101,7 @@ ngAfterViewInit(){
     dialogConfig.panelClass       = 'custom-dialog-container';
     dialogConfig.disableClose     =  false; // opcional según necesidad
   
-     const dialogRef =  this.dialog.open(FacClComponent, dialogConfig);
+     const dialogRef =  this.dialog.open(Factcli, dialogConfig);
      dialogRef.afterClosed().subscribe(
         (datass:any) => { if (datass.clicked === 'Alta'){               
                              console.log("Evento recibido en FacsCLComponent:");    
@@ -131,7 +128,7 @@ ngAfterViewInit(){
     dialogConfig.autoFocus = false;
     dialogConfig.data = data;
     
-    const dialogRef =  this.dialog.open(FacClComponent, dialogConfig);
+    const dialogRef =  this.dialog.open(Factcli, dialogConfig);
     dialogRef.afterClosed().subscribe( // 
           (data:any) => { if (data.clicked === 'Ver'){                   
               this.leerFacsCL(); // refrescar lista

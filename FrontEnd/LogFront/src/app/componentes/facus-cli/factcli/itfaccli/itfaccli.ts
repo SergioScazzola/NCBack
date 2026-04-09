@@ -16,25 +16,23 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { intItFacCl, itfacclDTO } from '../../../../../entidades/itfacclDTO';
 
 registerLocaleData(localeEsAr);
-
 @Component({
-  selector: 'app-itfaccl',
-  imports: [    MatFormField,
+  selector: 'app-itfaccli',
+  imports: [ MatFormField,
                  MatLabel,   
                  MatInputModule,      
                  MatSelectModule,
                  ReactiveFormsModule,                                        
                  CommonModule,
                  DragDropModule,
-                 FormsModule,],
+                 FormsModule],
   providers : [ CurrencyPipe,{ provide: LOCALE_ID, useValue: 'es-AR' }
-    ],
-  templateUrl: './itfaccl.component.html',
-  styleUrl: './itfaccl.component.css',
+    ],                 
+  templateUrl: './itfaccli.html',
+  styleUrl: './itfaccli.css',
 })
-
-export class ItfacclComponent {
- //public nameInput = viewChild<ElementRef>('idViaje');
+export class Itfaccli {
+//public nameInput = viewChild<ElementRef>('idViaje');
  isloading        : boolean = true;
  cviajes          : viajeDTO[]=[];
  cchoferes        : choferDTO[]=[];
@@ -44,7 +42,7 @@ export class ItfacclComponent {
 
    constructor( public fb           : FormBuilder,
                 public servicio     : ServiciosService,
-                public dialogRef    : MatDialogRef<ItfacclComponent>,
+                public dialogRef    : MatDialogRef<Itfaccli>,
                 private currencyPipe: CurrencyPipe,
                 public  dialog      : MatDialog,  
                 private cdr         : ChangeDetectorRef,         
@@ -71,7 +69,7 @@ export class ItfacclComponent {
              this.isloading = false;
              this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores  //        
             if (this.data.accion === "V") {  // sólo visualizar item
-                 this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Chofer: "+this.data.nomcli;                    
+                 this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Cliente : "+this.data.nomcli;                    
                  this.idviajeSel = this.data.ditFac.idViaje;
                  this.actualizarFormulario();
             } else if (this.data.accion === "A") { // data.accion = "A" -> Alta
@@ -229,5 +227,4 @@ retornarItemFactp(){ // Devuelve un objeto "itfactpDTO" para que el componente p
 aceptarItemFactp(){
     this.dialogRef.close({ clicked : "Ver"})
 }
-
 }
