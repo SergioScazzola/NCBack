@@ -15,10 +15,9 @@ import { finalize, forkJoin, Subscription } from 'rxjs';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { intItFacCl, itfacclDTO } from '../../../../../entidades/itfacclDTO';
 
-registerLocaleData(localeEsAr);
 @Component({
-  selector: 'app-itfaccli',
-  imports: [ MatFormField,
+  selector: 'app-itfac-cliente',
+   imports: [ MatFormField,
                  MatLabel,   
                  MatInputModule,      
                  MatSelectModule,
@@ -28,10 +27,10 @@ registerLocaleData(localeEsAr);
                  FormsModule],
   providers : [ CurrencyPipe,{ provide: LOCALE_ID, useValue: 'es-AR' }
     ],                 
-  templateUrl: './itfaccli.html',
-  styleUrl: './itfaccli.css',
+  templateUrl: './itfac-cliente.component.html',
+  styleUrl: './itfac-cliente.component.css',
 })
-export class Itfaccli {
+export class ItfacClienteComponent {
 //public nameInput = viewChild<ElementRef>('idViaje');
  isloading        : boolean = true;
  cviajes          : viajeDTO[]=[];
@@ -42,7 +41,7 @@ export class Itfaccli {
 
    constructor( public fb           : FormBuilder,
                 public servicio     : ServiciosService,
-                public dialogRef    : MatDialogRef<Itfaccli>,
+                public dialogRef    : MatDialogRef<ItfacClienteComponent>,
                 private currencyPipe: CurrencyPipe,
                 public  dialog      : MatDialog,  
                 private cdr         : ChangeDetectorRef,         

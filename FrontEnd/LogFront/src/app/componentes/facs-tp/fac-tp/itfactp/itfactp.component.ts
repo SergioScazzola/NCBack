@@ -40,6 +40,7 @@ export class ItfactpComponent {
  operacion        : string;
  formItfac        : FormGroup;
  idchoferSel      : number = 1;
+ indiceviaje       : number=0;
 
    constructor( public fb           : FormBuilder,
                 public servicio     : ServiciosService,
@@ -131,9 +132,11 @@ actualizarFormulario(){
       var nroviaje : number;
       if (typeof(event)=='number'){ // recibi un numero
          indv = 0;
+         this.indiceviaje=0;
       } else { // recibi un evento
-         nroviaje = event.value;
+         nroviaje = event.value;         
          indv = this.cviajes.findIndex(p=>p.idViaje==nroviaje);
+         this.indiceviaje=indv;
       }
             
      this.formItfac.controls['origen'].setValue(this.cviajes[indv].origen);

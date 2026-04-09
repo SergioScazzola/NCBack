@@ -5,20 +5,20 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
 import { SinoService } from '../../servicios/sino.service';
 import { NotiserviceService } from '../../servicios/notiservice.service';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, forkJoin, Subscription } from 'rxjs';
 import { DatePipe,DecimalPipe} from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { facclDTO } from '../../../entidades/facclDTO';
-import { Factcli } from './factcli/factcli';
+import { FacClienteComponent } from './fac-cliente/fac-cliente.component';
 import { MatDateFormats } from '@angular/material/core';
 
 @Component({
-  selector: 'app-facus-cli',
-  imports: [ CommonModule,DatePipe,DecimalPipe,MatTableModule],
-  templateUrl: './facus-cli.html',
-  styleUrl: './facus-cli.css',
+  selector: 'app-facs-clientes',
+ imports: [ CommonModule,DatePipe,DecimalPipe,MatTableModule],
+  templateUrl: './facs-clientes.component.html',
+  styleUrl: './facs-clientes.component.css',
 })
-export class FacusCli {
+export class FacsClientesComponent {
 @ViewChild('filtroInput') inputRef!: ElementRef<HTMLInputElement>;
    
    
@@ -52,15 +52,18 @@ export class FacusCli {
       if (this.inputRef) {
           this.inputRef.nativeElement.value = this.filtro;   
       }             
-      this.leerFacsCL;  
-      })       
+      this.leerCFacsCL(); // carga la lista de facturas al cliente
        
- }
+      })
+  }
          
- leerFacsCL(){
-    var subs : Subscription;
-    subs = this.servicio.getFacsCL()
-        .pipe(finalize(()=> {
+ leerCFacsCL(){
+         forkJoin({
+              facturas: this.servicio.getFacsCL(),    
+           // lee factura y detalle en paralelo para mostrar en el formulario      
+         }).subscribe(res2 => {
+            this.cfacsCL = res2.facturas;
+
             this.cantfaccl = this.cfacsCL.length;
             this.dataSource.data = this.cfacsCL;         
             this.dataSource.filterPredicate = (dato : facclDTO, fil : string) => {
@@ -76,11 +79,9 @@ export class FacusCli {
             }
             this.isloading = false;
             this.cdr.detectChanges();
-            subs.unsubscribe();
-       }))
-       .subscribe((data : any): void => {
-           this.cfacsCL = data});                 
-   } 
+         })  
+      
+    }
 
    agFacCL(){
     console.log("CCCCCCCCCCCCCCCCCCCC : "+this.cantfaccl);
@@ -98,11 +99,11 @@ export class FacusCli {
     dialogConfig.panelClass       = 'custom-dialog-container';
     dialogConfig.disableClose     =  false; // opcional según necesidad
   
-     const dialogRef =  this.dialog.open(Factcli, dialogConfig);
+     const dialogRef =  this.dialog.open(FacClienteComponent, dialogConfig);
      dialogRef.afterClosed().subscribe(
         (datass:any) => { if (datass.clicked === 'Alta'){               
                              console.log("Evento recibido de Factcli:");    
-                             this.leerFacsCL();
+                             this.leerCFacsCL();
                         }})
      this.formFaccl = true;
      this.factpmod  = 0; 
@@ -125,10 +126,10 @@ export class FacusCli {
     dialogConfig.autoFocus = false;
     dialogConfig.data = data;
     
-    const dialogRef =  this.dialog.open(Factcli, dialogConfig);
+    const dialogRef =  this.dialog.open(FacClienteComponent, dialogConfig);
     dialogRef.afterClosed().subscribe( // 
           (data:any) => { if (data.clicked === 'Ver'){                   
-              this.leerFacsCL(); // refrescar lista
+              this.leerCFacsCL(); // refrescar lista
           }})
  
    }
@@ -143,7 +144,7 @@ export class FacusCli {
                   .pipe(finalize(() => {
                      this.notiServicio.showNotification("La Factura Nro "+idfac+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
                      subscri.unsubscribe();
-                    this.leerFacsCL(); // refrescar lista
+                    this.leerCFacsCL(); // refrescar lista
  
                    }))
                    .subscribe((data : any): void => {
@@ -157,7 +158,7 @@ export class FacusCli {
    manejarOperacion($event:any){
      if ($event==="Alta" || $event==="Modi"){
          this.formFaccl = false;
-         this.leerFacsCL(); // refrescar lista
+         this.leerCFacsCL(); // refrescar lista
       
      } else {
        this.formFaccl = false;

@@ -221,7 +221,7 @@ export class ServiciosService {
    public getFacsCL() {
     return this.http.get<facclDTO[]>(this.apiUrl + `faccl/facscl`);
   }
-
+ 
   public getCantFacsCL() {
     return this.http.get<number>(this.apiUrl + `faccl/max`);
   }

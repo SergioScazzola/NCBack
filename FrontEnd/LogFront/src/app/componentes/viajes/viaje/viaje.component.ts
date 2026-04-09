@@ -124,7 +124,7 @@ export class ViajeComponent {
     this.formViaje = this.fb.group({        
        nroviaje     : [''], 
        fecha        : [new Date()],
-       idChofer     : [2],
+       idChofer     : [1],
        idCliente    : [1],
        idCamion     : [1],
        descrip      : [''],
@@ -304,8 +304,8 @@ onSelectionCamion($event : any){
     var tarifap  =  this.formViaje.controls["tarifap"].value; // tarifa plena
     var tiva     =  this.servicio.getTasaIVA() / 100; // tasa de IVA obtenida del servicio
     
-    var tarifav  =  this.redondearAdos(tarifap * 0.90); // tarifa del viaje
-    var valorviaje = this.redondearAdos(ckm * tarifav);
+    // var tarifav  =  this.redondearAdos(tarifap); // tarifa del viaje
+    var valorviaje = this.redondearAdos(ckm * tarifap);
     this.formViaje.controls["impneto"].setValue(this.redondearAdos(valorviaje));
     var netociva = valorviaje * (1+tiva);   
     this.formViaje.controls["impviaje"].setValue(this.redondearAdos(netociva))
@@ -318,8 +318,8 @@ onSelectionCamion($event : any){
     var tarifap  =  this.formViaje.controls["tarifap"].value; // tarifa plena
     var tiva     =  this.servicio.getTasaIVA() / 100; // tasa de IVA obtenida del servicio
     
-    var tarifav  =  this.redondearAdos(tarifap * 0.90); // tarifa del viaje
-    var valorviaje = this.redondearAdos(ckm * tarifav);
+    //var tarifav  =  this.redondearAdos(tarifap * 0.90); // tarifa del viaje
+    var valorviaje = this.redondearAdos(ckm * tarifap);
     this.formViaje.controls["impneto"].setValue(this.redondearAdos(valorviaje));
     var netociva = valorviaje * (1+tiva);   
     this.formViaje.controls["impviaje"].setValue(this.redondearAdos(netociva))

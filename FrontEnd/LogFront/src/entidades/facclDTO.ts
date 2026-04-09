@@ -14,9 +14,9 @@ export interface facclDTO {
 }
      
 export interface intFacCl {
-    idFactura    : number,  
+    idFactura    : number;
     nrofactura   : string;
-    accion       : string,
+    accion       : string;
    
 }
 

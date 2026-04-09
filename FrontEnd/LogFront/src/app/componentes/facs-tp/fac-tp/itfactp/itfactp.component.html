@@ -48,7 +48,7 @@
 
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
-          <mat-label>Tarifa Viaje</mat-label>
+          <mat-label>Tarifa Viaje ({{cviajes[this.indiceviaje].tarifap}})</mat-label>
           <input matInput readonly="true" formControlName="tarifa"
            [value]="formItfac.get('tarifa')?.value | currency:'ARS':'symbol':'1.2-2'"
             style="text-align: right"/>
