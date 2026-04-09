@@ -19,7 +19,7 @@
 
 
 .header h4 {
-  background-color: #d1ba9c;
+  background-color: #9cc0d1;
   padding: 8px 16px;
   border-radius: 4px;
   margin: 0;
@@ -27,7 +27,7 @@
 }
 
 .add-button {
-  background-color: #d1ba9c;
+  background-color:  #9cc0d1;
   color : black;
   font-weight: 500;
   display: flex;
@@ -57,7 +57,7 @@
 }
 
 .mat-mdc-header-row {
-  background-color: #d1ba9c;
+  background-color: #79b6d3;
   height: 24px;
   font-size: 14px;
   font-weight: 500;
@@ -79,12 +79,12 @@
 }
 
 .mat-mdc-row:nth-child(even) {
-  background-color: #d3c9bb;
+  background-color: #9cc0d1;
   color: black;
 }
 
 .mat-mdc-row:hover {
-  background-color:#d1ba9c;
+  background-color:#9cc0d1;
 }
 
 /* Estilos para las celdas */
@@ -104,7 +104,7 @@
 /* Ancho de columnas */
 .mat-column-idFactura {
   padding-left: 10px !important;
-  width: 70px;
+  width: 50px;
   text-align: center;
   white-space: nowrap;
   overflow: visible;
@@ -136,7 +136,7 @@
   text-overflow: ellipsis;
 }
 
-.mat-column-nomchofer {
+.mat-column-nomcliente {
   padding-left: 0;
   width: 150px;
   text-align: left;

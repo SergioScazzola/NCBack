@@ -36,7 +36,7 @@ export class FacsClComponent {
    dataSource            = new MatTableDataSource<any>();
 
  
-   colfaccl : string[] = ["idFactura" , "nrofactura","facndc","fecha","nomCliente","impneto","impiva","totalfac","M","B" ];
+   colfaccl : string[] = ["idFactura" , "nrofactura","facndc","fecha","nomcliente","impneto","impiva","totalfac","M","B" ];
  
 
    constructor(     private servicio     : ServiciosService,               
@@ -47,7 +47,10 @@ export class FacsClComponent {
                     private cdr          : ChangeDetectorRef,     
                     private notiServicio : NotiserviceService
                                ) {    
-   }         
+   }     
+ngAfterViewInit(){
+  this.isloading = false;
+}    
  ngOnInit(){         
      this.rutaActiva.queryParamMap.subscribe((params) => { // lee el parametro de ruteo y lo asigna al filtro
         var fil  = params.get('filtro')||'';     
@@ -59,15 +62,18 @@ export class FacsClComponent {
       })       
        
  }
-       
-   leerFacsCL(){
+         
+ leerFacsCL(){
       var subs : Subscription;
       subs = this.servicio.getFacsCL()
            .pipe(finalize(()=> {
                this.cantfaccl = this.cfacsCL.length;
-                this.dataSource.data = this.cfacsCL;         
+               console.log("Cant : "+this.cfacsCL.length);
+               console.log("Cli1 : "+this.cfacsCL[0].nomcliente);
+                console.log("Cli2 : "+this.cfacsCL[1].nomcliente);
+               this.dataSource.data = this.cfacsCL;         
                 this.dataSource.filterPredicate = (dato : facclDTO, fil : string) => {
-                     return dato.nomCliente.toLowerCase().includes(fil);
+                     return dato.nomcliente.toLowerCase().includes(fil);
                                      };    
                 // Aplica filtro si hay uno
                 if (this.filtro!=='') {                                 
@@ -75,7 +81,7 @@ export class FacsClComponent {
                     this.inputRef.nativeElement.value = this.filtro;//setAttribute('value', this.filtro);
                 }
                 this.isloading = false;
-                this.cdr.detectChanges();
+                this.cdr.markForCheck();                
                subs.unsubscribe();
            }))
            .subscribe((data : any): void => {
@@ -100,7 +106,8 @@ export class FacsClComponent {
   
      const dialogRef =  this.dialog.open(FacClComponent, dialogConfig);
      dialogRef.afterClosed().subscribe(
-        (datass:any) => { if (datass.clicked === 'Alta'){                   
+        (datass:any) => { if (datass.clicked === 'Alta'){               
+                             console.log("Evento recibido en FacsCLComponent:");    
                              this.leerFacsCL();
                         }})
      this.formFaccl = true;
@@ -157,6 +164,7 @@ export class FacsClComponent {
      if ($event==="Alta" || $event==="Modi"){
          this.formFaccl = false;
          this.leerFacsCL(); // refrescar lista
+      
      } else {
        this.formFaccl = false;
      }

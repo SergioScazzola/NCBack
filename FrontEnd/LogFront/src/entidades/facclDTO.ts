@@ -5,7 +5,7 @@ export interface facclDTO {
      facndc         : string;  // fac : suma, ndc : resta
      fecha          : Date;
      idCliente      : number;
-     nomCliente     : string;
+     nomcliente     : string;
      cantit         : number;        
      impneto        : number; 
      impiva         : number;

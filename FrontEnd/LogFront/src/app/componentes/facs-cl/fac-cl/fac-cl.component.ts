@@ -76,7 +76,7 @@ export class FacClComponent {
      facndc         : "FAC",  // fac : suma, ndc : resta
      fecha          : new Date(),
      idCliente      : 1,
-     nomCliente     : "",
+     nomcliente     : "",
      cantit         : 0,        
      impneto        : 0, 
      impiva         : 0,
@@ -155,7 +155,7 @@ export class FacClComponent {
                 this.formFaccl.controls["idFactura"].setValue(this.nfaccpalta);
                 console.log("Datos Recibidos : " + JSON.stringify(this.data));
                 var indcliente = this.cclientes.findIndex(p=>p.idCliente=this.idclienteSel);
-                this.factpp.nomCliente = this.cclientes[indcliente].nombre;                            
+                this.factpp.nomcliente = this.cclientes[indcliente].nombre;                            
                 this.isloading = false;
                 this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores
             }))
@@ -183,7 +183,7 @@ export class FacClComponent {
     }
   actualizarFormulario(){
     var indcliente = this.cclientes.findIndex(p=>p.idCliente=this.idclienteSel);
-    this.factpp.nomCliente = this.cclientes[indcliente].nombre;
+    this.factpp.nomcliente = this.cclientes[indcliente].nombre;
     this.formFaccl.controls["idFactura"].setValue(this.factpp.idFactura), 
     this.formFaccl.controls["nrofactura"].setValue(this.factpp.nrofactura),              
     this.formFaccl.controls["facndc"].setValue(this.factpp.facndc), 
@@ -194,17 +194,17 @@ export class FacClComponent {
     this.formFaccl.controls["totalfac"].setValue(this.factpp.totalfac), 
     this.formFaccl.controls["cantit"].setValue(this.factpp.cantit), 
     this.idclienteSel = this.factpp.idCliente;
-    this.factpp.nomCliente = this.cclientes[indcliente].nombre;
+    this.factpp.nomcliente = this.cclientes[indcliente].nombre;
                            
    }
        
              
 onSelectionCliente($event : any){
-  // recibo un idChofer
+  // recibo un idCliente
  this.idclienteSel = $event.value;
  this.factpp.idCliente = this.idclienteSel;
  var indcli = this.cclientes.findIndex(p=>p.idCliente==this.idclienteSel);
- this.factpp.nomCliente = this.cclientes[indcli].nombre; 
+ this.factpp.nomcliente = this.cclientes[indcli].nombre; 
 }
 
  onFechaChange(event: any) {
@@ -224,7 +224,7 @@ agItemFaccl(){ // Se llama unicamente en alta de factura
      nrofactura :   this.formFaccl.controls["nrofactura"].value,
      nroitem    :   this.cdetfaccl.length+1,   
      nrocli     :   this.factpp.idCliente,
-     nomcli     :   this.factpp.nomCliente,
+     nomcli     :   this.factpp.nomcliente,
      accion     : "A",
      ditFac     : {   // donde se recibe  el item creado 
       idFactura      : this.formFaccl.controls["idFactura"].value,      
@@ -295,11 +295,12 @@ agItemFaccl(){ // Se llama unicamente en alta de factura
         facndc        : this.formFaccl.controls["facndc"].value,   
         fecha         : this.formFaccl.controls["fecha"].value,   
         idCliente     : this.formFaccl.controls["idCliente"].value,   
-        nomCliente    : this.cclientes[indcli].nombre,
+        nomcliente    : this.cclientes[indcli].nombre,
+        cantit        : this.formFaccl.controls["cantit"].value,   
         impneto       : this.formFaccl.controls["impneto"].value,   
         impiva        : this.formFaccl.controls["impiva"].value,   
         totalfac      : this.formFaccl.controls["totalfac"].value,   
-        cantit        : this.formFaccl.controls["cantit"].value,   
+       
         
   }   
    
@@ -307,8 +308,8 @@ agItemFaccl(){ // Se llama unicamente en alta de factura
   var subs : Subscription;  
       subs = this.servicio.grabarFacCL(faccl)
          .pipe(finalize(() => {        
-           this.notiService.showNotification("La Factura Nro : "+faccl.nrofactura+" del chofer "+faccl.nomCliente+"("+resu+
-                                        ") se ha agregado con éxito",'Aceptar','mensaje',500);     
+            this.notiService.showNotification("La Factura Nro : "+faccl.nrofactura+" del  "+faccl.nomcliente+"("+resu+
+                                        ") se ha agregado con éxito",'Aceptar','mensaje',500);    
            grabo  = true;
            
            const observables = this.cdetfaccl.map(item => {
@@ -332,7 +333,7 @@ agItemFaccl(){ // Se llama unicamente en alta de factura
             forkJoin(observables).subscribe({
                 next: (results) => {
                   console.log('Todos los items grabados:', results);     
-                  this.dialogRef.close({ clicked : "Alta"}) // grabé un nuevo cobro
+                  this.dialogRef.close({ clicked : "Alta"}) // grabé una nueva factura
                   }, 
                 error: (err) => {
                   console.error('Error al grabar items:', err);
@@ -356,7 +357,7 @@ verItemFactp(nroit  : number){ // prepara datos y los manda al componente "itfac
     nrofactura    : this.formFaccl.controls["nrofactura"].value,
     nroitem       : nroitem,
     nrocli        : this.factpp.idCliente,
-    nomcli        : this.factpp.nomCliente,
+    nomcli        : this.factpp.nomcliente,
     accion        : "V",
     ditFac   : {   // donde se envia el item a modificar    
       idFactura      : this.formFaccl.controls["idFactura"].value,         

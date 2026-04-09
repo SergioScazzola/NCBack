@@ -10,7 +10,6 @@ import { CamionesComponent } from './componentes/camiones/camiones.component';
 import { ClientesComponent } from './componentes/clientes/clientes.component';
 import { ViajesComponent } from './componentes/viajes/viajes.component';
 import { FacsTPComponent } from './componentes/facs-tp/facs-tp.component';
-import { FacClComponent } from './componentes/facs-cl/fac-cl/fac-cl.component';
 import { FacsClComponent } from './componentes/facs-cl/facs-cl.component';
 
 export const routes: Routes = [
