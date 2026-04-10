@@ -130,6 +130,32 @@ public class ViajeController {
      
       } 
     }
+
+    @PutMapping(value="/viaje/actuft", params={"id","factu"})
+    public ResponseEntity<String> updateFacT(@RequestParam("id") Integer idviaje,
+                                             @RequestParam("factu") Integer facturado){
+      try {
+        int resultado = tpteRepository.actualizarFactT(idviaje,facturado);    
+        return new ResponseEntity<>(Integer.toString(resultado), HttpStatus.OK);
+      } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+     
+      } 
+    }
+
+    @PutMapping(value="/viaje/actufc", params={"id","factu"})
+    public ResponseEntity<String> updateFacC(@RequestParam("id") Integer idviaje,
+                                             @RequestParam("factu") Integer facturado){
+      try {
+        int resultado = tpteRepository.actualizarFactC(idviaje,facturado);    
+        return new ResponseEntity<>(Integer.toString(resultado), HttpStatus.OK);
+      } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+     
+      } 
+    }
+
+
      @DeleteMapping(value="/viaje", params={"id"})    
     public ResponseEntity<String> borrarViaje(@RequestParam("id") Integer idviaje){
       try {
@@ -139,6 +165,7 @@ public class ViajeController {
         return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR );
       }
 
+    
     }
    
 }

@@ -384,7 +384,33 @@ public class JdbcTpteRepository implements TpteRepository {
         } catch (IncorrectResultSizeDataAccessException e) {
           return null;
         }
-      }  
+      } 
+
+      @Override
+      public int actualizarFactT(int idviaje, int facturado){
+      int resu = 0;
+      try {                   
+          resu = jdbcTemplate.update("UPDATE viajes SET fact=? WHERE idViaje=?",
+                    new Object[] {facturado, idviaje});
+                               
+        } catch (IncorrectResultSizeDataAccessException e) {
+          return -3;
+      }
+      return resu; 
+      }
+
+      @Override
+      public int actualizarFactC(int idviaje, int facturado){
+      int resu = 0;
+      try {                   
+          resu = jdbcTemplate.update("UPDATE viajes SET facc=? WHERE idViaje=?",
+                    new Object[] {facturado, idviaje});
+                               
+        } catch (IncorrectResultSizeDataAccessException e) {
+          return -3;
+      }
+      return resu; 
+      }
 
       @Override
       public int actualizarViaje(int nrov, Viaje viaje){      
@@ -393,12 +419,12 @@ public class JdbcTpteRepository implements TpteRepository {
           resu = jdbcTemplate.update("UPDATE viajes SET fecha=?,idChofer=?,nomchofer=?,"+
                                     "idCliente=?,nomcliente=?,idCamion=?,descrip=?,"+
                                     "origen=?,destino=?,ctg=?,cantkm=?,cargaton=?,"+
-                                    "tarifap=?,ltsgasoil=?,impneto=?,impviaje=?,facturado=? WHERE idViaje=?",
+                                    "tarifap=?,ltsgasoil=?,impneto=?,impviaje=?,fact=?,facc=? WHERE idViaje=?",
                     new Object[] {viaje.getFecha(),viaje.getIdChofer(),viaje.getNomchofer(),viaje.getIdCliente(),
                                   viaje.getNomcliente(),viaje.getIdCamion(),viaje.getDescrip(),viaje.getOrigen(),
                                   viaje.getDestino(),viaje.getCtg(),viaje.getCantkm(),viaje.getCargaton(),
                                   viaje.getTarifap(),viaje.getLtsgasoil(),viaje.getImpneto(),viaje.getImpviaje(),
-                                  viaje.getFacturado(),viaje.getIdViaje()
+                                  viaje.getFact(),viaje.getFacc(),viaje.getIdViaje()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -413,13 +439,14 @@ public class JdbcTpteRepository implements TpteRepository {
           resu = jdbcTemplate.update("INSERT viajes(idViaje,fecha,idChofer,"+
                                     "nomchofer,idCliente,nomcliente,idCamion,descrip,"+
                                     "origen,destino,ctg,cantkm,cargaton,"+
-                                    "tarifap,ltsgasoil,impneto,impviaje,facturado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
+                                    "tarifap,ltsgasoil,impneto,impviaje,fact,facc) "+
+                                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] {viaje.getIdViaje(),viaje.getFecha(),viaje.getIdChofer(),
                                   viaje.getNomchofer(),viaje.getIdCliente(),viaje.getNomcliente(),
                                   viaje.getIdCamion(),viaje.getDescrip(),viaje.getOrigen(),
                                   viaje.getDestino(),viaje.getCtg(),viaje.getCantkm(),viaje.getCargaton(),
                                   viaje.getTarifap(),viaje.getLtsgasoil(),viaje.getImpneto(),viaje.getImpviaje(),
-                                  viaje.getFacturado()
+                                  viaje.getFact(),viaje.getFacc()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -436,10 +463,12 @@ public class JdbcTpteRepository implements TpteRepository {
       }
       return resu;
     }   
+    
+
 
     // FACTURA DEL TRANSPORTE //
 
-       @Override
+      @Override
       public List<FactTpte> AllFacstp() {   
         String selec = "SELECT * FROM facstpte ORDER BY fecha DESC LIMIT 150";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class));

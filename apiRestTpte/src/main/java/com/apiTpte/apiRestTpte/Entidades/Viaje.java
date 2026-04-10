@@ -20,6 +20,8 @@ public class Viaje {
     private float    ltsgasoil;
     private double   impneto;
     private double   impviaje;
+    private int      fact;
+    private int      facc;
 
     
    public double getImpneto() {
@@ -165,12 +167,20 @@ public void setImpneto(double impneto) {
         this.descrip = descrip;
     }
 
-    public int getFacturado() {
-        return facturado;
+    public int getFact() {
+        return fact;
     }
 
-    public void setFacturado(int facturado) {
-        this.facturado = facturado;
+    public void setFact(int facturado) {
+        this.fact = facturado;
+    }
+
+    public int getFacc() {
+        return facc;
+    }
+
+    public void setFacc(int facturado) {
+        this.facc = facturado;
     }
    
 
