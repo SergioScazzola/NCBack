@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, effect, ElementRef, Inject, NgZone, viewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators,FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -39,6 +40,7 @@ export const DATE_FORMATS : MatDateFormats = {
     MatInputModule,
     MatSelectModule,
     MatDatepickerModule,
+    MatCheckbox,
     MatNativeDateModule,
     ReactiveFormsModule,
     CommonModule,
@@ -137,7 +139,8 @@ export class ViajeComponent {
        ltsgasoil    : [0],
        impneto      : [0],
        impviaje     : [0],
-       facturado    : [0],
+       fact         : [0],
+       facc         : [0]
     })
   }
   actualizarControles(){
@@ -158,7 +161,9 @@ export class ViajeComponent {
     this.formViaje.controls["ltsgasoil"].setValue(this.viajee.ltsgasoil),
     this.formViaje.controls["impneto"].setValue(this.viajee.impneto),  
     this.formViaje.controls["impviaje"].setValue(this.viajee.impviaje),
-    this.formViaje.controls["facturado"].setValue(this.viajee.facturado),     
+    this.formViaje.controls["fact"].setValue(this.viajee.fact),     
+    this.formViaje.controls["facc"].setValue(this.viajee.facc),     
+
              
     this.idChoferSel      = this.viajee.idChofer;
     this.idClienteSel     = this.viajee.idCliente;
@@ -190,7 +195,8 @@ export class ViajeComponent {
         ltsgasoil   : this.formViaje.controls["ltsgasoil"].value,
         impneto     : this.formViaje.controls["impneto"].value,
         impviaje    : this.formViaje.controls["impviaje"].value,
-        facturado   : 0,
+        fact        : 0,
+        facc        : 0
     }   
     
         
@@ -231,7 +237,8 @@ export class ViajeComponent {
         ltsgasoil   : this.formViaje.controls["ltsgasoil"].value,
         impneto     : this.formViaje.controls["impneto"].value,
         impviaje    : this.formViaje.controls["impviaje"].value,
-        facturado   : 0,
+        fact        : 0,
+        facc        : 0
     }   
    
     var subscri : Subscription;

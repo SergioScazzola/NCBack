@@ -307,8 +307,7 @@ agItemFactp(){ // Se llama unicamente en alta de factura
          .pipe(finalize(() => {        
            this.notiService.showNotification("La Factura Nro : "+factp.nrofactura+" del chofer "+factp.nomchofer+"("+resu+
                                         ") se ha agregado con éxito",'Aceptar','mensaje',500);     
-           grabo  = true;
-           
+           grabo  = true;           
            const observables = this.cdetfactp.map(item => {
                const itfactp: itfactpDTO = {    
                   idFactura      : item.idFactura,    
@@ -326,14 +325,17 @@ agItemFactp(){ // Se llama unicamente en alta de factura
                   impiva         : item.impiva,
                   totalitem      : item.totalitem
                };
-            return this.servicio.grabarItemFacTP(itfactp)});
+            // Graba item y marca en el viaje asociado que ha sido facturado al Chofer
+            
+            return this.servicio.grabarItemFacTP(itfactp),
+                   this.servicio.updateFactT(itfactp.idViaje,1)});          
             forkJoin(observables).subscribe({
                 next: (results) => {
-                  console.log('Todos los items grabados:', results);     
-                  this.dialogRef.close({ clicked : "Alta"}) // grabé un nuevo cobro
+                  console.log('Todos los items grabadosssssssssssssssssssssss:', results);     
+                  this.dialogRef.close({ clicked : "Alta"}) // grabé una nueva factura
                   }, 
                 error: (err) => {
-                  console.error('Error al grabar items:', err);
+                  console.error('Error al grabar iteeeeeeeeeeeeeeeeeems:', err);
                 }
             });
           }))
@@ -342,10 +344,6 @@ agItemFactp(){ // Se llama unicamente en alta de factura
       })
   }
       
-
-
-
-
 verItemFactp(nroit  : number){ // prepara datos y los manda al componente "itfactp" para visualizar el item
  
   var nroitem = nroit;

@@ -194,7 +194,7 @@
     <div class="botonera">
       <button
         class="btn btn-sm btn-outline-primary"
-        [disabled]="formFaccl.invalid || cdetfaccl.length === 0 || data.accion != 'A'"
+        [disabled]="formFaccl.invalid || cdetfaccl===null || cdetfaccl.length === 0 || data.accion != 'A'"
         (click)="GrabarFacturaCL()"
       >
         Agregar Factura 

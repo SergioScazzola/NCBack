@@ -323,7 +323,9 @@ agItemFaccl(){ // Se llama unicamente en alta de factura
                   impiva         : item.impiva,
                   totalitem      : item.totalitem
                };
-            return this.servicio.grabarItemFacCL(itfaccl)});
+            // Graba item y marca en el viaje asociado que ha sido facturado al cliente
+            return this.servicio.grabarItemFacCL(itfaccl),
+                   this.servicio.updateFactC(itfaccl.idViaje,1)});
             forkJoin(observables).subscribe({
                 next: (results) => {
                   console.log('Todos los items grabados:', results);     

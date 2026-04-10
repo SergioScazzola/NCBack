@@ -206,6 +206,17 @@ export class ServiciosService {
       this.apiUrl + `viaje/viaje/nuevo`, viaje);
   }
 
+
+  // Actualiza el campo "fact" de Viajes para marcar que se emitio la factura de transporte 
+  public updateFactT(nroviaje : number, facturado : number) {
+    return this.http.put(environment.apiUrl + `viaje/viaje/actuft?id=`+nroviaje+`&factu=`+facturado,nroviaje);
+  } 
+
+  // Actualiza el campo "facc" de Viajes para marcar que se emitio la factura al cliente 
+   public updateFactC(nroviaje : number, facturado : number) {
+    return this.http.put(environment.apiUrl + `viaje/viaje/actufc?id=`+nroviaje+`&factu=`+facturado,nroviaje);
+  } 
+
   public updateViaje(nroviaje : number, viaje : viajeDTO) {
     return this.http.put<viajeDTO>(
       environment.apiUrl + `viaje/viaje/actualizar?id=` + nroviaje, viaje);

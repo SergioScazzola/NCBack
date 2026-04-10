@@ -16,7 +16,8 @@ export interface viajeDTO {
     ltsgasoil      : number;
     impneto        : number;
     impviaje       : number;
-    facturado      : number;
+    fact           : number;
+    facc           : number;
 }
 export interface intViaje {
     nroviaje   : number,  

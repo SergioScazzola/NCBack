@@ -17,6 +17,8 @@ h4 {
 .menserror {
    color : red
 }
+
+
 /* Esta clase se la envia camiones cuando llama, es la panelClass*/
 .custom-dialog-container {
   background-color:lightgray;  /*quita el fondo blanco */

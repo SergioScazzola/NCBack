@@ -197,7 +197,7 @@
     <div class="botonera">
       <button
         class="btn btn-sm btn-outline-primary"
-        [disabled]="formFactp.invalid || cdetfactp.length === 0 || data.accion != 'A'"
+        [disabled]="formFactp.invalid || cdetfactp.length === null || cdetfactp.length === 0 || data.accion != 'A'"
         (click)="GrabarFacturaTP()"
       >
         Agregar Factura 

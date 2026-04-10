@@ -100,7 +100,8 @@ export class FacsTPComponent {
   
      const dialogRef =  this.dialog.open(FacTpComponent, dialogConfig);
      dialogRef.afterClosed().subscribe(
-        (datass:any) => { if (datass.clicked === 'Alta'){                   
+        (datass:any) => { if (datass.clicked === 'Alta'){      
+                             console.log("FACTURA TPTE Grabada...");             
                              this.leerFacsTP();
                         }})
      this.formFactp = true;

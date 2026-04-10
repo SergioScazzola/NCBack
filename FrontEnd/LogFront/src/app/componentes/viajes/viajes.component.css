@@ -180,6 +180,12 @@
   text-overflow: ellipsis;
 }
 
+.mat-column-ft,
+.mat-column-fc {
+  padding-left: 0rem;
+  width: 50px;
+  text-align: center;
+}
 /* Estilos para columnas de acción M, B */
 .mat-column-M,
 .mat-column-B,

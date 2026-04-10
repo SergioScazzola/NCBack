@@ -9,10 +9,11 @@ import { NotiserviceService } from '../../servicios/notiservice.service';
 import { finalize, Subscription } from 'rxjs';
 import { viajeDTO } from '../../../entidades/viajeDTO';
 import { ViajeComponent } from './viaje/viaje.component';
+import { MatCheckbox } from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-viajes',
-  imports: [ MatTableModule,DatePipe,DecimalPipe],
+  imports: [ MatTableModule,DatePipe,DecimalPipe,MatCheckbox],
   templateUrl: './viajes.component.html',
   styleUrl: './viajes.component.css',
 })
@@ -29,7 +30,7 @@ export class ViajesComponent {
    viajemod              : number;
    dataSource            = new MatTableDataSource<any>();
    
-   colViajes : string[] = ["idViaje","fecha","nomcliente","nomchofer","descrip","destino","tarifap","cantkm","impviaje","M","B" ];
+   colViajes : string[] = ["idViaje","fecha","nomcliente","nomchofer","descrip","destino","tarifap","cantkm","impviaje","ft","fc","M","B" ];
  
    
    constructor(     private servicio     : ServiciosService,               

@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { facclDTO } from '../../../entidades/facclDTO';
 import { FacClienteComponent } from './fac-cliente/fac-cliente.component';
 import { MatDateFormats } from '@angular/material/core';
+import { itfacclDTO } from '../../../entidades/itfacclDTO';
 
 @Component({
   selector: 'app-facs-clientes',
@@ -30,6 +31,7 @@ export class FacsClientesComponent {
    formFaccl             : boolean;
    factpmod              : number; 
    cfacsCL               : facclDTO[]=[];
+   cdetfaccl             : itfacclDTO[]=[];
    dataSource            = new MatTableDataSource<any>();
 
  
@@ -133,26 +135,38 @@ export class FacsClientesComponent {
           }})
  
    }
+
    borrarFacCL(idfac : number, nrofac : string){
      var resu : string;
-      this.sinoServicio.abrirSiNoDialogo("Confirmación",
+     this.sinoServicio.abrirSiNoDialogo("Confirmación",
                                "¿ Está seguro de quiere borrar Definitivamente la Factura Nro."+idfac+"-"+nrofac+" ?")
         .then(result => {
            if (result) {
-               var subscri : Subscription;
-               subscri = this.servicio.elimFacCL(idfac)               
-                  .pipe(finalize(() => {
-                     this.notiServicio.showNotification("La Factura Nro "+idfac+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
-                     subscri.unsubscribe();
-                    this.leerCFacsCL(); // refrescar lista
- 
-                   }))
-                   .subscribe((data : any): void => {
-                        resu = data});       
-           } else {
-             console.log('El usuario seleccionó "No"');
-           }
-     })
+             
+             this.servicio.getItemsFacsCL(idfac)
+             // por cada item de detalle de Fac.del cliente, desmarco el viaje como no facturado
+               .subscribe((data:any):void =>{ 
+                  this.cdetfaccl = data
+                  const observables = this.cdetfaccl.map(item => {                         
+                        return this.servicio.updateFactC(item.idViaje,0)});
+                        forkJoin(observables).subscribe({
+                            next: (results) => {
+                              console.log('Todos los items grabados:', results);                                   
+                              }, 
+                            error: (err) => {
+                              console.error('Error al grabar items:', err);
+                            }
+                  });
+               })
+
+            this.servicio.elimFacCL(idfac)
+              .subscribe((data:any):void => { 
+                   resu = data;
+                   this.notiServicio.showNotification("Factura : "+nrofac+" Eliminada",'Aceptar','mensaje',500)
+                   })
+            }
+         });      
+                                            
   }
   
    manejarOperacion($event:any){
