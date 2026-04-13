@@ -108,7 +108,7 @@ public class JdbcTpteRepository implements TpteRepository {
      @Override
     // Devuelve todos los saldos registrados del chofer ordenados por fecha
     public List<SaldoChof> getSaldosPorChofer(int nrochofer) {   
-      String selec = "SELECT * FROM saldoschof WHERE id;Chofer=? ORDER BY fecha";
+      String selec = "SELECT * FROM saldoschof WHERE idChofer=? ORDER BY fecha";
       return jdbcTemplate.query(selec,BeanPropertyRowMapper.newInstance(SaldoChof.class),nrochofer);
     }
     @Override
@@ -999,10 +999,10 @@ public class JdbcTpteRepository implements TpteRepository {
       public int actualizarGasto(int nrog, Gasto gasto){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE gastos SET fecha=?,idViaje=?,compGasto=?,provGasto=?,"+
+          resu = jdbcTemplate.update("UPDATE gastos SET fecha=?,idChofer=?,idViaje=?,compGasto=?,provGasto=?,"+
                                     "cantGasto=?,unidGasto=?,preGasto=?,descGasto=?,impgasto=? "+
                                     "WHERE idGasto=?",
-                    new Object[] { gasto.getFecha(),gasto.getIdViaje(),gasto.getCompGasto(),gasto.getProvGasto(),
+                    new Object[] { gasto.getFecha(),gasto.getIdChofer(),gasto.getIdViaje(),gasto.getCompGasto(),gasto.getProvGasto(),
                                    gasto.getCantgasto(),gasto.getUnidGasto(),gasto.getPreGasto(),
                                    gasto.getDescGasto(),gasto.getImpgasto(),gasto.getIdGasto()                                                                      
                                 });
@@ -1016,10 +1016,11 @@ public class JdbcTpteRepository implements TpteRepository {
       // Graba nuevo Gasto 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT gastos(idGasto,fecha,idViaje,compGasto,provGasto,"+               
+          resu = jdbcTemplate.update("INSERT gastos(idGasto,fecha,idChofer,idViaje,compGasto,provGasto,"+               
                                      "cantGasto,unidGasto,preGasto,descGasto,impgasto) " + 
-                                     "VALUES(?,?,?,?,?,?,?,?,?,?)",
-                    new Object[] { gasto.getIdGasto(),gasto.getFecha(),gasto.getIdViaje(),gasto.getCompGasto(),gasto.getProvGasto(),
+                                     "VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+                    new Object[] { gasto.getIdGasto(),gasto.getFecha(),gasto.getIdChofer(),gasto.getIdViaje(),gasto.getCompGasto(),
+                                   gasto.getProvGasto(),
                                    gasto.getCantgasto(),gasto.getUnidGasto(),gasto.getPreGasto(),
                                    gasto.getDescGasto(),gasto.getImpgasto()
                                 });

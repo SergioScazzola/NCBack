@@ -5,6 +5,7 @@ import java.util.Date;
 public class Gasto {
      private int    idGasto;
      private Date   fecha;
+     private int    idChofer;
      private int    idViaje;
      private String compGasto;   
      private String provGasto;
@@ -94,6 +95,14 @@ public class Gasto {
 
      public void setDescGasto(String descGasto) {
          this.descGasto = descGasto;
+     }
+
+     public int getIdChofer() {
+         return idChofer;
+     }
+
+     public void setIdChofer(int idChofer) {
+         this.idChofer = idChofer;
      }
 
           
