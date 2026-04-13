@@ -20,6 +20,7 @@ import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
+import com.apiTpte.apiRestTpte.Entidades.SaldoChof;
 import com.apiTpte.apiRestTpte.Entidades.Usuario;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
 
@@ -103,6 +104,75 @@ public class JdbcTpteRepository implements TpteRepository {
       }
       return resu;
     }   
+
+     @Override
+    // Devuelve todos los saldos registrados del chofer ordenados por fecha
+    public List<SaldoChof> getSaldosPorChofer(int nrochofer) {   
+      String selec = "SELECT * FROM saldoschof WHERE id;Chofer=? ORDER BY fecha";
+      return jdbcTemplate.query(selec,BeanPropertyRowMapper.newInstance(SaldoChof.class),nrochofer);
+    }
+    @Override
+    public int saveSaldoChofer(SaldoChof saldoc){
+    // Graba un nuevo saldo para el Chofer
+        return jdbcTemplate.update("INSERT INTO saldoschof(idChofer,nrosaldo,fecha,saldo) "+
+                                   "VALUES(?,?,?,?)",
+            new Object[] { saldoc.getIdChofer(),saldoc.getNroSaldo(),saldoc.getFecha(),saldoc.getSaldo()});    
+    }
+
+    @Override
+    public SaldoChof  getSaldoDelChofer(int idchof, int nros){
+      String q = "SELECT * FROM saldoschof WHERE idChofer=? AND nrosaldo=?";
+      try {
+        SaldoChof saldochof = jdbcTemplate.queryForObject(q,
+            BeanPropertyRowMapper.newInstance(SaldoChof.class), idchof,nros);          
+        return saldochof;
+      } catch (IncorrectResultSizeDataAccessException e) {
+        return null;
+      }
+    }
+    @Override
+    // actualiza el saldo inicial del Chofer en la tabla "Choferes"
+    public int actSaldoInicial(SaldoChof saldoc){    
+    int resu = 0;
+    try {                   
+        resu = jdbcTemplate.update("UPDATE choferes SET saldoini=? WHERE idChofer=?",
+                                 
+            new Object[] { saldoc.getSaldo(),saldoc.getIdChofer()});
+      } catch (IncorrectResultSizeDataAccessException e) {
+        return -3;
+    }
+    return resu; 
+    }
+
+ @Override
+    // actualiza un saldo del Chofer en la tabla saldoscli"
+    public int actSaldodelChofer(SaldoChof saldoc){
+    
+    int resu = 0;
+    try {                   
+        resu = jdbcTemplate.update("UPDATE saldoschof SET fecha=?,saldo=? WHERE idChofer=? AND nrosaldo=?",
+                                 
+            new Object[] { saldoc.getFecha(),saldoc.getSaldo(),saldoc.getIdChofer(),saldoc.getNroSaldo()});
+      } catch (IncorrectResultSizeDataAccessException e) {
+        return -3;
+    }
+    return resu; 
+    }
+
+
+    @Override
+    public List<Gasto> GastosXChofer(int idchofer) {   
+      String selec = "SELECT * FROM gastos WHERE idChofer=? ORDER BY fecha DESC";
+      return jdbcTemplate.query(selec,BeanPropertyRowMapper.newInstance(Gasto.class),idchofer);
+    }
+    
+    @Override
+    public List<Pago> PagosXChofer(int idchofer) {   
+      String selec = "SELECT * FROM pagos WHERE idChofer=? ORDER BY fecha DESC";
+      return jdbcTemplate.query(selec,BeanPropertyRowMapper.newInstance(Pago.class),idchofer);
+    }
+
+  
 
     // *** CAMIONES *** //
       @Override
@@ -466,13 +536,20 @@ public class JdbcTpteRepository implements TpteRepository {
     
 
 
-    // FACTURA DEL TRANSPORTE //
+    // FACTURAS DEL TRANSPORTE //
 
       @Override
       public List<FactTpte> AllFacstp() {   
         String selec = "SELECT * FROM facstpte ORDER BY fecha DESC LIMIT 150";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class));
       }
+
+      @Override
+       public List<FactTpte> FacTXChofer(int idchofer) {
+         String selec = "SELECT * FROM facstpte WHERE idChofer=? ORDER BY fecha DESC";
+         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class), idchofer);
+       }
+
       @Override
       public int getMaxFacstp(){
         String consulta = "SELECT MAX(idFactura) FROM facstpte";

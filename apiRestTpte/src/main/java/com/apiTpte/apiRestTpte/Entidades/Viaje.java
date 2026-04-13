@@ -32,7 +32,7 @@ public void setImpneto(double impneto) {
     this.impneto = impneto;
 }
 
- private int      facturado;
+
 
     public Viaje(){
 

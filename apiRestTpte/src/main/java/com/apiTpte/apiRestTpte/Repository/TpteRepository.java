@@ -16,6 +16,7 @@ import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
+import com.apiTpte.apiRestTpte.Entidades.SaldoChof;
 import com.apiTpte.apiRestTpte.Entidades.Usuario;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
 
@@ -37,7 +38,13 @@ public interface TpteRepository {
     int saveChofer(Chofer chofer);
     int actualizarChofer(int idchofer, Chofer chofer);    
     int deleteChofer(int idchofer);
-
+    List<SaldoChof> getSaldosPorChofer(int nchof);
+    int actSaldoInicial(SaldoChof saldoc);  // en la tabla "choferes"
+    int saveSaldoChofer(SaldoChof saldoc);
+    SaldoChof getSaldoDelChofer(int idchof, int nros);
+    int actSaldodelChofer(SaldoChof saldoc);
+    List<Gasto> GastosXChofer(int idchofer);
+    List<Pago> PagosXChofer(int idchofer);
     List<EmpTpte> AllEmpresas();
     int getMaxEmpresas();
     EmpTpte findEmpresaById(int idempresa);
@@ -60,6 +67,7 @@ public interface TpteRepository {
     int actualizarViaje(int idviaje, Viaje viaje);    
     int getCantViajesXChofer(int idchofer);
     int getCantViajesXCliente(int idclte);
+  
     List<Viaje> ViajesXCliente(int idclte);
     int actualizarFactC(int idviaje,int facturado);
     int actualizarFactT(int idviaje,int facturado);
@@ -78,6 +86,7 @@ public interface TpteRepository {
     int saveItemFactp(ItfactT itfac);
     int actualizarItemFactp(ItfactT itfac);   
     int deleteItemFactp(int nrofac, int nroit);
+    List<FactTpte> FacTXChofer(int idchofer);
 
     // FACTURA AL CLIENTE
           
