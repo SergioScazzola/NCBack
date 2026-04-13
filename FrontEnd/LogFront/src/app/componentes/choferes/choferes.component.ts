@@ -32,7 +32,7 @@ export class ChoferesComponent {
    dataSource = new MatTableDataSource<any>();
    
         
-   colChoferes : string[] = ["idChofer" , "nombre","domicilio","localidad","empresa","cuit","telefono","notas","M","B" ];
+   colChoferes : string[] = ["idChofer" , "nombre","domicilio","localidad","empresa","cuit","telefono","notas","CC","M","B" ];
  
    
    constructor(     private servicio     : ServiciosService,               
@@ -151,6 +151,10 @@ export class ChoferesComponent {
      }
     }
 
+  cuentaCorriente(nrochof : number,nomchof : string){
+    var filter = this.inputRef.nativeElement.value;
+    this.router.navigate(['/choferes', nrochof,nomchof,filter,'ctactec']);
+  }
   volver(){
     this.router.navigate(['/ppal']);
  }

@@ -12,7 +12,7 @@ export interface factpDTO {
      totalfac       : number;
         
 }
-     
+
 export interface intFacTp {
     idFactura    : number,  
     nrofactura   : string;

@@ -1,0 +1,46 @@
+/* Contenedor principal */
+.ctacte-container {
+    width: 100%;
+    height: 100vh; /* Usar toda la altura de la ventana */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Evita scroll en el contenedor principal */
+    position: fixed; /* Fijar todo el contenedor */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-top: 10px; /* Espacio para la barra de navegación */
+  }
+  
+  /* Secciones fijas (superior e inferior) */
+  .fixed-section {
+    flex-shrink: 0; /* Evita que la sección se encoja */
+    width: 100%;
+    padding: 1px;
+    background-color:white;
+    z-index: 2; /* Asegurar que esté por encima de la tabla */
+  }
+
+  /* Cabecera con título y botón */
+.header {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  /*margin-bottom: 15px;*/
+}
+
+.header h4 {
+  background-color: #b6c1dd;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  min-width: 100%;
+  overflow: auto;
+  border-collapse: collapse;
+}

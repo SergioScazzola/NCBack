@@ -66,14 +66,18 @@ export class ServiciosService {
       environment.apiUrl + `chofer/chofer?id=` + nrochofer
     );
   }
- 
+  
  public getSaldosChofer(nrochof : number) {
   return this.http.get<saldoChofDTO[]>(this.apiUrl + `chofer/saldosxchof?nrochof=`+nrochof);
   }
 
+  public updateSaldoInicial(saldo: saldoChofDTO) {
+    return this.http.put<choferDTO>(
+      environment.apiUrl + `chofer/actsaldoini`,saldo);
+  }
 
   public getFactTpteXChofer(nrochof : number) {
-    return this.http.get<factpDTO[]>(this.apiUrl + `factp/factxchofer?idchof=`+nrochof);
+    return this.http.get<factpDTO[]>(this.apiUrl + `chofer/factxchofer?idchof=`+nrochof);
   }
 
   public getGastosxChofer(nrochof : number) {
@@ -82,6 +86,16 @@ export class ServiciosService {
 
   public getPagosxChofer(nrochof : number) {
     return this.http.get<pagoDTO[]>(this.apiUrl + `chofer/pagosxchofer?idchof=`+nrochof);
+  }
+  
+  // PAGOS AL CHOFER
+   public getCantPagos() {
+    return this.http.get<number>(this.apiUrl + `pago/max`);
+  }
+  public elimPago(nropago: number) {
+    return this.http.delete(
+      environment.apiUrl + `pago/pago?id=` + nropago
+    );
   }
 
   // ** CAMIONES ** //

@@ -44,6 +44,15 @@
             <i class="bi bi-receipt me-1"></i>Factura Cliente
           </a>
         </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"            
+            [routerLink]="['/choferes']" 
+            routerLinkActive="active"
+          >
+            <i class="bi bi-receipt me-1"></i>Choferes
+          </a>
+        </li>
          <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Tablas
@@ -55,13 +64,7 @@
                   routerLinkActive="active"
               >Camiones</a>
             </li>
-            <li nav-item>
-              <a  class="dropdown-item"
-                  [routerLink]="['/choferes']"
-                  [queryParams]="{ filtro: '' }"
-                  routerLinkActive="active"
-              >Choferes</a>
-            </li>
+           
             <li nav-item>
               <a  class="dropdown-item"
                   [routerLink]="['/empstpte']"

@@ -11,6 +11,7 @@ import { ClientesComponent } from './componentes/clientes/clientes.component';
 import { ViajesComponent } from './componentes/viajes/viajes.component';
 import { FacsTPComponent } from './componentes/facs-tp/facs-tp.component';
 import { FacsClientesComponent } from './componentes/facs-clientes/facs-clientes.component';
+import { CtacteComponent } from './componentes/choferes/ctactechof/ctactechof.component';
 
 export const routes: Routes = [
   // Rutas para invitados (no autenticados)
@@ -31,6 +32,7 @@ export const routes: Routes = [
     children: [
       { path: 'ppal', component: NavegadorComponent },     
       { path: 'choferes', component: ChoferesComponent },  
+      { path: 'choferes/:nrochofer/:nomchofer/:filtro/ctactec',component: CtacteComponent},     
       { path: 'camiones', component: CamionesComponent },          
       { path: 'clientes', component: ClientesComponent },     
       { path: 'viajes', component: ViajesComponent },     

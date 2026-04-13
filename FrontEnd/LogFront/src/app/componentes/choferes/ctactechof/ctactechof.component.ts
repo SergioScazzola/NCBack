@@ -14,11 +14,13 @@ import { SinoService } from '../../../servicios/sino.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { choferDTO } from '../../../../entidades/choferDTO';
-import { pagoDTO } from '../../../../entidades/pagoDTO';
+import { intPago, pagoDTO } from '../../../../entidades/pagoDTO';
 import { gastoDTO } from '../../../../entidades/gastoDTO';
-import { saldoChofDTO } from '../../../../entidades/saldoChofDTO';
+import { intSalChof, saldoChofDTO } from '../../../../entidades/saldoChofDTO';
 import { viajeDTO } from '../../../../entidades/viajeDTO';
 import { factpDTO } from '../../../../entidades/factpDTO';
+import { PagoschofComponent } from '../pagoschof/pagoschof.component';
+import { SaldochofComponent } from '../saldochof/saldochof.component';
 
 
 @Component({
@@ -41,7 +43,7 @@ public cpagos         : pagoDTO[]=[];
 public cgastos        : gastoDTO[]=[];
 public cmovscc        : ctactecDTO[]=[];
 public csaldos        : saldoChofDTO[]=[];
-public cargandoCtaCte : boolean = false;
+public cargandoCtaCte : boolean = true;
  
 public saldofinal     : number;
 
@@ -52,8 +54,9 @@ public  saldoinicial  : number=0;
 public  mensSaldo      : string;
 public  cbsaldos      : FormControl;
 private chof          : choferDTO;
+private maxpago       : number;
 private filter        : string;
-  colMovsCC: string[] = ["fecha" , "tipomov", "idMov", "descmov","importe","saldo","cob","bcob"];
+  colMovsCC: string[] = ["fecha" , "tipomov", "idMov", "descmov","importe","saldo","pag","bpag"];
 
   constructor(     private servicio    : ServiciosService,
                    private router      : Router,
@@ -67,8 +70,8 @@ ngOnInit()
 {
      // Verificar si hay parámetros en la ruta
  this.rutaActiva.paramMap.subscribe((params) => {
-     const pnro      = params.get('nrocliente');
-     const pnombre   = params.get('nomcliente');
+     const pnro      = params.get('nrochofer');
+     const pnombre   = params.get('nomchofer');
      this.filter     = params.get('filtro')||'';
      console.log("Filtro en CtaCte : "+this.filter);
      this.numchofer = pnro!=undefined?Number(pnro):0;
@@ -78,20 +81,23 @@ ngOnInit()
      var preparo : boolean=false;
      forkJoin({  // consultas para armar la cta.cte del chofer en paralelo
         salchof:       this.servicio.getSaldosChofer(this.numchofer),
-        viajeschof:    this.servicio.getViajesxChofer(this.numchofer),
+        // viajeschof:    this.servicio.getViajesxChofer(this.numchofer),
         facturaschof:  this.servicio.getFactTpteXChofer(this.numchofer),
-        gastoschof:    this.servicio.getGastosxChofer(this.numchofer),
-        pagoschof:     this.servicio.getPagosxChofer(this.numchofer),
-        chofer:         this.servicio.leerChofer(this.numchofer)
+        // gastoschof:    this.servicio.getGastosxChofer(this.numchofer),
+        // pagoschof:     this.servicio.getPagosxChofer(this.numchofer),
+        chofer:        this.servicio.leerChofer(this.numchofer),
+        maxpagos:      this.servicio.getCantChoferes(),
+
       }).subscribe(res2 => {
         this.csaldos    = res2.salchof;
-        this.cviajes    = res2.viajeschof;
+        // this.cviajes    = res2.viajeschof;
         this.cfacTpte   = res2.facturaschof;
-        this.cgastos    = res2.gastoschof;
-        this.cpagos     = res2.pagoschof;
+        // this.cgastos    = res2.gastoschof;
+        // this.cpagos     = res2.pagoschof;
         this.chof       = res2.chofer;   
+        this.maxpago    = res2.maxpagos;
 
-        this.cargandoCtaCte = false;                           
+                             
         this.prepararMovimientos();                                
         this.saldoinicial = this.chof.saldoini;
         if (this.saldoinicial==0){
@@ -101,11 +107,13 @@ ngOnInit()
             this.datepipe.transform(this.csaldos[0].fecha,"dd/MM/yyyy")+" : "                              
         };
         this.generarColSaldo();              
+        this.cargandoCtaCte = false;      
       })
     })   
 }
 
 prepararMovimientos(){
+  console.log("Ingresó a preparar movimientossssssssssssssssssssssss");
 // vuelca Facturas de tpte, Pagos y Gastos al array de movimientos y los ordena por fecha
 if (this.cpagos!=undefined){
   for (let index=0; index<this.cpagos.length;index++){
@@ -147,8 +155,9 @@ if (this.cfacTpte!=undefined){
    };  
    this.cmovscc.push(regmov);
   };
+  console.log("Cantidad de Facturasssssssssss : "+this.cfacTpte.length);
 }
-
+ 
 this.cmovscc.sort(function (a,b) {         // ordenar movimientos por fecha
                     if (a.fecha! < b.fecha!){
                       return -1
@@ -158,7 +167,7 @@ this.cmovscc.sort(function (a,b) {         // ordenar movimientos por fecha
                       return 0
                     }
                   }); 
-
+console.log("Cantidad de Movimientos : "+this.cmovscc.length);
 }
 determinarSaldoInicial() : number{
  var indmenor = -9;
@@ -187,57 +196,56 @@ generarColSaldo(){
     this.cmovscc[index].saldo = saldo
   };
   this.saldofinal = saldo;      
+  console.log("Saldo final : "+this.saldofinal)
 }
 
 Cancelar() {
   // Volver a la página de clientes retomando estado
-  this.router.navigate(['/clientes',this.filter]);
+  this.router.navigate(['/choferes',this.filter]);
 }
 
-agregarCobro(){
-     const data : intCobranza = {
-        nrocliente : this.numcliente,
-        nrocobr    : 0,
-        nomcliente : this.nomcliente,
+agregarPago(){
+     const data : intPago= {
+        idPago     : this.numchofer,
+        nombre     : this.nomchofer,
         accion     : "A"
       }       
       const dialogConfig = new MatDialogConfig();   
       dialogConfig.autoFocus = false;
       dialogConfig.data = data;
       dialogConfig.panelClass = "";
-      const dialogRef =  this.dialog.open(CobranzaComponent, dialogConfig);
+      const dialogRef =  this.dialog.open(PagoschofComponent, dialogConfig);
             dialogRef.afterClosed().subscribe( // 
             (data:any) => { if (data.clicked === 'Alta'){        // Agregó un cobro           
-                             this.actualizarxUltCobro();   // leer cobros, rearmar cmovims y recalcular totales                                            
+                             this.actualizarxUltPago();   // leer cobros, rearmar cmovims y recalcular totales                                            
                              }
                             })
 }
-modificarCobro(nrocob:number ){
-  const data : intCobranza = {
-    nrocliente : this.numcliente,
-    nrocobr    : nrocob,
-    nomcliente : this.nomcliente,
+modificarPago(nropag:number ){
+  const data : intPago = {
+    idPago     : this.maxpago+1,   
+    nombre     : this.nomchofer,
     accion     : "M"
   }       
   const dialogConfig = new MatDialogConfig();   
   dialogConfig.autoFocus = false;
   dialogConfig.data = data;
   dialogConfig.panelClass = "";
-  const dialogRef =  this.dialog.open(CobranzaComponent, dialogConfig);
+  const dialogRef =  this.dialog.open(PagoschofComponent, dialogConfig);
         dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Modi'){        // Modifico el cobro seleccionado           
-                        this.actualizarxUltCobro();   // leer cobros, rearmar cmovims y recalcular totales                                                      // leer ultimo cobro y agregar a cmovims y recalcular totales                                            
+                        this.actualizarxUltPago();   // leer cobros, rearmar cmovims y recalcular totales                                                      // leer ultimo cobro y agregar a cmovims y recalcular totales                                            
                          }
                         })
 
 
 }
-actualizarxUltCobro(){
-  // Vuelve  a  leer los cobros al cliente para reflejar el último en la cta.cte
+actualizarxUltPago(){
+  // Vuelve  a  leer los pagos al chofer para reflejar el último en la cta.cte
   var subs1 : Subscription;
   this.cmovscc = [];
-  this.ccobros = [];
-  subs1 = this.servicio.getCobrosxCliente(this.numcliente) // traer los cobros al cliente
+  this.cpagos = [];
+  subs1 = this.servicio.getPagosxChofer(this.numchofer) // traer los pagos al chofer
       .pipe(
         finalize(() => {                                    
           this.cargandoCtaCte = false;
@@ -246,7 +254,7 @@ actualizarxUltCobro(){
           subs1.unsubscribe;
       }))           
       .subscribe((data:any):void => {
-        this.ccobros = data;
+        this.cpagos = data;
     })
 }
 
@@ -267,19 +275,19 @@ modifSaldoInicial(){
     nros = 1; 
     acc  = "A";
  }
- const datas : intSaldoCli = {
-    nrocli     : this.numcliente,    
-    nrosaldo   : nros,
-    nomcli     : this.nomcliente,
-    accion     : acc,
-    fecprmv    : fec     // fecha del movimiento mas antiguo
+ const datas : intSalChof = {
+    nrochof     : this.numchofer,    
+    nrosaldo    : nros,
+    nomchof     : this.nomchofer,
+    accion      : acc,
+    fecprmv     : fec     // fecha del movimiento mas antiguo
   }    
   console.log("dessppues  de asignar data : "+datas.nrosaldo);   
   const dialogConfig = new MatDialogConfig();   
   dialogConfig.autoFocus = false;
   dialogConfig.data = datas;
   dialogConfig.panelClass = "";
-  const dialogRef =  this.dialog.open(SaldocliComponent, dialogConfig);
+  const dialogRef =  this.dialog.open(SaldochofComponent, dialogConfig);
         dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Alta' || data.clicked === 'Modi'){ // agrego o modifico saldo inicial
                         this.regenerarSaldo();   // volver a leer los saldos                                                       // leer ultimo cobro y agregar a cmovims y recalcular totales                                            
@@ -291,7 +299,7 @@ modifSaldoInicial(){
 regenerarSaldo(){
   this.csaldos = [];
   var subs : Subscription;
-  subs = this.servicio.getSaldosCliente(this.numcliente)
+  subs = this.servicio.getSaldosChofer(this.numchofer)
        .pipe(
          finalize(() => {                                        
                  this.saldoinicial = this.csaldos[0].saldo;
@@ -310,19 +318,19 @@ onSelectionChangeSaldos($event : any){
 
 actualizarSaldoInicial(){
   // Actualiza el saldo  inicial en la table "clientes"
-   var salc : saldoCliDTO = {
-      idCliente : this.numcliente,
-      nrosaldo  : 0,
+   var salc : saldoChofDTO = {
+      idChofer  : this.numchofer,
+      nroSaldo  : 0,
       fecha     : new Date(),
       saldo     : this.saldoinicial
     }  
   
     var subscri : Subscription;         
     var resu : number;
-    subscri = this.servicio.actualizarSaldoInicial(salc)
+    subscri = this.servicio.updateSaldoInicial(salc)
       .pipe(
          finalize(() => { 
-            this.notiService.showNotification("Saldo inicial para el cliente : "+this.nomcliente+
+            this.notiService.showNotification("Saldo inicial para el chofer : "+this.nomchofer+
                               "("+resu+") modificado con éxito",'Aceptar','mensaje',500);    
             subscri.unsubscribe;
          }))
@@ -343,7 +351,7 @@ generarCtaCtePDF(){
     var filas    :  any[];
     const doc = new jsPDF('p','mm','A4');
     
-    const title = 'Cuenta Corriente de : '+this.nomcliente;
+    const title = 'Cuenta Corriente de : '+this.nomchofer;
   
     // Fecha actual
     const fecha = new Date();
@@ -382,7 +390,7 @@ generarCtaCtePDF(){
               const pageSize = doc.internal.pageSize;
               const text = `Página ${i} de ${totalPages}`;
               doc.setFontSize(10);
-              doc.text("Degros S.A.", 10, 15, { align: 'left' });
+              doc.text("Logistica NC", 10, 15, { align: 'left' });
 
               // Título centrado
               doc.setFontSize(10);
@@ -406,26 +414,26 @@ generarCtaCtePDF(){
               doc.text(cade,doc.internal.pageSize.getWidth()-10, 23,{ align: 'right' });
              //}
             }  
-            doc.save('CCCli'+this.nomcliente+'.pdf');                               
+            doc.save('CCChofer'+this.nomchofer+'.pdf');                               
   
 }
-BorrarCobro(nrocobro:number){
+BorrarPago(nropago:number){
  var resu : string;
    this.sinoServicio.abrirSiNoDialogo("Confirmación",
-                        "¿ Está seguro de quiere borrar el Cobro Nro."+nrocobro+" ?")
+                        "¿ Está seguro de quiere borrar el Pago Nro."+nropago+" ?")
         .then(result => {
            if (result) {
                var subscri : Subscription;
-               subscri = this.servicio.eliminarCabyDetCobro(nrocobro)
+               subscri = this.servicio.elimPago(nropago)
                   .pipe(finalize(() => {
-                     this.notiService.showNotification("El Cobro Nro "+nrocobro+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
+                     this.notiService.showNotification("El Pago Nro "+nropago+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
                      var subs : Subscription;
-                     this.ccobros  = [];
+                     this.cpagos  = [];
                      this.cmovscc = [];
-                     subs = this.servicio.getCobrosxCliente(this.numcliente) // recargo los cobros del cliente
+                     subs = this.servicio.getPagosxChofer(this.numchofer) // recargo los cobros del cliente
                          .pipe(finalize(()=> {
                            this.cargandoCtaCte = false;
-                           this.saldoinicial = this.clte.saldoini;
+                           this.saldoinicial = this.chof.saldoini;
                            this.prepararMovimientos();   
                            if (this.saldoinicial==0){
                              this.mensSaldo = "Saldo inicial : "                              
@@ -437,7 +445,7 @@ BorrarCobro(nrocobro:number){
                            subs.unsubscribe;
                           }))
                         .subscribe((data : any):void => {
-                           this.ccobros = data
+                           this.cpagos = data
                         })                                                                                                                
                    }))
                   .subscribe((data : any): void => {

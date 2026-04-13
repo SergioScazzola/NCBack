@@ -5,4 +5,12 @@ export interface saldoChofDTO {
      saldo      : number;
 }
 
+export interface intSalChof {
+     nrochof    : number;
+     nrosaldo   : number;
+     nomchof    : string;  
+     accion     : string;
+     fecprmv    : Date|null
+}
+
 
