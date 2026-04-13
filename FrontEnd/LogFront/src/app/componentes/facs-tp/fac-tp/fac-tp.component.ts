@@ -5,7 +5,7 @@ import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input'
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA,MatDialogModule, MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
-import { Subscription, finalize, forkJoin, max } from 'rxjs';
+import { Subscription, finalize, forkJoin, max, switchMap } from 'rxjs';
 import { CurrencyPipe,DatePipe,DecimalPipe} from '@angular/common';
 import { NotiserviceService } from '../../../servicios/notiservice.service';
 import { ServiciosService } from '../../../servicios/service';
@@ -325,10 +325,11 @@ agItemFactp(){ // Se llama unicamente en alta de factura
                   impiva         : item.impiva,
                   totalitem      : item.totalitem
                };
-            // Graba item y marca en el viaje asociado que ha sido facturado al Chofer
-            
-            return this.servicio.grabarItemFacTP(itfactp),
-                   this.servicio.updateFactT(itfactp.idViaje,1)});          
+            // Graba item y marca en el viaje asociado que ha sido facturado al Chofer         
+            return this.servicio.grabarItemFacTP(itfactp).pipe(
+                           switchMap(() => this.servicio.updateFactT(itfactp.idViaje, 1))
+                      )});
+
             forkJoin(observables).subscribe({
                 next: (results) => {
                   console.log('Todos los items grabadosssssssssssssssssssssss:', results);     

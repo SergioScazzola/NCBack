@@ -141,7 +141,11 @@ export class ViajeComponent {
        impviaje     : [0],
        fact         : [0],
        facc         : [0]
-    })
+    });
+    this.formViaje.get('facc')?.disable();
+    this.formViaje.get('fact')?.disable();
+
+
   }
   actualizarControles(){
     // Actualiza controles para modificar

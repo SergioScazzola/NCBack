@@ -73,7 +73,7 @@ export class ItfacClienteComponent {
                  this.actualizarFormulario();
             } else if (this.data.accion === "A") { // data.accion = "A" -> Alta
            
-                 this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Chofer: "+this.data.nomcli;    
+                 this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Cliente : "+this.data.nomcli;    
                  this.formItfac.controls["nroitem"].setValue(this.data.nroitem);
                  this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje);
                  this.formItfac.controls["nomchofer"].setValue(this.cviajes[0].nomchofer);

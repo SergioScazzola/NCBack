@@ -28,10 +28,9 @@
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
+              "src/assets/camionazo.jpg",
+              "src/assets/camionrojo.jpg",
+              "src/camion.png"
             ],
             "styles": [
               "src/material-theme.scss",

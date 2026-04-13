@@ -13,6 +13,9 @@ import { factpDTO} from '../../entidades/factpDTO';
 import { facclDTO } from '../../entidades/facclDTO';
 import { itfactpDTO } from '../../entidades/itfactpDTO';
 import { itfacclDTO } from '../../entidades/itfacclDTO';
+import { saldoChofDTO } from '../../entidades/saldoChofDTO';
+import { gastoDTO } from '../../entidades/gastoDTO';
+import { pagoDTO } from '../../entidades/pagoDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -62,6 +65,23 @@ export class ServiciosService {
     return this.http.delete(
       environment.apiUrl + `chofer/chofer?id=` + nrochofer
     );
+  }
+ 
+ public getSaldosChofer(nrochof : number) {
+  return this.http.get<saldoChofDTO[]>(this.apiUrl + `chofer/saldosxchof?nrochof=`+nrochof);
+  }
+
+
+  public getFactTpteXChofer(nrochof : number) {
+    return this.http.get<factpDTO[]>(this.apiUrl + `factp/factxchofer?idchof=`+nrochof);
+  }
+
+  public getGastosxChofer(nrochof : number) {
+    return this.http.get<gastoDTO[]>(this.apiUrl + `chofer/gastosxchofer?idchof=`+nrochof);
+  }
+
+  public getPagosxChofer(nrochof : number) {
+    return this.http.get<pagoDTO[]>(this.apiUrl + `chofer/pagosxchofer?idchof=`+nrochof);
   }
 
   // ** CAMIONES ** //

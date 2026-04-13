@@ -5,7 +5,7 @@ import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input'
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA,MatDialogModule, MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
-import { Subscription, finalize, forkJoin, max } from 'rxjs';
+import { Subscription, finalize, forkJoin, max, switchMap } from 'rxjs';
 import { CurrencyPipe,DatePipe,DecimalPipe} from '@angular/common';
 import { NotiserviceService } from '../../../servicios/notiservice.service';
 import { ServiciosService } from '../../../servicios/service';
@@ -133,7 +133,7 @@ export class FacClienteComponent {
            this.cdetfaccl  = res2.detalle;
 
              
-           this.operacion = `Consulta Factura Cliente Nro. ${this.factpp.idFactura} - ${this.factpp.nrofactura}`;
+           this.operacion = `Consulta Factura Nro. ${this.factpp.nrofactura}`;
            this.actualizarFormulario();
            this.isloading = false;
            this.cdr.markForCheck()// <--- Importante: fuerza la detección si sigue el error    
@@ -324,8 +324,11 @@ agItemFaccl(){ // Se llama unicamente en alta de factura
                   totalitem      : item.totalitem
                };
             // Graba item y marca en el viaje asociado que ha sido facturado al cliente
-            return this.servicio.grabarItemFacCL(itfaccl),
-                   this.servicio.updateFactC(itfaccl.idViaje,1)});
+              return this.servicio.grabarItemFacCL(itfaccl).pipe(
+                 switchMap(() => this.servicio.updateFactC(itfaccl.idViaje, 1))
+            )});
+           
+           
             forkJoin(observables).subscribe({
                 next: (results) => {
                   console.log('Todos los items grabados:', results);     
