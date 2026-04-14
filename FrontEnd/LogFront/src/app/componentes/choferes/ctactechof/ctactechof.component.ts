@@ -42,7 +42,7 @@ public cfacTpte       : factpDTO[]=[];
 public cpagos         : pagoDTO[]=[]; 
 public cgastos        : gastoDTO[]=[];
 public cmovscc        : ctactecDTO[]=[];
-public csaldos        : saldoChofDTO[]=[];
+public csaldos        : saldoChofDTO[];
 public cargandoCtaCte : boolean = true;
  
 public saldofinal     : number;
@@ -87,7 +87,7 @@ ngOnInit()
         gastoschof:    this.servicio.getGastosxChofer(this.numchofer),
         pagoschof:     this.servicio.getPagosxChofer(this.numchofer),
         chofer:        this.servicio.leerChofer(this.numchofer),
-        maxpagos:      this.servicio.getCantChoferes(),
+        maxpagos:      this.servicio.getCantPagos(),
 
       }).subscribe(res2 => {
         this.csaldos    = res2.salchof;
@@ -173,22 +173,37 @@ this.cmovscc.sort(function (a,b) {         // ordenar movimientos por fecha
                   }); 
 console.log("Cantidad de Movimientos : "+this.cmovscc.length);
 }
-determinarSaldoInicial() : number{
- var indmenor = -9;
- if (this.csaldos!=undefined && this.cmovscc!=undefined){
-    var index    = 0;    
-    var salir = false;
-    while ( index < this.csaldos.length && !salir ){
-      if (this.csaldos[index].fecha < this.cmovscc[0].fecha!){// saldo anterior al 1er movimiento
+determinarSaldoInicial(): number {
+  let indmenor = -9;
+
+ const saldos = this.csaldos.filter(
+  (s): s is saldoChofDTO => s != null
+);
+
+ const movs = this.cmovscc.filter(
+  (m): m is ctactecDTO => m != null
+);
+
+  let index = 0;
+  let salir = false;
+
+  if (saldos.length && movs.length) {
+    const fechaMov = movs[0].fecha;
+    if (!fechaMov)   return indmenor
+    
+    while (index < saldos.length && !salir) {
+      const fechaSaldo = saldos[index].fecha;
+      if (fechaSaldo && fechaSaldo < fechaMov) {
         indmenor = index;
-        index++
+        index++;
       } else {
-        salir = true
+        salir = true;
       }
     }
-}
-return indmenor
-}    
+  }
+
+  return indmenor;
+}   
 
 generarColSaldo(){
   // FAC suma, NDC,resta PAGO resta, GASTO resta,saldo positivo = deboo al chofer, saldo negativo = me debe el chofer
@@ -209,8 +224,10 @@ Cancelar() {
 }
 
 agregarPago(){
+     // Llama al componente de pago "pagoschof" para agregar un pago al chofer
      const data : intPago= {
-        idPago     : this.numchofer,
+        idPago     : this.maxpago + 1,
+        idChofer   : this.numchofer,
         nombre     : this.nomchofer,
         accion     : "A"
       }       
@@ -221,7 +238,7 @@ agregarPago(){
       const dialogRef =  this.dialog.open(PagoschofComponent, dialogConfig);
             dialogRef.afterClosed().subscribe( // 
             (data:any) => { if (data.clicked === 'Alta'){        // Agregó un cobro           
-                             this.actualizarxUltPago();   // leer cobros, rearmar cmovims y recalcular totales                                            
+                             this.actualizarxUltPago();   // leer pagos y rearmar cmovims y recalcular totales                                            
                              }
                             })
 }
@@ -269,10 +286,10 @@ modifSaldoInicial(){
  if (this.cmovscc[0]!=undefined){
   fec = this.cmovscc[0].fecha;   
  } else {
-   fec = null;
+   fec = new Date();
  }
  
- if (this.csaldos!=undefined){ // modifica saldo inicial
+ if (this.csaldos!=undefined && this.csaldos.length>0){ // modifica saldo inicial
     nros = 1;
     acc  = "I";
  } else {  // no tiene saldos, agrega el primer saldo
@@ -321,10 +338,10 @@ onSelectionChangeSaldos($event : any){
 }
 
 actualizarSaldoInicial(){
-  // Actualiza el saldo  inicial en la table "clientes"
+  // Actualiza el saldo  inicial en la table "choferes"
    var salc : saldoChofDTO = {
       idChofer  : this.numchofer,
-      nroSaldo  : 0,
+      nrosaldo  : 0,
       fecha     : new Date(),
       saldo     : this.saldoinicial
     }  

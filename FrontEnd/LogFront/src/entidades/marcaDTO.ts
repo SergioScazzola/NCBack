@@ -3,3 +3,9 @@ export interface marcaDTO {
     marca         : string;        
 }
 
+export interface MPagoDTO {
+    idmediopago   : number;
+    mediopago     : string;
+}
+
+

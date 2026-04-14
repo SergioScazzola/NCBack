@@ -25,6 +25,7 @@ export interface pagoDTO {
 
 export interface intPago {
     idPago   : number,  
+    idChofer : number,
     nombre    : string;
     accion    : string,
    

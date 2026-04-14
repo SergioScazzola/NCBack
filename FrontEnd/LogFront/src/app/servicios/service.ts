@@ -76,6 +76,18 @@ export class ServiciosService {
       environment.apiUrl + `chofer/actsaldoini`,saldo);
   }
 
+ public AgregarSaldoChofer(saldoc : saldoChofDTO) {
+    return this.http.post<saldoChofDTO>(this.apiUrl + `chofer/saldo/nuevo`,saldoc);
+  }
+  
+  public leerSaldoChofer(nrochof: number, nrosaldo: number) {
+    return this.http.get<choferDTO>( this.apiUrl + `chofer/saldo?idchofer=`+nrochof+`&nrosaldo=`+nrosaldo);
+  }
+
+  public updateSaldoChofer( saldoc : saldoChofDTO){
+     return this.http.put<saldoChofDTO>(environment.apiUrl + `chofer/actsaldochof`,saldoc);
+  }
+
   public getFactTpteXChofer(nrochof : number) {
     return this.http.get<factpDTO[]>(this.apiUrl + `chofer/factxchofer?idchof=`+nrochof);
   }
@@ -97,6 +109,11 @@ export class ServiciosService {
       environment.apiUrl + `pago/pago?id=` + nropago
     );
   }
+
+  public leerPagoChofer(nropago: number) {
+    return this.http.get<pagoDTO>( this.apiUrl + `chofer/pago?id=`+nropago);
+  }
+
 
   // ** CAMIONES ** //
 
