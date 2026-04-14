@@ -14,6 +14,7 @@ import com.apiTpte.apiRestTpte.Entidades.FactTpte;
 import com.apiTpte.apiRestTpte.Entidades.Gasto;
 import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
+import com.apiTpte.apiRestTpte.Entidades.MPago;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.SaldoChof;
@@ -132,5 +133,6 @@ public interface TpteRepository {
 
     // TABLAS Auxiliares //
     List<Marca> AllMarcas();
+    List<MPago> AllMediosPagos();
 
 }

@@ -18,6 +18,7 @@ import com.apiTpte.apiRestTpte.Entidades.FactTpte;
 import com.apiTpte.apiRestTpte.Entidades.Gasto;
 import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
+import com.apiTpte.apiRestTpte.Entidades.MPago;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.SaldoChof;
@@ -145,7 +146,7 @@ public class JdbcTpteRepository implements TpteRepository {
     }
 
  @Override
-    // actualiza un saldo del Chofer en la tabla saldoscli"
+    // actualiza un saldo del Chofer en la tabla saldoschof"
     public int actSaldodelChofer(SaldoChof saldoc){
     
     int resu = 0;
@@ -1053,5 +1054,11 @@ public class JdbcTpteRepository implements TpteRepository {
         return jdbcTemplate.query("SELECT * FROM usuarios WHERE usuario='"+usuario+"'", 
             BeanPropertyRowMapper.newInstance(Usuario.class) );        
       }
+    
+      @Override
+    public List<MPago> AllMediosPagos() {   
+      String selec = "SELECT * FROM marcas ORDER BY marca";
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(MPago.class));
+    }
 
 }

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class SaldoChof {
  private int  idChofer;
- private int  nroSaldo;
+ private int  nrosaldo;
  private Date fecha;
  private double saldo;
 
@@ -17,10 +17,10 @@ public  SaldoChof() {}
         this.idChofer = idChofer;
     }
     public int getNroSaldo() {
-        return nroSaldo;
+        return nrosaldo;
     }
     public void setNroSaldo(int nroSaldo) {
-        this.nroSaldo = nroSaldo;
+        this.nrosaldo = nroSaldo;
     }
     public Date getFecha() {
         return fecha;

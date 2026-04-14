@@ -6,13 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apiTpte.apiRestTpte.Entidades.MPago;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Repository.JdbcTpteRepository;
 
@@ -32,6 +33,9 @@ public class TablasController {
     public ResponseEntity<List<Marca>> getAllMarcas() {
        return ResponseEntity.ok(tpteRepository.AllMarcas());
   
+    @GetMapping(value="/mediospago")
+    public ResponseEntity<List<MPago>> getAllMpagos() {
+       return ResponseEntity.ok(tpteRepository.AllMediosPagos());
   }
 
  

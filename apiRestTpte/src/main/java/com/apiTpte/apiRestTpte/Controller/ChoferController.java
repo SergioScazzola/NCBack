@@ -177,8 +177,18 @@ public class ChoferController {
       }
 
     }
+     @PutMapping(value="/actsaldochof")
+     public ResponseEntity<String> updateSaldoCliente(@RequestBody SaldoChof saldochof){
+      try {
+        int resultado = tpteRepository.actSaldodelChofer(saldochof);    
+        return new ResponseEntity<>(Integer.toString(resultado), HttpStatus.OK);
+      } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+     
+      } 
+    }
       // actualiza el saldo inicial del Chofer en la tabla "choferes"
-      @PutMapping(value="/actsaldoini")
+    @PutMapping(value="/actsaldoini")
      public ResponseEntity<String> updateSaldoChofer(@RequestBody SaldoChof saldoc){
       try {
         int resultado = tpteRepository.actSaldoInicial(saldoc);    
