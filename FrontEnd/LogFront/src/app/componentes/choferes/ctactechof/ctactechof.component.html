@@ -1,3 +1,11 @@
+@if (cargandoCtaCte) {
+  <div class="d-flex justify-content-center align-items-center" style="height: 200px">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <span class="ms-2">Cargando Cuenta Corriente del Chofer...</span>
+  </div>
+} @else {
 <div class="ctacte-container">
     <!-- Sección superior fija -->
     <div class="fixed-section">
@@ -36,28 +44,29 @@
           </div>
         </div>
          <!-- Mostrar spinner mientras carga o mostrar mensaje si no hay datos -->
-        @if (!cargandoCtaCte){
-        <div class="loading-info">
+       
+        <!--div class="loading-info">
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
           </div>
           <span class="ms-2">Cargando Cuenta Corriente del Chofer...</span>
-        </div>
-        } 
+        </div-->
+        @if (cmovscc.length === 0 ){
         <div class="trabajos-section">
           <h5 class="trabajos-title">Movimientos en Cuenta Corriente</h5>
-          @if (cmovscc.length === 0){
+         
           <p class="no-trabajos-message">
-            No hay registros de cuenta corriente para este Chofer.{{cfacTpte.length}}
+            No hay registros de cuenta corriente para este Chofer.
           </p>
-         }
+
         </div>
+        }
     </div>
 
     <!-- Sección de tabla con scroll -->
    
-      <div class="table-container" >
-        @if (this.cmovscc.length>0){
+    <div class="table-container" >
+       
           <table mat-table class="mat-elevation-z8" [dataSource]="this.cmovscc"
              style="width: 100%; min-width: 1200px">
            <ng-container matColumnDef="fecha">
@@ -210,7 +219,7 @@
         <tr mat-header-row *matHeaderRowDef=" colMovsCC; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; let index; columns:  colMovsCC"></tr>
         </table>
-      }
+
       </div>
    
 
@@ -226,4 +235,7 @@
         </button>
       </div>
     </div>
+   </div>
 </div>
+</div>
+}

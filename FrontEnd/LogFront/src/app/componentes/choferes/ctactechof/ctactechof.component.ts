@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { finalize, forkJoin, map, of, Subscription } from 'rxjs';
 import { ServiciosService } from '../../../servicios/service';
 import { ctactecDTO } from '../../../../entidades/ctactecDTO';
@@ -63,6 +63,7 @@ private filter        : string;
                    private currencyPipe: CurrencyPipe,
                    private datepipe    : DatePipe,
                    private notiService : NotiserviceService,
+                   private cdr          : ChangeDetectorRef,     
                    private sinoServicio: SinoService,
                    private rutaActiva  : ActivatedRoute,
                    public  dialog      : MatDialog) { }     
@@ -81,19 +82,19 @@ ngOnInit()
      var preparo : boolean=false;
      forkJoin({  // consultas para armar la cta.cte del chofer en paralelo
         salchof:       this.servicio.getSaldosChofer(this.numchofer),
-        // viajeschof:    this.servicio.getViajesxChofer(this.numchofer),
+        viajeschof:    this.servicio.getViajesxChofer(this.numchofer),
         facturaschof:  this.servicio.getFactTpteXChofer(this.numchofer),
-        // gastoschof:    this.servicio.getGastosxChofer(this.numchofer),
-        // pagoschof:     this.servicio.getPagosxChofer(this.numchofer),
+        gastoschof:    this.servicio.getGastosxChofer(this.numchofer),
+        pagoschof:     this.servicio.getPagosxChofer(this.numchofer),
         chofer:        this.servicio.leerChofer(this.numchofer),
         maxpagos:      this.servicio.getCantChoferes(),
 
       }).subscribe(res2 => {
         this.csaldos    = res2.salchof;
-        // this.cviajes    = res2.viajeschof;
+        this.cviajes    = res2.viajeschof;
         this.cfacTpte   = res2.facturaschof;
-        // this.cgastos    = res2.gastoschof;
-        // this.cpagos     = res2.pagoschof;
+        this.cgastos    = res2.gastoschof;
+        this.cpagos     = res2.pagoschof;
         this.chof       = res2.chofer;   
         this.maxpago    = res2.maxpagos;
 
@@ -107,13 +108,14 @@ ngOnInit()
             this.datepipe.transform(this.csaldos[0].fecha,"dd/MM/yyyy")+" : "                              
         };
         this.generarColSaldo();              
-        this.cargandoCtaCte = false;      
+        this.cargandoCtaCte = false;    
+        this.cdr.detectChanges();  
       })
     })   
 }
 
 prepararMovimientos(){
-  console.log("Ingresó a preparar movimientossssssssssssssssssssssss");
+ 
 // vuelca Facturas de tpte, Pagos y Gastos al array de movimientos y los ordena por fecha
 if (this.cpagos!=undefined){
   for (let index=0; index<this.cpagos.length;index++){
@@ -149,13 +151,15 @@ if (this.cfacTpte!=undefined){
       idMov      : this.cfacTpte[index].idFactura,
       fecha      : this.cfacTpte[index].fecha,   
       tipomov    : this.cfacTpte[index].facndc==="FAC"? "FAC" : "NDC",
-      descmov    : this.cfacTpte[index].nrofactura+" - "+this.cfacTpte[index].cantit+" viajes",
+      descmov    : (this.cfacTpte[index].facndc==="FAC"? "FAC" : "NDC")+" - "+
+                   this.cfacTpte[index].nrofactura+" - "+
+                   this.cfacTpte[index].cantit+" viajes",
       importe    : this.cfacTpte[index].facndc==="FAC"? this.cfacTpte[index].totalfac : this.cfacTpte[index].totalfac*-1, // factura suma
       saldo      : 0
    };  
    this.cmovscc.push(regmov);
   };
-  console.log("Cantidad de Facturasssssssssss : "+this.cfacTpte.length);
+ 
 }
  
 this.cmovscc.sort(function (a,b) {         // ordenar movimientos por fecha
