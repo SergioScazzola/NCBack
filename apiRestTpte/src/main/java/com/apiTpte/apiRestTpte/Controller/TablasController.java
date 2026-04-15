@@ -32,6 +32,7 @@ public class TablasController {
     @GetMapping(value="/marcas")
     public ResponseEntity<List<Marca>> getAllMarcas() {
        return ResponseEntity.ok(tpteRepository.AllMarcas());
+   }
   
     @GetMapping(value="/mediospago")
     public ResponseEntity<List<MPago>> getAllMpagos() {
