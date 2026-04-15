@@ -110,6 +110,11 @@ export class ServiciosService {
     );
   }
 
+  public grabarPagoChofer(pago : pagoDTO) {
+    return this.http.post<pagoDTO>(this.apiUrl + `pago/pago/nuevo`,pago);
+  }
+
+
   public leerPagoChofer(nropago: number) {
     return this.http.get<pagoDTO>( this.apiUrl + `chofer/pago?id=`+nropago);
   }

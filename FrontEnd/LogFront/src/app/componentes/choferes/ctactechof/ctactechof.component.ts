@@ -123,7 +123,7 @@ if (this.cpagos!=undefined){
      idMov      : this.cpagos[index].idPago,
      fecha      : this.cpagos[index].fecha!,   
      tipomov    : "PAG",
-     descmov    : "PAG nro. "+this.cpagos[index].idPago+" - Fac Nro.: "+this.cpagos[index].nrofactura,                      
+     descmov    : "PAG nro. "+this.cpagos[index].idPago+" - Fac Nro.: "+this.cpagos[index].idFactura,                      
      importe   :  this.cpagos[index].imptotal*-1, // pago resta
      saldo     :  0
   };
@@ -233,8 +233,12 @@ agregarPago(){
       }       
       const dialogConfig = new MatDialogConfig();   
       dialogConfig.autoFocus = false;
-      dialogConfig.data = data;
-      dialogConfig.panelClass = "";
+      dialogConfig.data         = data;
+      dialogConfig.width        =  '900px';         // ancho máximo de la ventana
+      dialogConfig.maxWidth     = '95vw';      
+      dialogConfig.height       = 'auto';        // altura se ajusta al contenido
+      dialogConfig.panelClass   = 'custom-dialog-container';
+      dialogConfig.disableClose =  false; // opcional según necesidad
       const dialogRef =  this.dialog.open(PagoschofComponent, dialogConfig);
             dialogRef.afterClosed().subscribe( // 
             (data:any) => { if (data.clicked === 'Alta'){        // Agregó un cobro           
@@ -242,7 +246,7 @@ agregarPago(){
                              }
                             })
 }
-modificarPago(nropag:number ){
+/*modificarPago(nropag:number ){
   const data : intPago = {
     idPago     : this.maxpago+1,   
     nombre     : this.nomchofer,
@@ -260,7 +264,7 @@ modificarPago(nropag:number ){
                         })
 
 
-}
+}*/
 actualizarxUltPago(){
   // Vuelve  a  leer los pagos al chofer para reflejar el último en la cta.cte
   var subs1 : Subscription;

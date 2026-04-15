@@ -1,4 +1,4 @@
-import { Component, Inject, LOCALE_ID } from '@angular/core';
+import { Component, Inject,  NgZone,LOCALE_ID, ChangeDetectorRef } from '@angular/core';
 import { SelecTextDirective } from '../../../Directivas/selec-text.directive';
 import { CommonModule, CurrencyPipe, registerLocaleData } from '@angular/common';
 import localeEsAR from '@angular/common/locales/es-AR';
@@ -85,18 +85,18 @@ export class PagoschofComponent {
   private factpSel       : number;
   public  imprimeconcepto : boolean = true;
 
- constructor(   public  fb               : FormBuilder,
+ constructor(     public  fb               : FormBuilder,
                   private servicio       : ServiciosService,                
                   public dialogRef       : MatDialogRef<PagoschofComponent>,
                   @Inject(MAT_DIALOG_DATA) public data: intPago,  
+                  private zone           : NgZone,
+                  private cdr            : ChangeDetectorRef,  
                   private currencyPipe   : CurrencyPipe,
-                  public  dialog        : MatDialog,                                
+                  public  dialog         : MatDialog,                                
                   public  util           : UtilService,
                   private notiService    : NotiserviceService )
        {  }
-/*        idPago     : this.numchofer,
-        nombre     : this.nomchofer,
-        accion     : "A"*/
+
   ngOnInit() {
     registerLocaleData(localeEsAR, 'es-AR');
     this.imppago = 0;
@@ -159,17 +159,31 @@ export class PagoschofComponent {
         }) 
   }
   mostrarHora() {
-    // mantiene actualizado el control "fecha" con Horas minutos y segundos
+   this.zone.runOutsideAngular(() => {
     setInterval(() => {
-      this.hoy = new Date();      
-      const valorControl = new Date(this.formPag.controls['fecha'].value);
-      const fechaform = new Date(valorControl); // ✅ convierte string/objeto a Date real
-      fechaform.setHours(this.hoy.getHours(), this.hoy.getMinutes(), this.hoy.getSeconds());
-      this.formPag.controls['fecha'].setValue(fechaform); // ✅ se actualiza con una fecha válida     
-      console.log(this.formPag.controls['fecha'].value); 
+      const hoy = new Date();
+      const valorControl = this.formPag.controls['fecha'].value;
+      
+      if (valorControl) {
+        const fechaform = new Date(valorControl);
+        fechaform.setHours(hoy.getHours(), hoy.getMinutes(), hoy.getSeconds());
+
+        // Volvemos a la zona de Angular solo para actualizar el valor
+        this.zone.run(() => {
+          this.formPag.controls['fecha'].setValue(fechaform, { emitEvent: false });
+          this.cdr.detectChanges(); // Forzamos la actualización sin romper el ciclo
+        });
+      }
     }, 1000);
+  }) 
   }
-  
+  onSelectionFactura(event: any){
+    
+  }
+
+  onSelectionChangeMPago($event: any, nro : number){
+
+  }
   onFechaChange(event: any) {
     const nuevaFecha: Date = event.value; // Fecha seleccionada en el datepicker
     const ahora = new Date(); // Hora actual
@@ -182,7 +196,7 @@ export class PagoschofComponent {
   }
 
   onSelectionChangeFactura(event : any){
-     this.laboSel = event.value
+     
   }
 
   onSelectionChangeMedioPago(event : any){
@@ -248,42 +262,42 @@ prepararAlta(){
   }
   
 
-  quitarFormatoMoneda() {
-     
-    const valor = this.formPag.controls['importe'].value;
-    if (typeof valor === 'string') {
-      const sinFormato = valor.replaceAll('$', '')
-                              .replaceAll('.', '')
-                              .replaceAll(',','.');
-      this.formPag.controls['importe'].setValue(sinFormato, { emitEvent: false });
-    }
-    this.imppago = this.formPag.controls['importe'].value;
-  }
+ 
   GrabarPago(){
    
-      var indmp = this.cmediospago.findIndex(p=>p.idmpago==this.mpagoSel);
+      
 
-      var pago : pagoEmpDTO = {
-      idPagoemp      : this.formPag.controls['nropag'].value,
-      fecha          : this.formPag.controls['fecha'].value,
-      nroemp         : this.data.nroempleado,
-      nomemp         : this.data.nomempleado,
-      idmpago        : this.mpagoSel,
-      mediopago      : this.cmediospago[indmp].mediodepago,
-      nrompago       : this.formPag.controls['nrompago'].value,
-      banco          : this.formPag.controls['banco'].value,
-      importe        : Number(this.formPag.controls['importe'].value.replaceAll('$', '')
-                                                                  .replaceAll('.', '')
-                                                                  .replaceAll(',','.')),                                                                         
-      nrolaboreo     : this.laboSel,
-      observaciones  : this.formPag.controls['observ'].value,
+      var pago : pagoDTO = {
+             
+         idPago         : this.formPag.controls['nropag'].value,
+         fecha          : this.formPag.controls['fecha'].value,
+         idChofer       : this.data.idChofer,
+         idFactura      : this.formPag.controls['idFactura'].value,
+         idmpago1       : this.formPag.controls['idmpago1'].value,
+         nrompago1      : this.formPag.controls['nrompago1'].value,      
+         banco1         : this.formPag.controls['banco1'].value,
+         importe1       : this.formPag.controls['importe1'].value,
+                                                               
+         idmpago2       : this.formPag.controls['idmpago2'].value,
+         nrompago2      : this.formPag.controls['nrompago2'].value,      
+         banco2         : this.formPag.controls['banco2'].value,
+         importe2       : this.formPag.controls['importe2'].value,
+
+         idmpago3       : this.formPag.controls['idmpago3'].value,
+         nrompago3      : this.formPag.controls['nrompago3'].value,      
+         banco3         : this.formPag.controls['banco3'].value,
+         importe3       : this.formPag.controls['importe3'].value,
+      
+        imptotal       : this.formPag.controls['imptotal'].value,
+        observ         : this.formPag.controls['observ'].value
+            
       }
       var subs : Subscription;
       var resu : number;
-      subs = this.servicio.agregarPagoEmpleado(pago)
+      subs = this.servicio.grabarPagoChofer(pago)
         .pipe(finalize(() => {  
-           this.notiService.showNotification("El Pago Nro : "+pago.idPagoemp+
-                                      " al empleado : "+pago.nomemp+" ("+resu+") se ha agregado con éxito",'Aceptar','mensaje',500);      
+           this.notiService.showNotification("El Pago Nro : "+pago.idPago+
+                                      " al Chofer : "+this.data.nombre+" ("+resu+") se ha agregado con éxito",'Aceptar','mensaje',500);      
            this.dialogRef.close({ clicked : "Alta"})
            subs.unsubscribe
         }))
@@ -292,7 +306,7 @@ prepararAlta(){
         })                                                                                                  
     
 }
-ModificarPago(){
+/*ModificarPago(){
   var indmp = this.cmediospago.findIndex(p=>p.idmpago==this.mpagoSel);
   var pago : pagoEmpDTO = {
     idPagoemp      : this.formPag.controls['nropag'].value,
@@ -321,13 +335,13 @@ ModificarPago(){
 .subscribe((datas:any):void =>{
    resu = datas
 })           
-  }
+  }*/
 
   Anular(){
     this.dialogRef.close({ clicked : "Cancelar"})
   }
   // Recibo de Pago al Empleado
-  generarReciboPDF() : void {
+  /*generarReciboPDF() : void {
                
     const doc = new jsPDF('p','mm','A4');
    
@@ -415,6 +429,6 @@ ModificarPago(){
  
     updatechecked(checked : boolean){
       this.imprimeconcepto = checked;
-    }
+    }*/
 }
 
