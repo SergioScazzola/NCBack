@@ -7,25 +7,21 @@ import java.util.Date;
 public class Pago {
     private int     idPago;
     private Date    fecha;
-    private int     idChofer;  
-    private String  nomchofer;        
-    private int     idmpago1;
-    private String  mediopago1;
+    private int     idChofer;        
+    private int     idmpago1;  
     private String  nrompago1;
     private String  banco1;
     private double  importe1;
     private int     idmpago2;
-    private String  mediopago2;
     private String  nrompago2;
     private String  banco2;
     private double  importe2;
     private int     idmpago3;
-    private String  mediopago3;
     private String  nrompago3;
     private String  banco3;
     private double  importe3;
     private double  imptotal;
-    private String  observaciones;
+    private String  observ;
   
   public Pago(){}
 
@@ -53,28 +49,12 @@ public class Pago {
     this.idChofer = idChofer;
   }
 
-  public String getNomchofer() {
-    return nomchofer;
-  }
-
-  public void setNomchofer(String nomchofer) {
-    this.nomchofer = nomchofer;
-  }
-
   public int getIdmpago1() {
     return idmpago1;
   }
 
   public void setIdmpago1(int idmpago1) {
     this.idmpago1 = idmpago1;
-  }
-
-  public String getMediopago1() {
-    return mediopago1;
-  }
-
-  public void setMediopago1(String mediopago1) {
-    this.mediopago1 = mediopago1;
   }
 
   public String getNrompago1() {
@@ -109,14 +89,6 @@ public class Pago {
     this.idmpago2 = idmpago2;
   }
 
-  public String getMediopago2() {
-    return mediopago2;
-  }
-
-  public void setMediopago2(String mediopago2) {
-    this.mediopago2 = mediopago2;
-  }
-
   public String getNrompago2() {
     return nrompago2;
   }
@@ -147,14 +119,6 @@ public class Pago {
 
   public void setIdmpago3(int idmpago3) {
     this.idmpago3 = idmpago3;
-  }
-
-  public String getMediopago3() {
-    return mediopago3;
-  }
-
-  public void setMediopago3(String mediopago3) {
-    this.mediopago3 = mediopago3;
   }
 
   public String getNrompago3() {
@@ -189,12 +153,12 @@ public class Pago {
     this.imptotal = imptotal;
   }
 
-  public String getObservaciones() {
-    return observaciones;
+  public String getObserv() {
+    return observ;
   }
 
-  public void setObservaciones(String observaciones) {
-    this.observaciones = observaciones;
+  public void setObserv(String observ) {
+    this.observ = observ;
   }
 
  
