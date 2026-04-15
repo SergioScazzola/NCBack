@@ -6,7 +6,7 @@ import { ConfigService } from './config.service';
 import { choferDTO } from '../../entidades/choferDTO';
 import { empTpteDTO } from '../../entidades/empTpteDTO';
 import { camionDTO } from '../../entidades/camionDTO';
-import { marcaDTO } from '../../entidades/marcaDTO';
+import { marcaDTO, MPagoDTO } from '../../entidades/marcaDTO';
 import { clienteDTO } from '../../entidades/clienteDTO';
 import { viajeDTO } from '../../entidades/viajeDTO';
 import { factpDTO} from '../../entidades/factpDTO';
@@ -185,7 +185,9 @@ export class ServiciosService {
  public getMarcas() {
     return this.http.get<marcaDTO[]>(this.apiUrl + `tablas/marcas`);
  } 
-
+public getMediosPago() {
+    return this.http.get<MPagoDTO[]>(this.apiUrl + `tablas/mediospago`);
+ } 
  // ** CLIENTES ** //
 
    public getClientes() {

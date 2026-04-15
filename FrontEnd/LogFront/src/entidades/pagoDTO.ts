@@ -3,7 +3,7 @@ export interface pagoDTO {
       fecha       : Date,
       idChofer    : number,
       nomchofer   : string,
-      nrofactura  : string,
+      idFactura   : number,
       idmpago1    : number,
       mediopago1  : string,
       nrompago1   : string,
@@ -20,7 +20,7 @@ export interface pagoDTO {
       banco3      : string,
       importe3    : number,
       imptotal    : number,
-      observaciones : string
+      observ      : string
 }
 
 export interface intPago {

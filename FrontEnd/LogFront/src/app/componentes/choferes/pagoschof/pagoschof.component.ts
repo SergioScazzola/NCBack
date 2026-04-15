@@ -22,7 +22,7 @@ import { es } from 'date-fns/locale';
 //import { DATE_FORMATS } from '../../laboreos/laboreo/laboreo.component';
 import { DateFnsAdapter } from '@angular/material-date-fns-adapter';
 import jsPDF from 'jspdf';
-import { UtilService } from '../../../util.service';
+import { UtilService } from '../../../servicios/util.service';
 import autoTable from 'jspdf-autotable';
 import { viajeDTO } from '../../../../entidades/viajeDTO';
 import { factpDTO } from '../../../../entidades/factpDTO';
@@ -74,12 +74,12 @@ export class PagoschofComponent {
   public  cviajes       : viajeDTO[]=[];
   public  cfacsTpte     : factpDTO[]=[];
   public  hoy           : Date = new Date();
+  public  pagochof      : pagoDTO;
   public  imppago       : number;
 
   private maxpago       : number;
   private pagopalta     : number;
-  private pagochof      : pagoDTO;
-  
+
 
   private mpagoSel      : number;
   private factpSel       : number;
@@ -104,54 +104,35 @@ export class PagoschofComponent {
      forkJoin({  // consultas traer info para pago
           
            viajeschof:    this.servicio.getViajesxChofer(this.data.idChofer),
-           facturaschof:  this.servicio.getFactTpteXChofer(this.data.idChofer),       
-           chofer:        this.servicio.leerPagoChofer(this.data.idPago),
-    
+           facturaschof:  this.servicio.getFactTpteXChofer(this.data.idChofer),  
+             
+           //chofer:        this.servicio.leerPagoChofer(this.data.idPago),
+           mediospago:    this.servicio.getMediosPago(),
    
          }).subscribe(res2 => {
        
            this.cviajes     = res2.viajeschof;
            this.cfacsTpte   = res2.facturaschof;
-           
-          
-        var subs1 : Subscription;
-        subs1 = this.servicio.getlaboreosXEmpleado(this.data.nroempleado)
-         .pipe(finalize(() => {                       
-           var subs : Subscription;
-           subs = this.servicio.getMediosdePago()
-            .pipe(finalize(() => {            
-              subs.unsubscribe;
-              var subscri : Subscription;      
-              subscri = this.servicio.getCantPagos()
-                .pipe(finalize(() => {            
-                  if (this.data.accion=="A"){  // Alta de Pago
+           this.cmediospago = res2.mediospago;
+           if (this.data.accion=="A"){  // Alta de Pago
                     this.mostrarHora();
                     this.pagopalta =  this.maxpago+1;                                                       
-                    this.operacion = "Agregar Pago al Empleado : "+this.data.nomempleado;
-                    subscri.unsubscribe();
+                    this.operacion = "Agregar Pago al Chofer : "+this.data.nombre;
+           
                     this.prepararAlta();
                   } else {   // Modificación de un pago  -> Lee el pago
                     var subs2 : Subscription;
-                    subs2 = this.servicio.getPagoEmpleado(this.data.nropago)
+                    subs2 = this.servicio.leerPagoChofer(this.data.idPago)
                        .pipe(finalize(() => {  
-                            this.operacion = "Modificar Pago Nro.: "+this.data.nropago+" al Empleado : "+this.data.nomempleado;                
+                            this.operacion = "Modificar Pago Nro.: "+this.data.idPago+" al Chofer : "+this.data.nombre;                
                             subs2.unsubscribe;
                             this.prepararModificacion();
                        }))
                        .subscribe((datas:any):void =>{
-                           this.pagoemp = datas
+                           this.pagochof = datas
                        })                                                                                                
                   }
-                }))                          
-                .subscribe((datas:any):void =>{
-                     this.maxpago = datas
-                })                                
-                }))
-              .subscribe((datas : any): void => {
-                 this.cmediospago = datas});      
-         }))
-         .subscribe((datas : any): void => {
-          this.claboreos = datas});      
+          })
       
   }
   
@@ -160,24 +141,21 @@ export class PagoschofComponent {
           nropag      : [''], 
           fecha       : [''],           
           idChofer    : ['',[Validators.required]],    
-          idFactura   : ['',[Validators.required]],    
-          idmpago1    : ['',[Validators.required]],              
-          mediopago1  : [' '],         
+          idFactura   : [0,[Validators.required]],    
+          idmpago1    : [1,[Validators.required]],                            
           nrompago1   : [' '],
           banco1      : [' '],                   
           importe1    : ['',[Validators.required]],
-          idmpago2    : ['',[Validators.required]],              
-          mediopago2  : [' '],         
+          idmpago2    : [1],                        
           nrompago2   : [' '],
           banco2      : [' '],                   
           importe2    : [''],
-          idmpago3    : [''],              
-          mediopago3  : [' '],         
-          nrompago3   : [' '],
-          banco3      : [' '],                   
+          idmpago3    : [1],                     
+          nrompago3   : [''],
+          banco3      : [''],                   
           importe3    : [''],
           imptotal    : [''],
-          observ      : [' ']
+          observ      : ['']
         }) 
   }
   mostrarHora() {
@@ -203,39 +181,63 @@ export class PagoschofComponent {
     this.formPag.controls['fecha'].setValue(nuevaFecha);
   }
 
-  onSelectionChangeLaboreo(event : any){
+  onSelectionChangeFactura(event : any){
      this.laboSel = event.value
   }
 
   onSelectionChangeMedioPago(event : any){
       this.mpagoSel = event.value;
   }
-  prepararAlta(){
-    this.formPag.controls['nropag'].setValue(this.pagopalta);    
-    this.formPag.controls['nempleado'].setValue(this.data.nomempleado);   
-    this.formPag.controls['fecha'].setValue(this.hoy);   
-    this.mpagoSel = 1;
-    this.laboSel  = 1;
-    this.formPag.controls['mediopago'].setValue(this.mpagoSel);
-    this.formPag.controls['nrolaboreo'].setValue(this.laboSel);
+prepararAlta(){
+   this.formPag.controls['nropag'].setValue(this.pagopalta);
+   this.formPag.controls['fecha'].setValue(this.hoy);
+   this.formPag.controls['idChofer'].setValue(1);
+   this.formPag.controls['idFactura'].setValue(0);
+   this.formPag.controls['idmpago1'].setValue(1);
+   this.formPag.controls['nrompago1'].setValue(' ');
+   this.formPag.controls['banco1'].setValue(' ');
+   this.formPag.controls['importe1'].setValue(' ');
+
+   this.formPag.controls['idmpago2'].setValue(1);
+   this.formPag.controls['nrompago2'].setValue(' ');
+   this.formPag.controls['banco2'].setValue(' ');
+   this.formPag.controls['importe2'].setValue(' ');
+
+   this.formPag.controls['idmpago3'].setValue(1);
+   this.formPag.controls['nrompago3'].setValue(' ');
+   this.formPag.controls['banco3'].setValue(' ');
+   this.formPag.controls['importe2'].setValue(' ');
+
+   this.formPag.controls['imptotal'].setValue(0);
+   this.formPag.controls['observ'].setValue('');
 
   }
   
   prepararModificacion(){
-   var importecad = this.currencyPipe.transform(this.pagoemp.importe, '$', 'symbol', '1.2-2', 'es-AR');
-   this.formPag.controls['nropag'].setValue(this.data.nropago); 
-   this.formPag.controls['fecha'].setValue(this.pagoemp.fecha); 
-   this.formPag.controls['nempleado'].setValue(this.pagoemp.nomemp); 
-   this.formPag.controls['mediopago'].setValue(this.pagoemp.idmpago);
-   this.formPag.controls['nrompago'].setValue(this.pagoemp.nrompago);  
-   this.formPag.controls['banco'].setValue(this.pagoemp.banco);  
-   this.formPag.controls['importe'].setValue(importecad); 
-   this.formPag.controls['nrolaboreo'].setValue(this.pagoemp.nrolaboreo);  
-   this.formPag.controls['observ'].setValue(this.pagoemp.observaciones);       
-   this.mpagoSel  = this.pagoemp.idmpago;
-   this.laboSel   = this.pagoemp.nrolaboreo;
-   this.imppago = this.pagoemp.importe;
+   this.formPag.controls['nropag'].setValue(this.pagopalta);
+   this.formPag.controls['fecha'].setValue(this.pagochof.fecha);
+   this.formPag.controls['idChofer'].setValue(this.pagochof.idChofer);
+   this.formPag.controls['idFactura'].setValue(this.cfacsTpte[this.cfacsTpte.findIndex(f=>f.idFactura==this.pagochof.idFactura)].idFactura);
+   this.formPag.controls['idmpago1'].setValue(this.pagochof.idmpago1);
+   this.formPag.controls['nrompago1'].setValue(this.pagochof.nrompago1);
+   this.formPag.controls['banco1'].setValue(this.pagochof.banco1);  
+   this.formPag.controls['importe1'].setValue(this.pagochof.importe1);  
+
+   this.formPag.controls['idmpago2'].setValue(this.pagochof.idmpago2);
+   this.formPag.controls['nrompago2'].setValue(this.pagochof.nrompago2);
+   this.formPag.controls['banco2'].setValue(this.pagochof.banco2);  
+   this.formPag.controls['importe2'].setValue(this.pagochof.importe2);  
+
+   this.formPag.controls['idmpago3'].setValue(this.pagochof.idmpago3);
+   this.formPag.controls['nrompago3'].setValue(this.pagochof.nrompago3);
+   this.formPag.controls['banco3'].setValue(this.pagochof.banco3);  
+   this.formPag.controls['importe3'].setValue(this.pagochof.importe3);  
+
+   this.formPag.controls['imptotal'].setValue(this.pagochof.imptotal);
+   this.formPag.controls['observ'].setValue(this.pagochof.observ);
   }
+
+
   formatearComoMoneda() {  // formatea como moneda al salir de "importe"
     const valor = parseFloat(this.formPag.controls['importe'].value?.toString().replace(',', '.'));
     if (!isNaN(valor)) {
