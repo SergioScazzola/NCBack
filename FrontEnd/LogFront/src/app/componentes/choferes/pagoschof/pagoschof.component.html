@@ -1,7 +1,7 @@
 <div class="container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     <h4 mat-dialog-title >{{operacion}}</h4>  
       <form [formGroup]="formPag" >        
-         !-- Fila 1 --
+         <!-- Fila 1 -->
          <div class="row mt-1" >
             <div class="col-4">
               <mat-form-field class="w-100" appearance="fill">
@@ -24,22 +24,22 @@
               <mat-hint>{{ formPag.controls['fecha'].value | date : "dd/MM/yyyy HH:mm"}}</mat-hint> 
               </mat-form-field >
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <mat-form-field class="w-100" appearance="fill">
-              <mat-label>Chofer</mat-label>
+              <mat-label>Nro de Factura</mat-label>
               <mat-select
                 formControlName="idChofer"
                 (selectionChange)="onSelectionFactura($event)">
                @for (factu of cfacsTpte; track factu.idFactura) {
                 <mat-option [value]="factu.idFactura">
-                  {{ factu.idFactura+" - "+factu.nrofactura+" - "+factu.totalfac }}
+                  {{ factu.idFactura+" - "+factu.nrofactura+" - "+(factu.totalfac | currency:'$':'symbol':'1.2-2') }}
                 </mat-option>
                }
                </mat-select>
                </mat-form-field>
             </div>  
         </div>
-        !-- Medio de Pago 1 --
+        <!-- Medio de Pago 1 -->
         <div class="row mt-1" >
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
@@ -77,7 +77,7 @@
          </div>
         </div>
 
-        !-- Medio de Pago 2 --
+        <!-- Medio de Pago 2 -->
         <div class="row mt-1" >
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
@@ -115,7 +115,7 @@
          </div>
         </div>
 
-        !-- Medio de Pago 3 --
+        <!-- Medio de Pago 3 -->
         <div class="row mt-1" >
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
@@ -168,7 +168,7 @@
             </mat-form-field>
           </div>
         </div>
-        !-- Fila de botones  --
+        <!-- Fila de botones  -->
         <div class="row">
           <div class="botonera">           
             <button class="btn btn-sm btn-outline-primary me-5" 

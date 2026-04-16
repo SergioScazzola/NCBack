@@ -4,11 +4,9 @@ h4 {
     text-align: center;
 }
 
-.container {
-    background-color:lightgray;
-    width : 800px;
-    height: 500px;
-
+.custom-dialog-container {
+  background-color:lightgray;  /*quita el fondo blanco */
+  border-radius: 0px;
 }
 .botonera {    
     background-color:lightgray;
