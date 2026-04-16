@@ -27,6 +27,7 @@ import autoTable from 'jspdf-autotable';
 import { viajeDTO } from '../../../../entidades/viajeDTO';
 import { factpDTO } from '../../../../entidades/factpDTO';
 import { intPago, pagoDTO } from '../../../../entidades/pagoDTO';
+import { ImporteDecimalDirective } from "../../../Directivas/importeDecimal";
 
 export const DATE_FORMATS : MatDateFormats = {
 
@@ -44,19 +45,19 @@ export const DATE_FORMATS : MatDateFormats = {
 @Component({
   selector: 'app-pagoschof',
  imports: [MatFormField,
-                  MatLabel,         
-                  MatInputModule,
-                  MatTableModule,
-                  ReactiveFormsModule,
-                  MatDatepickerModule,
-                  MatNativeDateModule,    
-                  MatIconModule,
-                  MatCheckboxModule,
-                  CommonModule,
-                  FormsModule,
-                  MatSelectModule,
-                  DragDropModule,                
-                  SelecTextDirective],
+    MatLabel,
+    MatInputModule,
+    MatTableModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatIconModule,
+    MatCheckboxModule,
+    CommonModule,
+    FormsModule,
+    MatSelectModule,
+    DragDropModule,
+    SelecTextDirective],
  providers : [
       CurrencyPipe,   
       { provide : DateAdapter, useClass: DateFnsAdapter },
@@ -76,7 +77,8 @@ export class PagoschofComponent {
   public  hoy           : Date = new Date();
   public  pagochof      : pagoDTO;
   public  imppago       : number;
-
+  private imps          : number[]=[0,0,0];
+  
   private maxpago       : number;
   private pagopalta     : number;
 
@@ -116,7 +118,7 @@ export class PagoschofComponent {
            this.cmediospago = res2.mediospago;
            if (this.data.accion=="A"){  // Alta de Pago
                     this.mostrarHora();
-                    this.pagopalta =  this.maxpago+1;                                                       
+                    this.pagopalta =  this.data.idPago;                                                       
                     this.operacion = "Agregar Pago al Chofer : "+this.data.nombre;
            
                     this.prepararAlta();
@@ -143,17 +145,17 @@ export class PagoschofComponent {
           idChofer    : ['',[Validators.required]],    
           idFactura   : [0,[Validators.required]],    
           idmpago1    : [1,[Validators.required]],                            
-          nrompago1   : [' '],
-          banco1      : [' '],                   
-          importe1    : ['',[Validators.required]],
+          nrompago1   : [''],
+          banco1      : [''],                   
+          importe1    : ['',[Validators.required,Validators.pattern(/^-?\d+([.,]\d{1,2})?$/)]],
           idmpago2    : [1],                        
-          nrompago2   : [' '],
-          banco2      : [' '],                   
-          importe2    : [''],
+          nrompago2   : [''],
+          banco2      : [''],                   
+          importe2    : ['',[Validators.required,Validators.pattern(/^-?\d+([.,]\d{1,2})?$/)]],
           idmpago3    : [1],                     
           nrompago3   : [''],
           banco3      : [''],                   
-          importe3    : [''],
+          importe3    : ['',[Validators.required,Validators.pattern(/^-?\d+([.,]\d{1,2})?$/)]],
           imptotal    : [''],
           observ      : ['']
         }) 
@@ -251,21 +253,48 @@ prepararAlta(){
    this.formPag.controls['observ'].setValue(this.pagochof.observ);
   }
 
+onFocusImporte(control : string,nro:number ,event : any){
+  const valor : string = this.formPag.controls[control].value;
+  const parseado = valor.replaceAll(".","").replaceAll(",",".");
+ event.target.value = parseado;
 
-  formatearComoMoneda() {  // formatea como moneda al salir de "importe"
-    const valor = parseFloat(this.formPag.controls['importe'].value?.toString().replace(',', '.'));
-    if (!isNaN(valor)) {
-      const valorFormateado = this.currencyPipe.transform(valor, '$', 'symbol', '1.2-2');
-      console.log("Valor Fomateado : "+valorFormateado);
-      this.formPag.controls['importe'].setValue(valorFormateado, { emitEvent: false });
-    }
-  }
+}
+ onBlurImporte(control: string,nro:number, event: any) {
+  const valor = this.formPag.controls[control].value;// Valor sin formatear  
+  this.imps[nro-1] = parseFloat(valor); // pongo el valor en el array para sumar
   
+  const valorFormateado =new Intl.NumberFormat('es-AR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+    }).format(valor);
+    
+    this.totalizarPago();
 
- 
+    event.target.value = valorFormateado;
+
+
+
+  }
+
+  totalizarPago(){
+    var totalpago = this.imps[0]+this.imps[1]+this.imps[2];
+    const valorFormateado =new Intl.NumberFormat('es-AR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(totalpago);
+     this.formPag.controls['imptotal'].setValue(valorFormateado);
+  }
+
   GrabarPago(){
    
-      
+      var imp1 = this.formPag.controls['importe1'].value;
+      var imp2 = this.formPag.controls['importe2'].value;
+      var imp3 = this.formPag.controls['importe3'].value;
+      var impt = this.formPag.controls['imptotal'].value;
+      imp1.replaceAll(".","").replaceAll(",",".");
+      imp2.replaceAll(".","").replaceAll(",",".");
+      imp3.replaceAll(".","").replaceAll(",",".");
+      impt.replaceAll(".","").replaceAll(",",".");
 
       var pago : pagoDTO = {
              
@@ -275,20 +304,20 @@ prepararAlta(){
          idFactura      : this.formPag.controls['idFactura'].value,
          idmpago1       : this.formPag.controls['idmpago1'].value,
          nrompago1      : this.formPag.controls['nrompago1'].value,      
-         banco1         : this.formPag.controls['banco1'].value,
-         importe1       : this.formPag.controls['importe1'].value,
+         banco1         : this.formPag.controls['banco1'].value,        
+         importe1       : imp1,
                                                                
          idmpago2       : this.formPag.controls['idmpago2'].value,
          nrompago2      : this.formPag.controls['nrompago2'].value,      
          banco2         : this.formPag.controls['banco2'].value,
-         importe2       : this.formPag.controls['importe2'].value,
+         importe2       : imp2,
 
          idmpago3       : this.formPag.controls['idmpago3'].value,
          nrompago3      : this.formPag.controls['nrompago3'].value,      
          banco3         : this.formPag.controls['banco3'].value,
-         importe3       : this.formPag.controls['importe3'].value,
+         importe3       : imp3,
       
-        imptotal       : this.formPag.controls['imptotal'].value,
+        imptotal       : impt,
         observ         : this.formPag.controls['observ'].value
             
       }

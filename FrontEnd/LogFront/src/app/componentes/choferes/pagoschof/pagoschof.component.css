@@ -3,7 +3,9 @@ h4 {
     background-color:lightblue;
     text-align: center;
 }
-
+.mat-mdc-form-field {
+  --mdc-filled-text-field-container-color: lightblue;
+}
 .custom-dialog-container {
   background-color:lightgray;  /*quita el fondo blanco */
   border-radius: 0px;
@@ -16,3 +18,4 @@ h4 {
     margin-bottom: 5px;
     width: 100%
 }
+

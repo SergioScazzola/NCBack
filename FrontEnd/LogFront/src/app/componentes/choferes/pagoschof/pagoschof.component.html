@@ -1,9 +1,9 @@
-<div class="container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+<div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     <h4 mat-dialog-title >{{operacion}}</h4>  
       <form [formGroup]="formPag" >        
          <!-- Fila 1 -->
          <div class="row mt-1" >
-            <div class="col-4">
+            <div class="col-3">
               <mat-form-field class="w-100" appearance="fill">
                <mat-label>Nro.Pago</mat-label>
                <input
@@ -13,7 +13,7 @@
                  style="text-align: center"/>
                </mat-form-field>
             </div>
-            <div class="col-4">
+            <div class="col-3">
               <mat-form-field class="w-100" appearance="fill"> 
               <input #fechaviaje matInput #inputFocus [matDatepicker]="picker"  
                   placeholder = "Elija una fecha" 
@@ -24,7 +24,7 @@
               <mat-hint>{{ formPag.controls['fecha'].value | date : "dd/MM/yyyy HH:mm"}}</mat-hint> 
               </mat-form-field >
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <mat-form-field class="w-100" appearance="fill">
               <mat-label>Nro de Factura</mat-label>
               <mat-select
@@ -70,8 +70,9 @@
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
             <mat-label>Importe</mat-label>
-            <input matInput selecText formControlName="importe1"
-                 [value]="formPag.get('importe1')?.value  | currency:'$':'symbol':'1.2-2'"
+            <input selecText matInput formControlName="importe1"  
+                 (blur)="onBlurImporte('importe1',1,$event)"   
+                 (focus)="onFocusImporte('importe1',1,$event)"                   
                  style="text-align: right;">	
             </mat-form-field>   
          </div>
@@ -108,8 +109,9 @@
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
             <mat-label>Importe</mat-label>
-            <input matInput selecText formControlName="importe2"
-                 [value]="formPag.get('importe2')?.value  | currency:'$':'symbol':'1.2-2'"
+            <input matInput selecText formControlName="importe2"    
+                 (blur)="onBlurImporte('importe2',2,$event)" 
+                 (focus)="onFocusImporte('importe2',2,$event)"       
                  style="text-align: right;">	
             </mat-form-field>   
          </div>
@@ -146,22 +148,22 @@
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
             <mat-label>Importe</mat-label>
-            <input matInput selecText formControlName="importe3"
-                 [value]="formPag.get('importe3')?.value  | currency:'$':'symbol':'1.2-2'"
+            <input matInput selecText formControlName="importe3"     
+                 (blur)="onBlurImporte('importe3',3,$event)"   
+                (focus)="onFocusImporte('importe3',3,$event)"    
                  style="text-align: right;">	
             </mat-form-field>   
          </div>
         </div>
         <div class="row mt-1" >
-           <div class="col-md-6">
+           <div class="col-md-4">
             <mat-form-field class="w-100" appearance="fill">
             <mat-label>Total Pago</mat-label>
-            <input matInput readonly="true" formControlName="imptotal"
-                 [value]="formPag.get('imptotal')?.value  | currency:'$':'symbol':'1.2-2'"
-                 style="text-align: right;">	
+            <input matInput readonly="true" formControlName="imptotal"                
+                 style="text-align:  right;">	
             </mat-form-field>   
            </div>
-           <div class="col-md-6">
+           <div class="col-md-8">
             <mat-form-field class="w-100" appearance="fill">
             <mat-label>Nota</mat-label>
                <input matInput formControlName="observ"/>        
