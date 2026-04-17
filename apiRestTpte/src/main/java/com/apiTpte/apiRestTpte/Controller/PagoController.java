@@ -62,7 +62,7 @@ public class PagoController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
-    @PostMapping(value="/pago/nuevo")
+  @PostMapping(value="/pago/nuevo")
     // Graba un nuevo Pago a la Emp.de Tpte.
     public ResponseEntity<String> crearPago(@RequestBody Pago pago) {
        try {

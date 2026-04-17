@@ -7,7 +7,8 @@ import java.util.Date;
 public class Pago {
     private int     idPago;
     private Date    fecha;
-    private int     idChofer;        
+    private int     idChofer;   
+    private int     idFactura;         
     private int     idmpago1;  
     private String  nrompago1;
     private String  banco1;
@@ -22,8 +23,10 @@ public class Pago {
     private double  importe3;
     private double  imptotal;
     private String  observ;
+
+    public Pago(){}
+
   
-  public Pago(){}
 
   public int getIdPago() {
     return idPago;
@@ -161,5 +164,11 @@ public class Pago {
     this.observ = observ;
   }
 
- 
+public int getIdFactura() {
+      return idFactura;
+    }
+
+    public void setIdFactura(int idFactura) {
+      this.idFactura = idFactura;
+    } 
 }

@@ -918,12 +918,12 @@ public class JdbcTpteRepository implements TpteRepository {
       public int actualizarPago(int nrop, Pago pago){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE pagos SET fecha=?,idChofer=?,idmpago1=?,"+
+          resu = jdbcTemplate.update("UPDATE pagos SET fecha=?,idChofer=?,idFactura=?,idmpago1=?,"+
                                     "nrompago1=?,banco1=?,importe1=?,"+
                                     "idmpago2=?,nrompago2=?,banco2=?,importe2=?,"+
                                     "idmpago3=?,nrompago3=?,banco3=?,importe3=?,"+
                                     "imptotal=?,observ=? WHERE idPago=?",
-                    new Object[] { pago.getFecha(),pago.getIdChofer(),pago.getIdmpago1(),pago.getNrompago1(),
+                    new Object[] { pago.getFecha(),pago.getIdChofer(),pago.getIdFactura(),pago.getIdmpago1(),pago.getNrompago1(),
                                    pago.getBanco1(),pago.getImporte1(),pago.getIdmpago2(),pago.getNrompago2(),
                                    pago.getBanco2(),pago.getImporte2(),pago.getIdmpago3(),pago.getNrompago3(),
                                    pago.getBanco3(),pago.getImporte3(),pago.getImptotal(),pago.getObserv(),pago.getIdPago()
@@ -938,11 +938,11 @@ public class JdbcTpteRepository implements TpteRepository {
       // Graba nuevo Pago 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT pagos(idPago,fecha,idChofer,idmpago1,"+
+          resu = jdbcTemplate.update("INSERT pagos(idPago,fecha,idChofer,idFactura,idmpago1,"+
                                     "nrompago1,banco1,importe1,idmpago2,nrompago2,banco2,importe2,"+
                                     "idmpago3,nrompago3,banco3,importe3,"+
-                                    "imptotal,observ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
-                    new Object[] { pago.getIdPago(),pago.getFecha(),pago.getIdChofer(),
+                                    "imptotal,observ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
+                    new Object[] { pago.getIdPago(),pago.getFecha(),pago.getIdChofer(),pago.getIdFactura(),
                                    pago.getIdmpago1(),pago.getNrompago1(),pago.getBanco1(),pago.getImporte1(),
                                    pago.getIdmpago2(),pago.getNrompago2(),pago.getBanco2(),pago.getImporte2(),
                                    pago.getIdmpago3(),pago.getNrompago3(),pago.getBanco3(),pago.getImporte3(),
