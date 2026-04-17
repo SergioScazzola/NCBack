@@ -1,3 +1,6 @@
+@if (isloading){  
+  <div style="padding:20px">Cargando...</div>
+} @else {
 <div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     <h4 mat-dialog-title >{{operacion}}</h4>  
       <form [formGroup]="formPag" >        
@@ -28,9 +31,9 @@
               <mat-form-field class="w-100" appearance="fill">
               <mat-label>Nro de Factura</mat-label>
               <mat-select
-                formControlName="idChofer"
+                formControlName="idFactura"
                 (selectionChange)="onSelectionFactura($event)">
-               @for (factu of cfacsTpte; track factu.idFactura) {
+               @for (factu of this.cfacsTpte; track factu.idFactura) {
                 <mat-option [value]="factu.idFactura">
                   {{ factu.idFactura+" - "+factu.nrofactura+" - "+(factu.totalfac | currency:'$':'symbol':'1.2-2') }}
                 </mat-option>
@@ -40,7 +43,7 @@
             </div>  
         </div>
         <!-- Medio de Pago 1 -->
-        <div class="row mt-1" >
+        <div class="row mt-1 " >
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
               <mat-label>Medio de Pago</mat-label>
@@ -70,16 +73,15 @@
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
             <mat-label>Importe</mat-label>
-            <input selecText matInput formControlName="importe1"  
-                 (blur)="onBlurImporte('importe1',1,$event)"   
-                 (focus)="onFocusImporte('importe1',1,$event)"                   
+            <input matInput selecText appImporte  formControlName="importe1"   
+                 (blur)="modificoImporte('importe1',1)"                             
                  style="text-align: right;">	
             </mat-form-field>   
          </div>
         </div>
 
         <!-- Medio de Pago 2 -->
-        <div class="row mt-1" >
+        <div class="row mt-1 " >
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
               <mat-label>Medio de Pago</mat-label>
@@ -109,16 +111,15 @@
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
             <mat-label>Importe</mat-label>
-            <input matInput selecText formControlName="importe2"    
-                 (blur)="onBlurImporte('importe2',2,$event)" 
-                 (focus)="onFocusImporte('importe2',2,$event)"       
+            <input matInput selecText appImporte formControlName="importe2"                     
+               (blur)="modificoImporte('importe2',2)"    
                  style="text-align: right;">	
             </mat-form-field>   
          </div>
         </div>
 
         <!-- Medio de Pago 3 -->
-        <div class="row mt-1" >
+        <div class="row mt-1 " >
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
               <mat-label>Medio de Pago</mat-label>
@@ -148,9 +149,8 @@
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
             <mat-label>Importe</mat-label>
-            <input matInput selecText formControlName="importe3"     
-                 (blur)="onBlurImporte('importe3',3,$event)"   
-                (focus)="onFocusImporte('importe3',3,$event)"    
+            <input matInput appImporte formControlName="importe3"                    
+               (blur)="modificoImporte('importe3',3)"    
                  style="text-align: right;">	
             </mat-form-field>   
          </div>
@@ -159,7 +159,8 @@
            <div class="col-md-4">
             <mat-form-field class="w-100" appearance="fill">
             <mat-label>Total Pago</mat-label>
-            <input matInput readonly="true" formControlName="imptotal"                
+            <input matInput readonly="true" formControlName="imptotal"        
+               [value]="formPag.get('imptotal')?.value | currency:'$':true"            
                  style="text-align:  right;">	
             </mat-form-field>   
            </div>
@@ -176,9 +177,9 @@
             <button class="btn btn-sm btn-outline-primary me-5" 
                      [disabled]="formPag.invalid || data.accion!='A'" 
                      (click)="GrabarPago()">Agregar Pago</button>                                
-            <!--button class="btn btn-sm btn-outline-success me-5" 
+            <button class="btn btn-sm btn-outline-success me-5" 
                      [disabled]="formPag.invalid || data.accion!='M'" 
-                     (click)="ModificarPago()">Modificar Pago</button-->  
+                     (click)="ModificarPago()">Modificar Pago</button>  
             <!--button class="btn btn-sm btn-outline-info me-5" 
                      [disabled]="formPag.invalid || data.accion!='M'" 
                      (click)="generarReciboPDF()">Imprimir Recibo</button-->                       
@@ -188,3 +189,4 @@
       </div>  
     </form>
   </div>  
+}

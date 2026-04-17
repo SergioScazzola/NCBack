@@ -246,25 +246,28 @@ agregarPago(){
                              }
                             })
 }
-/*modificarPago(nropag:number ){
+modificarPago(nromov:number ){
   const data : intPago = {
-    idPago     : this.maxpago+1,   
+    idPago     : this.cmovscc[nromov-1].idMov,
+    idChofer   : this.chof.idChofer,
     nombre     : this.nomchofer,
     accion     : "M"
-  }       
+  }  
   const dialogConfig = new MatDialogConfig();   
   dialogConfig.autoFocus = false;
-  dialogConfig.data = data;
-  dialogConfig.panelClass = "";
+  dialogConfig.data         = data;
+  dialogConfig.width        =  '900px';         // ancho máximo de la ventana
+  dialogConfig.maxWidth     = '95vw';      
+  dialogConfig.height       = 'auto';        // altura se ajusta al contenido
+  dialogConfig.panelClass   = 'custom-dialog-container';
+  dialogConfig.disableClose =  false; // opcional según necesidad
   const dialogRef =  this.dialog.open(PagoschofComponent, dialogConfig);
         dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Modi'){        // Modifico el cobro seleccionado           
                         this.actualizarxUltPago();   // leer cobros, rearmar cmovims y recalcular totales                                                      // leer ultimo cobro y agregar a cmovims y recalcular totales                                            
                          }
                         })
-
-
-}*/
+}
 actualizarxUltPago(){
   // Vuelve  a  leer los pagos al chofer para reflejar el último en la cta.cte
   var subs1 : Subscription;

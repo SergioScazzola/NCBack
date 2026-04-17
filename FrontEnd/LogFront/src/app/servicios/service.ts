@@ -114,9 +114,13 @@ export class ServiciosService {
     return this.http.post<pagoDTO>(this.apiUrl + `pago/pago/nuevo`,pago);
   }
 
+  public updatePagoChofer(nropago : number, pagochofer : pagoDTO){
+     return this.http.put<pagoDTO>(environment.apiUrl + `pago/pago/actualizar?id=`+nropago,pagochofer);
+  }
+
 
   public leerPagoChofer(nropago: number) {
-    return this.http.get<pagoDTO>( this.apiUrl + `chofer/pago?id=`+nropago);
+    return this.http.get<pagoDTO>( this.apiUrl + `pago/pago?id=`+nropago);
   }
 
 
