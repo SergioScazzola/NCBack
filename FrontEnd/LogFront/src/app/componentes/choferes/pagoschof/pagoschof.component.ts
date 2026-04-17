@@ -87,7 +87,7 @@ export class PagoschofComponent {
   private factpSel       : number;
   public  imprimeconcepto : boolean = true;
 
- constructor(     public  fb               : FormBuilder,
+ constructor(     public  fb             : FormBuilder,
                   private servicio       : ServiciosService,                
                   public dialogRef       : MatDialogRef<PagoschofComponent>,
                   @Inject(MAT_DIALOG_DATA) public data: intPago,  
@@ -120,7 +120,7 @@ export class PagoschofComponent {
                     this.mostrarHora();
                     this.pagopalta =  this.data.idPago;                                                       
                     this.operacion = "Agregar Pago al Chofer : "+this.data.nombre;
-           
+                    this.formPag.controls['idFactura'].setValue(this.cfacsTpte[0].idFactura);
                     this.prepararAlta();
                   } else {   // Modificación de un pago  -> Lee el pago
                     var subs2 : Subscription;
@@ -180,7 +180,9 @@ export class PagoschofComponent {
   }) 
   }
   onSelectionFactura(event: any){
-    
+    this.formPag.controls['idFactura'].setValue(event.target.value);
+    console.log("Factura seleccionada : "+event.target.value);
+
   }
 
   onSelectionChangeMPago($event: any, nro : number){
@@ -233,7 +235,7 @@ prepararAlta(){
    this.formPag.controls['nropag'].setValue(this.pagopalta);
    this.formPag.controls['fecha'].setValue(this.pagochof.fecha);
    this.formPag.controls['idChofer'].setValue(this.pagochof.idChofer);
-   this.formPag.controls['idFactura'].setValue(this.cfacsTpte[this.cfacsTpte.findIndex(f=>f.idFactura==this.pagochof.idFactura)].idFactura);
+   this.formPag.controls['idFactura'].setValue(this.pagochof.idFactura);
    this.formPag.controls['idmpago1'].setValue(this.pagochof.idmpago1);
    this.formPag.controls['nrompago1'].setValue(this.pagochof.nrompago1);
    this.formPag.controls['banco1'].setValue(this.pagochof.banco1);  
@@ -305,19 +307,19 @@ onFocusImporte(control : string,nro:number ,event : any){
          idmpago1       : this.formPag.controls['idmpago1'].value,
          nrompago1      : this.formPag.controls['nrompago1'].value,      
          banco1         : this.formPag.controls['banco1'].value,        
-         importe1       : imp1,
+         importe1       : parseFloat(imp1),
                                                                
          idmpago2       : this.formPag.controls['idmpago2'].value,
          nrompago2      : this.formPag.controls['nrompago2'].value,      
          banco2         : this.formPag.controls['banco2'].value,
-         importe2       : imp2,
+         importe2       : parseFloat(imp2),
 
          idmpago3       : this.formPag.controls['idmpago3'].value,
          nrompago3      : this.formPag.controls['nrompago3'].value,      
          banco3         : this.formPag.controls['banco3'].value,
-         importe3       : imp3,
+         importe3       : parseFloat(imp3),
       
-        imptotal       : impt,
+        imptotal       : parseFloat(impt),
         observ         : this.formPag.controls['observ'].value
             
       }
