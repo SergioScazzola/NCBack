@@ -6,13 +6,15 @@ public class Gasto {
      private int    idGasto;
      private Date   fecha;
      private int    idChofer;
+     private String nomchofer;
      private int    idViaje;
-     private String compGasto;   
-     private String provGasto;
+     private String compgasto;   
+     private String provgasto;
+     private String tipogasto;
      private float  cantgasto;
-     private String unidGasto;
-     private double preGasto;
-     private String descGasto;
+     private String unidgasto;
+     private double pregasto;
+     private String descgasto;
      private double impgasto;
 
      public Gasto(){}
@@ -41,20 +43,20 @@ public class Gasto {
          this.idViaje = idViaje;
      }
 
-     public String getCompGasto() {
-         return compGasto;
+     public String getCompgasto() {
+         return compgasto;
      }
 
-     public void setCompGasto(String compGasto) {
-         this.compGasto = compGasto;
+     public void setCompgasto(String compGasto) {
+         this.compgasto = compGasto;
      }
 
-     public String getProvGasto() {
-         return provGasto;
+     public String getProvgasto() {
+         return provgasto;
      }
 
-     public void setProvGasto(String provGasto) {
-         this.provGasto = provGasto;
+     public void setProvgasto(String provGasto) {
+         this.provgasto = provGasto;
      }
 
      public double getImpgasto() {
@@ -73,28 +75,28 @@ public class Gasto {
          this.cantgasto = cantgasto;
      }
 
-     public String getUnidGasto() {
-         return unidGasto;
+     public String getUnidgasto() {
+            return unidgasto;
+     }
+     public void setUnidgasto(String unidgasto) {
+        this.unidgasto = unidgasto;
      }
 
-     public void setUnidGasto(String unidGasto) {
-         this.unidGasto = unidGasto;
+
+     public double getPregasto() {
+         return pregasto;
      }
 
-     public double getPreGasto() {
-         return preGasto;
+     public void setPregasto(double preGasto) {
+         this.pregasto = preGasto;
      }
 
-     public void setPreGasto(double preGasto) {
-         this.preGasto = preGasto;
+     public String getDescgasto() {
+         return descgasto;
      }
 
-     public String getDescGasto() {
-         return descGasto;
-     }
-
-     public void setDescGasto(String descGasto) {
-         this.descGasto = descGasto;
+     public void setDescgasto(String descGasto) {
+         this.descgasto = descGasto;
      }
 
      public int getIdChofer() {
@@ -104,6 +106,24 @@ public class Gasto {
      public void setIdChofer(int idChofer) {
          this.idChofer = idChofer;
      }
+
+  
+
+     public String getNomchofer() {
+         return nomchofer;
+     }
+
+     public void setNomchofer(String nomchofer) {
+         this.nomchofer = nomchofer;
+     }
+
+    public String getTipogasto() {
+            return tipogasto;
+    }
+
+    public void setTipogasto(String tipogasto) {
+        this.tipogasto = tipogasto;
+    }
 
           
 }

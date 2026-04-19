@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apiTpte.apiRestTpte.Entidades.Gasto;
+import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 
@@ -31,7 +32,7 @@ public class GastoController {
    
     @SuppressWarnings("null")
     @GetMapping("/gastos")
-    public ResponseEntity<List<Gasto>> getAllCobros() {
+    public ResponseEntity<List<Gasto>> getAllGastos() {
     try {
       List<Gasto> gastos = null;
             
@@ -53,6 +54,42 @@ public class GastoController {
      return cantg;
   }
   
+  @RequestMapping(value="/gastosxviaje", params={"idviaje"})
+    public ResponseEntity<List<Gasto>> getGastosXViaje(@RequestParam("idviaje") Integer idviaje) {
+    try {
+      List<Gasto> gastos = null;
+            
+    gastos = tpteRepository.GastosXViaje(idviaje);
+    
+      if (gastos.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } else {
+         return new ResponseEntity<>(gastos, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  
+  @SuppressWarnings("null")
+  @RequestMapping(value="/gastosxchofer", params={"idchofer"})
+    public ResponseEntity<List<Gasto>> getGastosXChofer(@RequestParam("idchofer") Integer idchofer) {
+    try {
+      List<Gasto> gastos = null;
+            
+    gastos = tpteRepository.GastosXChofer(idchofer);
+    
+      if (gastos.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } else {
+         return new ResponseEntity<>(gastos, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+
   @RequestMapping(value ="/gasto" , params={"id"} )
   public ResponseEntity<Gasto> getGastoById(@RequestParam("id") Integer idgasto) {
     Gasto gasto = tpteRepository.findGastoById(idgasto);

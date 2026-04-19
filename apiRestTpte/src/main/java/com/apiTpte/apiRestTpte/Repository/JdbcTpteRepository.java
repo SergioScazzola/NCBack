@@ -22,6 +22,8 @@ import com.apiTpte.apiRestTpte.Entidades.MPago;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.SaldoChof;
+import com.apiTpte.apiRestTpte.Entidades.TGasto;
+import com.apiTpte.apiRestTpte.Entidades.Unid;
 import com.apiTpte.apiRestTpte.Entidades.Usuario;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
 
@@ -408,6 +410,12 @@ public class JdbcTpteRepository implements TpteRepository {
       public List<Viaje> ViajesXCliente(int idclte){
         String selec = "SELECT * FROM viajes WHERE idCliente=? ORDER BY fecha DESC LIMIT 100";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Viaje.class),idclte);
+      }
+
+      @Override
+      public List<Gasto> GastosXViaje(int idviaje) {   
+        String selec = "SELECT * FROM gastos WHERE idViaje=? ORDER BY fecha DESC";
+        return jdbcTemplate.query(selec,BeanPropertyRowMapper.newInstance(Gasto.class),idviaje);
       }
 
        @Override
@@ -968,9 +976,11 @@ public class JdbcTpteRepository implements TpteRepository {
 
       @Override
       public List<Gasto> AllGastos() {   
-        String selec = "SELECT * FROM gastos ORDER BY fecha";
+        String selec = "SELECT * FROM gastos ORDER BY fecha DESC LIMIT 150";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Gasto.class));
       }
+
+
       @Override
       public int getMaxGastos(){
         String consulta = "SELECT MAX(idGasto) FROM gastos";
@@ -998,12 +1008,12 @@ public class JdbcTpteRepository implements TpteRepository {
       public int actualizarGasto(int nrog, Gasto gasto){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE gastos SET fecha=?,idChofer=?,idViaje=?,compGasto=?,provGasto=?,"+
-                                    "cantGasto=?,unidGasto=?,preGasto=?,descGasto=?,impgasto=? "+
+          resu = jdbcTemplate.update("UPDATE gastos SET fecha=?,idChofer=?,nomchofer=?,idViaje=?,compgasto=?,provgasto=?,"+
+                                    "tipogasto=?,cantgasto=?,unidgasto=?,pregasto=?,descgasto=?,impgasto=? "+
                                     "WHERE idGasto=?",
-                    new Object[] { gasto.getFecha(),gasto.getIdChofer(),gasto.getIdViaje(),gasto.getCompGasto(),gasto.getProvGasto(),
-                                   gasto.getCantgasto(),gasto.getUnidGasto(),gasto.getPreGasto(),
-                                   gasto.getDescGasto(),gasto.getImpgasto(),gasto.getIdGasto()                                                                      
+                    new Object[] { gasto.getFecha(),gasto.getIdChofer(),gasto.getNomchofer(),gasto.getIdViaje(),gasto.getCompgasto(),
+                                   gasto.getProvgasto(),gasto.getTipogasto(),gasto.getCantgasto(),gasto.getUnidgasto(),
+                                   gasto.getPregasto(),gasto.getDescgasto(),gasto.getImpgasto(),gasto.getIdGasto()                                                                      
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -1015,13 +1025,12 @@ public class JdbcTpteRepository implements TpteRepository {
       // Graba nuevo Gasto 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT gastos(idGasto,fecha,idChofer,idViaje,compGasto,provGasto,"+               
-                                     "cantGasto,unidGasto,preGasto,descGasto,impgasto) " + 
-                                     "VALUES(?,?,?,?,?,?,?,?,?,?,?)",
-                    new Object[] { gasto.getIdGasto(),gasto.getFecha(),gasto.getIdChofer(),gasto.getIdViaje(),gasto.getCompGasto(),
-                                   gasto.getProvGasto(),
-                                   gasto.getCantgasto(),gasto.getUnidGasto(),gasto.getPreGasto(),
-                                   gasto.getDescGasto(),gasto.getImpgasto()
+          resu = jdbcTemplate.update("INSERT gastos(idGasto,fecha,idChofer,nomchofer,idViaje,compgasto,provgasto,"+               
+                                     "tipogasto,cantgasto,unidgasto,pregasto,descgasto,impgasto) " + 
+                                     "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    new Object[] { gasto.getIdGasto(),gasto.getFecha(),gasto.getIdChofer(),gasto.getNomchofer(),gasto.getIdViaje(),
+                                   gasto.getCompgasto(),gasto.getProvgasto(),gasto.getTipogasto(),gasto.getCantgasto(),
+                                   gasto.getUnidgasto(),gasto.getPregasto(),gasto.getDescgasto(),gasto.getImpgasto()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -1057,6 +1066,18 @@ public class JdbcTpteRepository implements TpteRepository {
     public List<MPago> AllMediosPagos() {   
       String selec = "SELECT * FROM  mediospago ORDER BY idmediopago";
       return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(MPago.class));
+    }
+
+    @Override
+    public List<TGasto> AllTiposGasto() {   
+      String selec = "SELECT * FROM  tiposgasto ORDER BY idtipogasto";
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(TGasto.class));
+    }
+
+     @Override
+    public List<Unid> AllUnidades() {   
+      String selec = "SELECT * FROM  unidades ORDER BY idUnidad";
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Unid.class));
     }
 
 }

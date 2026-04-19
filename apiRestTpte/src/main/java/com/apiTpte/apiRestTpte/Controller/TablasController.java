@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apiTpte.apiRestTpte.Entidades.MPago;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
+import com.apiTpte.apiRestTpte.Entidades.TGasto;
+import com.apiTpte.apiRestTpte.Entidades.Unid;
 import com.apiTpte.apiRestTpte.Repository.JdbcTpteRepository;
 
 
@@ -37,6 +39,14 @@ public class TablasController {
     @GetMapping(value="/mediospago")
     public ResponseEntity<List<MPago>> getAllMpagos() {
        return ResponseEntity.ok(tpteRepository.AllMediosPagos());
+  }
+   @GetMapping(value="/tiposgasto")
+    public ResponseEntity<List<TGasto>> getAllTiposGasto() {
+       return ResponseEntity.ok(tpteRepository.AllTiposGasto());
+  }
+    @GetMapping(value="/unidades")
+    public ResponseEntity<List<Unid>> getAllUnidades() {
+       return ResponseEntity.ok(tpteRepository.AllUnidades());
   }
 
  

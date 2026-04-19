@@ -18,6 +18,8 @@ import com.apiTpte.apiRestTpte.Entidades.MPago;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.SaldoChof;
+import com.apiTpte.apiRestTpte.Entidades.TGasto;
+import com.apiTpte.apiRestTpte.Entidades.Unid;
 import com.apiTpte.apiRestTpte.Entidades.Usuario;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
 
@@ -67,6 +69,7 @@ public interface TpteRepository {
     Viaje findViajeById(int idviaje);
     int saveViaje(Viaje viaje);
     int actualizarViaje(int idviaje, Viaje viaje);    
+    List<Gasto> GastosXViaje(int idviaje);
     int getCantViajesXChofer(int idchofer);
     int getCantViajesXCliente(int idclte);
   
@@ -134,5 +137,7 @@ public interface TpteRepository {
     // TABLAS Auxiliares //
     List<Marca> AllMarcas();
     List<MPago> AllMediosPagos();
+    List<TGasto> AllTiposGasto();
+    List<Unid> AllUnidades();
 
 }
