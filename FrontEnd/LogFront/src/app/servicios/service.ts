@@ -6,7 +6,7 @@ import { ConfigService } from './config.service';
 import { choferDTO } from '../../entidades/choferDTO';
 import { empTpteDTO } from '../../entidades/empTpteDTO';
 import { camionDTO } from '../../entidades/camionDTO';
-import { marcaDTO, MPagoDTO } from '../../entidades/marcaDTO';
+import { marcaDTO, MPagoDTO, UnidadDTO } from '../../entidades/marcaDTO';
 import { clienteDTO } from '../../entidades/clienteDTO';
 import { viajeDTO } from '../../entidades/viajeDTO';
 import { factpDTO} from '../../entidades/factpDTO';
@@ -197,6 +197,10 @@ export class ServiciosService {
 public getMediosPago() {
     return this.http.get<MPagoDTO[]>(this.apiUrl + `tablas/mediospago`);
  } 
+public getUnidades() {
+    return this.http.get<UnidadDTO[]>(this.apiUrl + `tablas/unidades`);
+ } 
+
  // ** CLIENTES ** //
 
    public getClientes() {
@@ -243,6 +247,10 @@ public getMediosPago() {
 
    public getViajesxChofer(nrochof : number) {
     return this.http.get<viajeDTO[]>(this.apiUrl + `viaje/viajesxchofer?idchof=`+nrochof);
+  }
+  
+  public getGastosXViaje(nroviaje : number) {
+    return this.http.get<gastoDTO[]>(this.apiUrl + `gasto/gastosxviaje?idviaje=`+nroviaje);
   }
 
    public getCantViajesxChofer(nrochof : number) {
@@ -396,4 +404,33 @@ public getMediosPago() {
     return this.http.delete(
       environment.apiUrl + `factp/detalle/borrar=idfac=`+nrofac+`&&nroitem=`+nroitem);
   }
+
+  //  GASTOS (de viajes, choferes y generales)
+
+  public getGastos() {
+    return this.http.get<gastoDTO[]>(this.apiUrl + `gasto/gastos`);
+  }
+
+  public getCantGastos() {
+    return this.http.get<number>(this.apiUrl + `gasto/max`);
+  }
+
+  public leerGasto(nrogasto: number) {
+     return this.http.get<gastoDTO>( this.apiUrl + `gasto/gasto?id=` + nrogasto);
+  }
+
+
+  public grabarGasto(gasto : gastoDTO) {
+    return this.http.post<gastoDTO>( this.apiUrl + `gasto/gasto/nuevo`, gasto);
+  }
+
+
+  public updateGasto(nrogasto : number, gasto : gastoDTO) {
+    return this.http.put<gastoDTO>( environment.apiUrl + `gasto/gasto/actualizar?id=` + nrogasto, gasto);
+  }
+
+    public elimGasto(nrogasto : number) {
+    return this.http.delete( environment.apiUrl + `gasto/gasto?id=` + nrogasto);
+  }
+   
 }

@@ -7,6 +7,7 @@ h4 {
   --mdc-filled-text-field-container-color: lightblue;
 }
 .custom-dialog-container {
+
   background-color:lightgray;  /*quita el fondo blanco */
   border-radius: 0px;
 }
@@ -15,7 +16,7 @@ h4 {
     display: flex;
     justify-content:space-around;
     margin-top   : 10px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     width: 100%
 }
 

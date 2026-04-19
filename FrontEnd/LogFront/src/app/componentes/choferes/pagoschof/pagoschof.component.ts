@@ -237,7 +237,7 @@ prepararAlta(){
   }
   
   prepararModificacion(){
-  console.log(JSON.stringify(this.pagochof));
+
    this.formPag.controls['nropag'].setValue(this.pagochof.idPago);
    this.formPag.controls['fecha'].setValue(this.pagochof.fecha);
    this.formPag.controls['idChofer'].setValue(this.pagochof.idChofer);
@@ -245,20 +245,20 @@ prepararAlta(){
    this.formPag.controls['idmpago1'].setValue(this.pagochof.idmpago1);
    this.formPag.controls['nrompago1'].setValue(this.pagochof.nrompago1);
    this.formPag.controls['banco1'].setValue(this.pagochof.banco1);  
-   this.formPag.controls['importe1'].setValue(this.pagochof.importe1);  
+   this.formPag.controls['importe1'].setValue(this.formatearNumero(this.pagochof.importe1));  
 
    this.formPag.controls['idmpago2'].setValue(this.pagochof.idmpago2);
    this.formPag.controls['nrompago2'].setValue(this.pagochof.nrompago2);
    this.formPag.controls['banco2'].setValue(this.pagochof.banco2);  
 
    
-   this.formPag.controls['importe2'].setValue(this.pagochof.importe2);  
+   this.formPag.controls['importe2'].setValue(this.formatearNumero(this.pagochof.importe2));  
 
    this.formPag.controls['idmpago3'].setValue(this.pagochof.idmpago3);
    this.formPag.controls['nrompago3'].setValue(this.pagochof.nrompago3);
    this.formPag.controls['banco3'].setValue(this.pagochof.banco3);  
    
-   this.formPag.controls['importe3'].setValue(this.pagochof.importe3);  
+   this.formPag.controls['importe3'].setValue(this.formatearNumero(this.pagochof.importe3));  
 
    this.formPag.controls['imptotal'].setValue(this.pagochof.imptotal);  
    this.formPag.controls['observ'].setValue(this.pagochof.observ);

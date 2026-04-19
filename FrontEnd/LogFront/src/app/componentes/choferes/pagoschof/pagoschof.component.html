@@ -1,12 +1,12 @@
 @if (isloading){  
   <div style="padding:20px">Cargando...</div>
 } @else {
-<div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+<div class="custom-dialog-container px-3" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     <h4 mat-dialog-title >{{operacion}}</h4>  
       <form [formGroup]="formPag" >        
          <!-- Fila 1 -->
          <div class="row mt-1" >
-            <div class="col-3">
+            <div class="col-md-3">
               <mat-form-field class="w-100" appearance="fill">
                <mat-label>Nro.Pago</mat-label>
                <input
@@ -16,7 +16,7 @@
                  style="text-align: center"/>
                </mat-form-field>
             </div>
-            <div class="col-3">
+            <div class="col-md-3">
               <mat-form-field class="w-100" appearance="fill"> 
               <input #fechaviaje matInput #inputFocus [matDatepicker]="picker"  
                   placeholder = "Elija una fecha" 
@@ -27,15 +27,15 @@
               <mat-hint>{{ formPag.controls['fecha'].value | date : "dd/MM/yyyy HH:mm"}}</mat-hint> 
               </mat-form-field >
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <mat-form-field class="w-100" appearance="fill">
-              <mat-label>Nro de Factura</mat-label>
+              <mat-label>Facturas de {{data.nombre}}</mat-label>
               <mat-select
                 formControlName="idFactura"
                 (selectionChange)="onSelectionFactura($event)">
                @for (factu of this.cfacsTpte; track factu.idFactura) {
                 <mat-option [value]="factu.idFactura">
-                  {{ factu.idFactura+" - "+factu.nrofactura+" - "+(factu.totalfac | currency:'$':'symbol':'1.2-2') }}
+                  {{ factu.idFactura+" - "+factu.nrofactura+"    -    "+(factu.totalfac | currency:'$':'symbol':'1.2-2') }}
                 </mat-option>
                }
                </mat-select>

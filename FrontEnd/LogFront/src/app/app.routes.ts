@@ -12,6 +12,7 @@ import { ViajesComponent } from './componentes/viajes/viajes.component';
 import { FacsTPComponent } from './componentes/facs-tp/facs-tp.component';
 import { FacsClientesComponent } from './componentes/facs-clientes/facs-clientes.component';
 import { CtacteComponent } from './componentes/choferes/ctactechof/ctactechof.component';
+import { GastosComponent } from './componentes/gastos/gastos.component';
 
 export const routes: Routes = [
   // Rutas para invitados (no autenticados)
@@ -38,6 +39,7 @@ export const routes: Routes = [
       { path: 'viajes', component: ViajesComponent },     
       { path: 'factpte', component: FacsTPComponent },    
       { path: 'faccli', component : FacsClientesComponent},   
+      { path: 'gastos', component: GastosComponent }, 
       { path: '', pathMatch: 'full', redirectTo: 'ppal' },
     ],
   },

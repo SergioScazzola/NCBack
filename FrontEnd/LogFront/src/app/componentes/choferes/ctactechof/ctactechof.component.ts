@@ -19,6 +19,7 @@ import { gastoDTO } from '../../../../entidades/gastoDTO';
 import { intSalChof, saldoChofDTO } from '../../../../entidades/saldoChofDTO';
 import { viajeDTO } from '../../../../entidades/viajeDTO';
 import { factpDTO } from '../../../../entidades/factpDTO';
+import { FacTpComponent } from '../../facs-tp/fac-tp/fac-tp.component';
 import { PagoschofComponent } from '../pagoschof/pagoschof.component';
 import { SaldochofComponent } from '../saldochof/saldochof.component';
 
@@ -63,7 +64,7 @@ private filter        : string;
                    private currencyPipe: CurrencyPipe,
                    private datepipe    : DatePipe,
                    private notiService : NotiserviceService,
-                   private cdr          : ChangeDetectorRef,     
+                   private cdr         : ChangeDetectorRef,     
                    private sinoServicio: SinoService,
                    private rutaActiva  : ActivatedRoute,
                    public  dialog      : MatDialog) { }     
@@ -137,7 +138,7 @@ if (this.cgastos!=undefined){
       idMov      : this.cgastos[index].idGasto,
       fecha      : this.cgastos[index].fecha,   
       tipomov    : "GASTO",
-      descmov    : this.cgastos[index].descGasto,
+      descmov    : this.cgastos[index].descgasto,
       importe    :  this.cgastos[index].impgasto*-1, // gasto resta
       saldo      :  0
    };  
@@ -246,13 +247,13 @@ agregarPago(){
                              }
                             })
 }
-modificarPago(nromov:number ){
+modificarPago(idmov:number ){
   const data : intPago = {
-    idPago     : this.cmovscc[nromov-1].idMov,
+    idPago     : idmov,
     idChofer   : this.chof.idChofer,
     nombre     : this.nomchofer,
     accion     : "M"
-  }  
+  };
   const dialogConfig = new MatDialogConfig();   
   dialogConfig.autoFocus = false;
   dialogConfig.data         = data;
@@ -268,17 +269,46 @@ modificarPago(nromov:number ){
                          }
                         })
 }
+
+VerFactura(idmov : number){      
+    const data = {
+      idFactura     : idmov,        
+      nrofactura    : "",
+      accion        : "V"
+    }       
+    const dialogConfig = new MatDialogConfig();
+   
+    dialogConfig.width =  '900';         // ancho máximo de la ventana
+    dialogConfig.maxWidth = '95vw';      
+    dialogConfig.height   = 'auto';        // altura se ajusta al contenido
+    dialogConfig.panelClass = 'custom-dialog-container';
+    dialogConfig.disableClose =  false; // opcional según necesidad
+  
+    dialogConfig.autoFocus = false;
+    dialogConfig.data = data;
+    
+    const dialogRef =  this.dialog.open(FacTpComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe( // 
+          (data:any) => { if (data.clicked === 'Ver'){                   
+             
+          }})
+ 
+   }
+
 actualizarxUltPago(){
   // Vuelve  a  leer los pagos al chofer para reflejar el último en la cta.cte
   var subs1 : Subscription;
+  this.cargandoCtaCte = true;  
   this.cmovscc = [];
   this.cpagos = [];
   subs1 = this.servicio.getPagosxChofer(this.numchofer) // traer los pagos al chofer
       .pipe(
         finalize(() => {                                    
-          this.cargandoCtaCte = false;
+         
           this.prepararMovimientos();      
-          this.generarColSaldo();                                                         
+          this.generarColSaldo(); 
+          this.cargandoCtaCte = false;   
+          this.cdr.detectChanges();                                                          
           subs1.unsubscribe;
       }))           
       .subscribe((data:any):void => {

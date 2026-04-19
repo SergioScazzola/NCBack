@@ -53,6 +53,7 @@ table {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 .footer-container {
+  
   padding-top: 5px;
   padding-bottom: 5px;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
@@ -164,4 +165,16 @@ table {
 
 .action-btn i {
   font-size: 14px;
+}
+
+.total {
+  text-align: right;
+  font-size: 16px;
+  font-weight: 600;
+ 
+}
+
+.total span {
+  color: #2c3e50;
+  margin-left: 10px;
 }

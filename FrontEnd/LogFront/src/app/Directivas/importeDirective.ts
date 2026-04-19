@@ -9,7 +9,7 @@ export class ImporteDirective {
   constructor(private el: ElementRef, private control: NgControl) {}
 
   // 👉 Cuando entra al input (quita formato)
- @HostListener('focus')
+/* @HostListener('focus')
 onFocus() {
   let valor = this.control.control?.value;
 
@@ -28,6 +28,30 @@ onFocus() {
 
   this.el.nativeElement.value = valor;
   this.control.control?.setValue(valor, { emitEvent: false });
+  requestAnimationFrame(() => {
+      this.el.nativeElement.select();
+  });
+}*/
+@HostListener('focus')
+onFocus() {
+  let valor = this.control.control?.value;
+
+  if (valor == null) return;
+
+  if (typeof valor === 'number') {
+    this.el.nativeElement.value = valor.toString();
+  } else {
+    valor = valor.toString()
+      .replace(/\./g, '')
+      .replace(/,/g, '.');
+
+    this.el.nativeElement.value = valor;
+  }
+
+  // 👇 ahora sí funciona consistente
+  setTimeout(() => {
+    this.el.nativeElement.select();
+  });
 }
 
 
