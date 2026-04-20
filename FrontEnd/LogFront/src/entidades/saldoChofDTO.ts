@@ -1,6 +1,6 @@
 export interface saldoChofDTO {
      idChofer   : number;
-     nrosaldo   : number;
+     nroSaldo   : number;
      fecha      : Date|null;
      saldo      : number;
 }

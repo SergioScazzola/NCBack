@@ -100,14 +100,16 @@ ngOnInit()
         this.maxpago    = res2.maxpagos;
 
                              
-        this.prepararMovimientos();                                
+           
+        //console.log(JSON.stringify(this.chof));                       
         this.saldoinicial = this.chof.saldoini;
-        if (this.saldoinicial==0){
+        if (this.chof.saldoini==0){
             this.mensSaldo = "Saldo inicial : "                              
         } else {
             this.mensSaldo = "Saldo inicial al "+
             this.datepipe.transform(this.csaldos[0].fecha,"dd/MM/yyyy")+" : "                              
         };
+        this.prepararMovimientos();  
         this.generarColSaldo();              
         this.cargandoCtaCte = false;    
         this.cdr.detectChanges();  
@@ -340,6 +342,7 @@ modifSaldoInicial(){
     accion      : acc,
     fecprmv     : fec     // fecha del movimiento mas antiguo
   }    
+  console.log(JSON.stringify(datas));
   const dialogConfig = new MatDialogConfig();   
     dialogConfig.autoFocus = false;
     dialogConfig.data = datas;
@@ -351,6 +354,7 @@ modifSaldoInicial(){
   const dialogRef =  this.dialog.open(SaldochofComponent, dialogConfig);
         dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Alta' || data.clicked === 'Modi'){ // agrego o modifico saldo inicial
+                        this.saldoinicial = data.nsaldo.saldo; //refrescar saldo
                         this.regenerarSaldo();   // volver a leer los saldos                                                       // leer ultimo cobro y agregar a cmovims y recalcular totales                                            
                          }
                         })
@@ -381,7 +385,7 @@ actualizarSaldoInicial(){
   // Actualiza el saldo  inicial en la table "choferes"
    var salc : saldoChofDTO = {
       idChofer  : this.numchofer,
-      nrosaldo  : 0,
+      nroSaldo  : 0,
       fecha     : new Date(),
       saldo     : this.saldoinicial
     }  

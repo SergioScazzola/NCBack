@@ -206,10 +206,11 @@ onSelectionMarca($event : any){
    this.formCamion.controls["marca"].setValue(this.cmarcas[indmarca].marca); 
    this.marcaSel = this.cmarcas[indmarca].marca;
 
-   this.formCamion.controls["descrip"].setValue( this.formCamion.controls["marca"].value+" - Mod "+
-                                                 this.formCamion.controls["modelo"].value+" - Año "+
+   this.formCamion.controls["descrip"].setValue( this.formCamion.controls["marca"].value+" "+
+                                                 this.formCamion.controls["modelo"].value+" - "+
                                                  this.formCamion.controls["anio"].value+" - Pat "+
-                                                 this.formCamion.controls["domChasis"].value )
+                                                 this.formCamion.controls["domChasis"].value +"-"+
+                                                 this.formCamion.controls["domAcoplado"].value )
   
 }
 
@@ -217,30 +218,32 @@ onModeloChange(event : Event ){
  const target = event.target as HTMLInputElement;
  var modelo = target.value;
  this.formCamion.controls["modelo"].setValue(modelo.toUpperCase());
- this.formCamion.controls["descrip"].setValue(this.marcaSel+" - Mod "+
-                                              this.formCamion.controls["modelo"].value+" - Año "+
+ this.formCamion.controls["descrip"].setValue(this.marcaSel+" "+
+                                              this.formCamion.controls["modelo"].value+" - "+
                                               this.formCamion.controls["anio"].value+" - Pat "+
-                                              this.formCamion.controls["domChasis"].value)
-
+                                              this.formCamion.controls["domChasis"].value +"-"+
+                                              this.formCamion.controls["domAcoplado"].value)
 }
 
 onAnioChange(event : Event ){
   const target = event.target as HTMLInputElement;
   var anioo = target.value;
-  this.formCamion.controls["descrip"].setValue(this.marcaSel+" - Mod "+
-                                               this.formCamion.controls["modelo"].value+" - Año "+
+  this.formCamion.controls["descrip"].setValue(this.marcaSel+" "+
+                                               this.formCamion.controls["modelo"].value+" - "+
                                                anioo+" - Pat "+
-                                               this.formCamion.controls["domChasis"].value)
+                                               this.formCamion.controls["domChasis"].value+"-"+
+                                               this.formCamion.controls["domAcoplado"].value )
   
 }
 onBlurDomChasis(event : any){
   var texto = this.formCamion.controls["domChasis"].value;
   texto = texto.toUpperCase();
   this.formCamion.controls["domChasis"].setValue(texto);
-  this.formCamion.controls["descrip"].setValue(this.marcaSel+" - Mod "+
-                                               this.formCamion.controls["modelo"].value+" - Año"+
+  this.formCamion.controls["descrip"].setValue(this.marcaSel+" "+
+                                               this.formCamion.controls["modelo"].value+" - "+
                                                this.formCamion.controls["anio"].value+" - Pat "+                                              
-                                               this.formCamion.controls["domChasis"].value)
+                                               this.formCamion.controls["domChasis"].value +"-"+
+                                               this.formCamion.controls["domAcoplado"].value )
 }       
 
 onBlurDomAcoplado(event : any){
@@ -248,10 +251,11 @@ onBlurDomAcoplado(event : any){
  var texto = this.formCamion.controls["domAcoplado"].value;
   texto = texto.toUpperCase();
   this.formCamion.controls["domAcoplado"].setValue(texto);
-  this.formCamion.controls["descrip"].setValue(this.marcaSel+" - Mod "+
-                                               this.formCamion.controls["modelo"].value+" - Año "+
-                                              this.formCamion.controls["anio"].value+" - Pat "+
-                                               this.formCamion.controls["domChasis"].value)
+  this.formCamion.controls["descrip"].setValue(this.marcaSel+" "+
+                                               this.formCamion.controls["modelo"].value+" - "+
+                                               this.formCamion.controls["anio"].value+" - Pat "+
+                                               this.formCamion.controls["domChasis"].value +"-"+
+                                               this.formCamion.controls["domAcoplado"].value)
 } 
 Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})

@@ -1,9 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ServiciosService } from '../../../servicios/service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { intSalChof, saldoChofDTO } from '../../../../entidades/saldoChofDTO';
 import { NotiserviceService } from '../../../servicios/notiservice.service';
+import { SinoService } from '../../../servicios/sino.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input';
@@ -15,6 +16,7 @@ import { DateFnsAdapter } from '@angular/material-date-fns-adapter';
 import { es } from 'date-fns/locale';
 
 import { finalize, Subscription } from 'rxjs';
+import { ImporteDirective } from "../../../Directivas/importeDirective";
 
 export const DATE_FORMATS : MatDateFormats = {
   
@@ -30,16 +32,16 @@ export const DATE_FORMATS : MatDateFormats = {
 
 @Component({
   selector: 'app-saldochof',
-  imports: [      MatFormField,
-                  MatLabel,         
-                  MatInputModule,
-                  ReactiveFormsModule,      
-                  MatDatepickerModule,
-                  MatNativeDateModule,    
-                  MatIconModule,            
-                  CommonModule,
-                  DragDropModule,
-                  FormsModule,],
+  imports: [MatFormField,
+    MatLabel,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatIconModule,
+    CommonModule,
+    DragDropModule,
+    FormsModule, ImporteDirective],
   providers : [
     CurrencyPipe,
     DatePipe,
@@ -55,9 +57,10 @@ export class SaldochofComponent {
  formSal!        : FormGroup;
  hoy             : Date=new Date();
  operacion       : string;
+ isloading       : boolean = true;
  itsaldo         : saldoChofDTO  = {
      idChofer   : 0,
-     nrosaldo   : 1,
+     nroSaldo   : 1,
      fecha      : null,
      saldo      : 0
 
@@ -67,7 +70,10 @@ export class SaldochofComponent {
     constructor(public  fb            : FormBuilder,
                   private servicio    : ServiciosService,    
                   private currencyPipe: CurrencyPipe,        
-                  private     datePipe: DatePipe,    
+                  private     datePipe: DatePipe,  
+                  private cdr         : ChangeDetectorRef,
+                  private sinoServicio: SinoService,
+                  private zone        : NgZone,  
                   public dialogRef    : MatDialogRef<SaldochofComponent>,
                   @Inject(MAT_DIALOG_DATA) public data: intSalChof,  
                   private notiService : NotiserviceService )
@@ -75,22 +81,33 @@ export class SaldochofComponent {
 
 ngOnInit(){
   this.formSal = this.fb.group({        
-    nrochof    : [''], 
-    nrosaldo   : [''], 
-    fecha      : [''],           
-    saldo      : ['',[Validators.required]],                
+    nrochof    : [0], 
+    nrosaldo   : [0], 
+    fecha      : [new Date()],           
+    saldo      : [0,[Validators.required]],                
   });
- 
+  /* Recibo de ctactechof : 
+    nrochof     : this.numchofer,    
+    nrosaldo    : nros,
+    nomchof     : this.nomchofer,
+    accion      : acc,
+    fecprmv     : fec     */
   if (this.data.accion=="A"){
     this.formSal.controls['fecha'].setValue(this.hoy);
     this.mostrarHora();
     this.formSal.controls['nrochof'].setValue(this.data.nrochof);
     this.formSal.controls['nrosaldo'].setValue(this.data.nrosaldo);
+    if (this.data.fecprmv!=null){
+      var fechh = this.data.fecprmv as Date;
+      this.formSal.controls['fecha'].setValue(fechh.getDate() - 1);
+    } 
     if (this.data.nrosaldo==1){
         this.operacion = "Agregar Saldo inicial al Chofer : "+this.data.nomchof  
     } else {
       this.operacion = "Agregar Saldo al Chofer : "+this.data.nomchof  
     }
+    this.isloading = false;
+    this.cdr.detectChanges();
   } else {
     if (this.data.accion=="I"){
      this.operacion = "Modificar Saldo inicial al Chofer : "+this.data.nomchof
@@ -98,11 +115,14 @@ ngOnInit(){
      console.log("Anttes de leerr Saldo : "+this.data.nrosaldo);
      subs = this.servicio.leerSaldoChofer(this.data.nrochof,this.data.nrosaldo)
           .pipe(finalize(() => {
+                      console.log(JSON.stringify(this.itsaldo));
                       this.formSal.controls['nrochof'].setValue(this.itsaldo.idChofer);
-                      this.formSal.controls['nrosaldo'].setValue(this.itsaldo.nrosaldo);
+                      this.formSal.controls['nrosaldo'].setValue(this.itsaldo.nroSaldo);
                       this.formSal.controls['fecha'].setValue(this.itsaldo.fecha);
                       this.formSal.controls['saldo'].setValue(this.itsaldo.saldo)             
-                      subs.unsubscribe();                    
+                      subs.unsubscribe();   
+                      this.isloading = false;
+                      this.cdr.detectChanges();                 
                   }))
           .subscribe((data : any): void => {
                        this.itsaldo = data});      
@@ -110,7 +130,7 @@ ngOnInit(){
        this.operacion = "Agregar saldo inicial al Chofer : "+this.data.nomchof;
 
        this.itsaldo.idChofer = this.data.nrochof;
-       this.itsaldo.nrosaldo = this.data.nrosaldo;
+       this.itsaldo.nroSaldo = this.data.nrosaldo;
        this.itsaldo.fecha    = this.data.fecprmv;
        this.itsaldo.saldo    = 0;
  
@@ -126,30 +146,7 @@ ngOnInit(){
 
 }
 
- mostrarHora() {
-    // mantiene actualizado el control "fecha" con Horas minutos y segundos
-    setInterval(() => {
-      this.hoy = new Date();
-      
-      const valorControl = this.formSal.controls['fecha'].value;
-      const fechaform = new Date(valorControl); // ✅ convierte string/objeto a Date real
-  
-      fechaform.setHours(this.hoy.getHours(), this.hoy.getMinutes(), this.hoy.getSeconds());
-  
-      this.formSal.controls['fecha'].setValue(fechaform); // ✅ se actualiza con una fecha válida
-      console.log("Fecha : "+this.formSal.controls['fecha'].value);
-    }, 1000);
-  }
-  onFechaChange(event: any) {
-    const nuevaFecha: Date = event.value; // Fecha seleccionada en el datepicker
-    const ahora = new Date(); // Hora actual
-  
-    // Copiar la hora actual a la fecha seleccionada
-    nuevaFecha.setHours(ahora.getHours(), ahora.getMinutes(), ahora.getSeconds(), 0);
-  
-    // Establecer la fecha con hora en el form
-    this.formSal.controls['fecha'].setValue(nuevaFecha);
-  }
+ 
    formatearComoMoneda() {  // formatea como moneda al salir de "importe"
     const valor = parseFloat(this.formSal.controls['saldo'].value?.toString().replace(',', '.'));
     if (!isNaN(valor)) {
@@ -169,40 +166,31 @@ ngOnInit(){
   }
 
   GrabarSaldo(){
-     var fecc = this.formSal.controls['fecha'].value as Date;
-    if (this.verifFechaSaldo(fecc)){
-    var esnum : boolean;
-     var valorsaldo = this.formSal.controls['saldo'].value;
-     if (typeof valorsaldo==="string"){
-        esnum = false;
-    } else {
-      esnum = true;
-    }
-    var saldo : saldoChofDTO = {
+      var saldoobj : saldoChofDTO = {
         idChofer  : this.formSal.controls['nrochof'].value,
-        nrosaldo  : this.formSal.controls['nrosaldo'].value,
+        nroSaldo  : this.formSal.controls['nrosaldo'].value,
         fecha     : this.formSal.controls['fecha'].value,
-        saldo     : esnum?this.formSal.controls['saldo'].value:
-                Number(this.formSal.controls['saldo'].value.replaceAll('$','').replaceAll(',', '')),
-    }
-    console.log("saldo Nro : "+saldo.nrosaldo+" fecha : "+saldo.fecha+" saldo : "+saldo.saldo);
-    console.log("antes de agregar saldo : "+this.data.nrosaldo);
-    var subs : Subscription;
-    var resu : number;
+        saldo     : this.formSal.controls['saldo'].value,      
+      }     
+      var subs : Subscription;
+      var resu : number;
    
-    subs = this.servicio.AgregarSaldoChofer(saldo)
-      .pipe(finalize(() => {        
-          this.notiService.showNotification("El Saldo nro.: "+this.data.nrosaldo+" del Chofer "+
+      subs = this.servicio.AgregarSaldoChofer(saldoobj)
+        .pipe(finalize(() => {        
+         this.notiService.showNotification("El Saldo nro.: "+saldoobj.nroSaldo+" del Chofer "+
                                              this.data.nomchof+"("+resu+
-                                            ") se ha agregado con éxito",'Aceptar','mensaje',500);   
-          this.dialogRef.close({ clicked : "Alta"});                                       
+                                            ") se ha AGREGADOOOOO con éxito",'Aceptar','mensaje',500);   
+          this.dialogRef.close({ clicked : "Alta",
+                                  nsaldo : { ...saldoobj } // devuelvo el saldo agregado el padre
+                                    
+          });                                       
           subs.unsubscribe();
-      }))
-      .subscribe((datas:any):void =>{
+         }))
+        .subscribe((datas:any):void =>{
           resu = datas
        }) 
-      }
   }
+  
 
    ModificarSaldo(){
     var fecc = this.formSal.controls['fecha'].value as Date;
@@ -216,7 +204,7 @@ ngOnInit(){
     }
     var saldo : saldoChofDTO = {
         idChofer  : this.formSal.controls['nrochof'].value,
-        nrosaldo  : this.formSal.controls['nrosaldo'].value,
+        nroSaldo  : this.formSal.controls['nrosaldo'].value,
         fecha     : this.formSal.controls['fecha'].value,
         saldo     : esnum?this.formSal.controls['saldo'].value:
                 Number(this.formSal.controls['saldo'].value.replaceAll('$','').replaceAll(',', '')),
@@ -231,7 +219,9 @@ ngOnInit(){
                                              this.data.nomchof+"("+resu+
                                             ") se ha Modificado con éxito",'Aceptar','mensaje',10000)
          
-          this.dialogRef.close({ clicked : "Modi"});                                       
+          this.dialogRef.close({ clicked : "Modi",
+                                 nsaldo : { ...saldo }  // devuelvo el saldo modificado al padre
+          });                                       
           subs.unsubscribe;
       }))
       .subscribe((datas:any):void =>{
@@ -273,6 +263,36 @@ ngOnInit(){
 
   return retorno;
 }
+mostrarHora() {
+   this.zone.runOutsideAngular(() => {
+    setInterval(() => {
+      const hoy = new Date();
+      const valorControl = this.formSal.controls['fecha'].value;
+      
+      if (valorControl) {
+        const fechaform = new Date(valorControl);
+        fechaform.setHours(hoy.getHours(), hoy.getMinutes(), hoy.getSeconds());
+
+        // Volvemos a la zona de Angular solo para actualizar el valor
+        this.zone.run(() => {
+          this.formSal.controls['fecha'].setValue(fechaform, { emitEvent: false });
+          this.cdr.detectChanges(); // Forzamos la actualización sin romper el ciclo
+        });
+      }
+    }, 1000);
+  }) 
+  }
+
+   onFechaChange(event: any) {
+    const nuevaFecha: Date = event.value; // Fecha seleccionada en el datepicker
+    const ahora = new Date(); // Hora actual
+  
+    // Copiar la hora actual a la fecha seleccionada
+    nuevaFecha.setHours(ahora.getHours(), ahora.getMinutes(), ahora.getSeconds(), 0);
+  
+    // Establecer la fecha con hora en el form
+    this.formSal.controls['fecha'].setValue(nuevaFecha);
+  }
 
 }
 

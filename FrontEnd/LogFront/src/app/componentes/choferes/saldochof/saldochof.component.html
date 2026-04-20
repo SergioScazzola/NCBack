@@ -1,3 +1,4 @@
+@if (!isloading){
 <div class="container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
     <h4 mat-dialog-title >{{operacion}}</h4>  
       <form [formGroup]="formSal" >        
@@ -30,10 +31,7 @@
          <div class="col-auto">
           <mat-form-field style="width:200px;"  appearance="fill">
             <mat-label>Saldo</mat-label>                
-            <input matInput  selecText formControlName="saldo" style="text-align: right;"	   
-               [value]="formSal.controls['saldo'].value"
-               (blur)="formatearComoMoneda()"
-               (focus)="quitarFormatoMoneda()"  >        
+            <input matInput  appImporte formControlName="saldo" style="text-align: right;">        
            </mat-form-field>        
         </div>  
         </div>        
@@ -54,4 +52,4 @@
       </div>
   </form>
 </div>
-
+}
