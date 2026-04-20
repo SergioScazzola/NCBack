@@ -10,6 +10,7 @@ public class Chofer {
     private String cuit;
     private String nrodoc;
     private String telefono;
+    private int    idCamion;
     private String notas;
     private double saldoini;
    
@@ -104,6 +105,14 @@ public class Chofer {
 
     public void setSaldoini(double saldoini) {
         this.saldoini = saldoini;
+    }
+
+    public int getIdCamion() {
+        return idCamion;
+    }
+
+    public void setIdCamion(int idCamion) {
+        this.idCamion = idCamion;
     }
                
 }

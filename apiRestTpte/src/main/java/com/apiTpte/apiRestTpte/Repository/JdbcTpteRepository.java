@@ -71,10 +71,10 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("INSERT choferes(idChofer,idEmpresa,empresa,nombre,domicilio,localidad,cuit,"+
-                                    "nrodoc,telefono,notas,saldoini) VALUES(?,?,?,?,?,?,?,?,?,?,?) ",
+                                    "nrodoc,telefono,idCamion,notas,saldoini) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ",
                     new Object[] { chofer.getIdChofer(),chofer.getIdEmpresa(),chofer.getEmpresa(),chofer.getNombre(),
-                                   chofer.getDomicilio(),chofer.getLocalidad(),chofer.getCuit(),
-                                   chofer.getNrodoc(),chofer.getTelefono(),chofer.getNotas(),chofer.getSaldoini()
+                                   chofer.getDomicilio(),chofer.getLocalidad(),chofer.getCuit(),   chofer.getNrodoc(),
+                                   chofer.getTelefono(),chofer.getIdCamion(),chofer.getNotas(),chofer.getSaldoini()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -86,10 +86,10 @@ public class JdbcTpteRepository implements TpteRepository {
       int resu = 0;
       try {                   
           resu = jdbcTemplate.update("UPDATE choferes SET idEmpresa=?,empresa=?,nombre=?,domicilio=?,localidad=?,cuit=?,"+
-                                    "nrodoc=?,telefono=?,notas=?,saldoini=?"+" WHERE idChofer=?",
+                                    "nrodoc=?,telefono=?,idCamion=?,notas=?,saldoini=?"+" WHERE idChofer=?",
                    new Object[] {  chofer.getIdEmpresa(),chofer.getEmpresa(),chofer.getNombre(),
                                    chofer.getDomicilio(),chofer.getLocalidad(),chofer.getCuit(),
-                                   chofer.getNrodoc(),chofer.getTelefono(),chofer.getNotas(),
+                                   chofer.getNrodoc(),chofer.getTelefono(),chofer.getIdCamion(),chofer.getNotas(),
                                    chofer.getSaldoini(),chofer.getIdChofer()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
