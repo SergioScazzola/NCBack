@@ -117,6 +117,7 @@ public class JdbcTpteRepository implements TpteRepository {
     @Override
     public int saveSaldoChofer(SaldoChof saldoc){
     // Graba un nuevo saldo para el Chofer
+        System.out.println("OBJETO recibido en saveSaldoChofer : "+saldoc.getIdChofer()+" - "+saldoc.getNroSaldo());
         return jdbcTemplate.update("INSERT INTO saldoschof(idChofer,nrosaldo,fecha,saldo) "+
                                    "VALUES(?,?,?,?)",
             new Object[] { saldoc.getIdChofer(),saldoc.getNroSaldo(),saldoc.getFecha(),saldoc.getSaldo()});    

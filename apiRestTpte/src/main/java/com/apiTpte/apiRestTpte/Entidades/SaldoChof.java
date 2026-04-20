@@ -17,7 +17,12 @@ public  SaldoChof() {}
         this.idChofer = idChofer;
     }
     public int getNroSaldo() {
-        return nrosaldo;
+        if (nrosaldo==0){
+            return nrosaldo+1;
+        } else {
+            return nrosaldo;
+        }
+        
     }
     public void setNroSaldo(int nroSaldo) {
         this.nrosaldo = nroSaldo;
