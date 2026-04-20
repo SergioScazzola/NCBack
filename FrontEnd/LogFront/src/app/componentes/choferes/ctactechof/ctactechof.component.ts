@@ -323,7 +323,7 @@ modifSaldoInicial(){
  if (this.cmovscc[0]!=undefined){
   fec = this.cmovscc[0].fecha;   
  } else {
-   fec = new Date();
+   fec = null;
  }
  
  if (this.csaldos!=undefined && this.csaldos.length>0){ // modifica saldo inicial
@@ -340,11 +340,14 @@ modifSaldoInicial(){
     accion      : acc,
     fecprmv     : fec     // fecha del movimiento mas antiguo
   }    
-  console.log("dessppues  de asignar data : "+datas.nrosaldo);   
   const dialogConfig = new MatDialogConfig();   
-  dialogConfig.autoFocus = false;
-  dialogConfig.data = datas;
-  dialogConfig.panelClass = "";
+    dialogConfig.autoFocus = false;
+    dialogConfig.data = datas;
+    dialogConfig.width =  '900';         // ancho máximo de la ventana
+    dialogConfig.maxWidth = '95vw';      
+    dialogConfig.height   = 'auto';        // altura se ajusta al contenido
+    dialogConfig.panelClass = 'custom-dialog-container';
+    dialogConfig.disableClose =  false; // opcional según necesidad
   const dialogRef =  this.dialog.open(SaldochofComponent, dialogConfig);
         dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Alta' || data.clicked === 'Modi'){ // agrego o modifico saldo inicial

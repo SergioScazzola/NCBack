@@ -1,1 +1,181 @@
-<p>gasto works!</p>
+@if (isloading){  
+  <div style="padding:20px">Cargando...</div>
+} @else {
+<div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  <h4>{{ operacion }}</h4>
+
+  <form [formGroup]="formGasto" class="p-3">
+    <!-- Primera fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-2">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nro Gasto</mat-label>
+          <input
+            matInput
+            readonly
+            formControlName="idGasto"
+            style="text-align: center"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <mat-form-field class="w-100" appearance="fill"> 
+            <input #fechaviaje matInput #inputFocus [matDatepicker]="picker"  
+                  placeholder = "Elija una fecha" 
+                  (dateChange)="onFechaChange($event)"
+                  formControlName="fecha" > 
+            <mat-datepicker-toggle  matSuffix [for]="picker" > </mat-datepicker-toggle> 
+            <mat-datepicker #picker> </mat-datepicker>  
+            <mat-hint>{{ formGasto.controls['fecha'].value | date : "dd/MM/yyyy HH:mm"}}</mat-hint> 
+        </mat-form-field >
+        </div>
+        <div class="col-3">         
+            <mat-checkbox 
+                formControlName="gastogeneral"
+                (change)="cambioGastoGeneral()"
+                [checked]="formGasto.controls['gastogeneral'].value==1" >es un gasto general?
+            </mat-checkbox>
+        </div> 
+
+      </div> 
+         <!-- Segunda fila -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Chofer</mat-label>
+          <mat-select
+            formControlName="idChofer"            
+            (selectionChange)="onSelectionChofer($event)">
+            @for (chofer of cchoferes; track chofer.idChofer) {
+              <mat-option [value]="chofer.idChofer">
+                {{ chofer.idChofer+" - "+chofer.nombre }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        </div>  
+        <div class="col-md-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Viajes</mat-label>
+          <mat-select
+            formControlName="idViaje"
+            (selectionChange)="onSelectionViaje($event)">
+            @for (viaje of cviajes; track viaje.idViaje) {
+              <mat-option [value]="viaje.idViaje">
+                {{ viaje.idViaje+" - "+viaje.origen+"-"+viaje.destino }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+      <!-- Tercera fila -->
+      <div class="row g-3 mb-3">
+     
+        <div class="col-md-4">
+          <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Nro.Comprobante</mat-label>
+          <input matInput formControlName="compgasto" />
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Proveedor</mat-label>
+          <input matInput formControlName="provgasto" />
+        </mat-form-field>
+      </div>
+   
+    <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Tipo de Gasto</mat-label>
+          <mat-select
+            formControlName="ntipogasto"
+            (selectionChange)="onSelectionTipoGasto($event)"
+          >
+            @for (tg of ctiposgasto; track tg.idtipogasto) {
+              <mat-option [value]="tg.idtipogasto">
+                {{ tg.idtipogasto + " - " + tg.tipogasto }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+    </div>
+     </div> 
+    <!-- Cuarta fila -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Cantidad</mat-label>
+          <input matInput appImporte formControlName="cantgasto"           
+            (blur)="calcularImporte()"
+            style="text-align: right"/>
+        </mat-form-field>
+      </div>
+       <div class="col-md-4">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Unidad</mat-label>
+          <mat-select
+            formControlName="nunidgasto"
+            (selectionChange)="onSelectionUnidadGasto($event)" >
+            @for (unid of cunidades; track unid.idUnidad) {
+              <mat-option [value]="unid.idUnidad">
+              {{ unid.idUnidad + " - " + unid.unidad }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        </div>
+      <div class="col-md-4">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Importe Unitario</mat-label>
+            <input matInput appImporte formControlName="pregasto"                     
+                (blur)="calcularImporte()"
+                 style="text-align: right;">	
+            </mat-form-field>   
+      </div>      
+    </div>
+        
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Descripción Gasto</mat-label>
+          <input matInput formControlName="descgasto"                       
+            style="text-align: left"/>
+        </mat-form-field>
+      </div>
+     <div class="col-md-6">
+        <mat-form-field class="w-100" appearance="fill">
+          <mat-label>Importe del Gasto</mat-label>
+          <input matInput readonly="true" formControlName="impgasto"               
+            [value]="formGasto.get('impgasto')?.value | currency:'$':true"        
+            style="text-align: right"/>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Botonera -->
+    <div class="botonera">
+      <button
+        class="btn btn-outline-primary"
+        [disabled]="formGasto.invalid || data.accion != 'A'"
+        (click)="AgregarGasto()"
+      >
+        Agregar
+      </button>
+      <button
+        class="btn btn-outline-success"
+        [disabled]="formGasto.invalid || data.accion != 'M'"
+        (click)="ModificarGasto()"
+      >
+        Modificar
+      </button>
+      <button
+        class="btn btn-outline-secondary"
+        (click)="Anular()"
+      >
+        Cancelar
+      </button>
+    </div>    
+  </form>
+</div>
+}

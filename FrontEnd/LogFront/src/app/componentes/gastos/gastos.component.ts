@@ -6,17 +6,19 @@ import { SinoService } from '../../servicios/sino.service';
 import { NotiserviceService } from '../../servicios/notiservice.service';
 import { finalize, forkJoin, Subscription } from 'rxjs';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
-import { gastoDTO } from '../../../entidades/gastoDTO';
+import { gastoDTO, intGasto } from '../../../entidades/gastoDTO';
 import { GastoComponent } from './gasto/gasto.component';
 import { UnidadDTO } from '../../../entidades/marcaDTO';
+
 
 @Component({
   selector: 'app-gastos',
 imports: [CommonModule, MatTableModule],
+
   templateUrl: './gastos.component.html',
   styleUrl: './gastos.component.css',
 })
@@ -64,8 +66,7 @@ export class GastosComponent {
     forkJoin({
         gastos    : this.servicio.getGastos(),    
         cantgastos: this.servicio.getCantGastos(),
-
-                
+              
      }).subscribe(res2 => {
         this.cgastos = res2.gastos;
         this.cantgasto = res2.cantgastos;
@@ -86,14 +87,14 @@ export class GastosComponent {
    }
 
    agregarGasto(){
-     const data = {
-          nrogasto    : this.cantgasto+1,    
-          nombre     : "",      
+     const datas  = {
+          idgasto    : this.cantgasto+1,    
+          descrip    : "",      
           accion     : "A",
      }       
      const dialogConfig = new MatDialogConfig();   
     dialogConfig.autoFocus = false;
-    dialogConfig.data = data;
+    dialogConfig.data = datas;
     dialogConfig.width =  '900';         // ancho máximo de la ventana
     dialogConfig.maxWidth = '95vw';      
     dialogConfig.height   = 'auto';        // altura se ajusta al contenido
@@ -108,9 +109,10 @@ export class GastosComponent {
      this.formgasto = true;
      this.gastomod  = 0; 
    }
+
    modificarGasto(numgasto : number){      
     const data = {
-      nrogasto : numgasto,        
+      idgasto : numgasto,        
       nombre   : "",
       accion   : "M"
     }       

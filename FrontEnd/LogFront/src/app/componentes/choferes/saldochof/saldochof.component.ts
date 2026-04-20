@@ -185,7 +185,8 @@ ngOnInit(){
         saldo     : esnum?this.formSal.controls['saldo'].value:
                 Number(this.formSal.controls['saldo'].value.replaceAll('$','').replaceAll(',', '')),
     }
-   
+    console.log("saldo Nro : "+saldo.nrosaldo+" fecha : "+saldo.fecha+" saldo : "+saldo.saldo);
+    console.log("antes de agregar saldo : "+this.data.nrosaldo);
     var subs : Subscription;
     var resu : number;
    
@@ -195,7 +196,7 @@ ngOnInit(){
                                              this.data.nomchof+"("+resu+
                                             ") se ha agregado con éxito",'Aceptar','mensaje',500);   
           this.dialogRef.close({ clicked : "Alta"});                                       
-          subs.unsubscribe;
+          subs.unsubscribe();
       }))
       .subscribe((datas:any):void =>{
           resu = datas

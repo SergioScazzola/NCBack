@@ -17,6 +17,7 @@ import { DateFnsModule } from '@angular/material-date-fns-adapter';
 import {es} from 'date-fns/locale';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats, MatNativeDateModule} from '@angular/material/core';
 import { SelecTextDirective } from "../../../Directivas/selec-text.directive";
+import {  ImporteDirective } from '../../../Directivas/importeDirective';
 import { choferDTO } from '../../../../entidades/choferDTO';
 import { clienteDTO } from '../../../../entidades/clienteDTO';
 import { intViaje, viajeDTO } from '../../../../entidades/viajeDTO';
@@ -45,7 +46,9 @@ export const DATE_FORMATS : MatDateFormats = {
     ReactiveFormsModule,
     CommonModule,
     DragDropModule,
-    FormsModule, SelecTextDirective],
+    FormsModule, 
+    ImporteDirective,
+   ],
    providers : [ DecimalPipe,
     { provide : DateAdapter, useClass: DateFnsAdapter },
     { provide : MAT_DATE_FORMATS, useValue: DATE_FORMATS},
@@ -258,8 +261,11 @@ export class ViajeComponent {
     }
              
 onSelectionChofer($event : any){
-  // recibo un idChofer
+  // recibo un idChofer -> seleccionar el camion del chofer y setearlo en el form
  this.idChoferSel = $event.value;
+ var idcamion = this.cchoferes.find(p=>p.idChofer==this.idChoferSel)?.idCamion;
+ this.formViaje.controls["idCamion"].setValue(idcamion);
+ this.idCamionSel = idcamion!;
  
 }
 

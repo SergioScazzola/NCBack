@@ -8,6 +8,7 @@ export interface choferDTO {
     cuit      : string;
     nrodoc    : string;
     telefono  : string;
+    idCamion  : number;
     notas     : string;
     saldoini  : number;        
 }

@@ -18,3 +18,7 @@ h4 {
     margin-bottom: 5px;
     width: 100%
 }
+.custom-dialog-container {
+  background-color:lightgray;  /*quita el fondo blanco */
+  border-radius: 0px;
+}

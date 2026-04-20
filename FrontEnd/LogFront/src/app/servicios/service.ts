@@ -6,7 +6,7 @@ import { ConfigService } from './config.service';
 import { choferDTO } from '../../entidades/choferDTO';
 import { empTpteDTO } from '../../entidades/empTpteDTO';
 import { camionDTO } from '../../entidades/camionDTO';
-import { marcaDTO, MPagoDTO, UnidadDTO } from '../../entidades/marcaDTO';
+import { marcaDTO, MPagoDTO, TGastoDTO, UnidadDTO } from '../../entidades/marcaDTO';
 import { clienteDTO } from '../../entidades/clienteDTO';
 import { viajeDTO } from '../../entidades/viajeDTO';
 import { factpDTO} from '../../entidades/factpDTO';
@@ -200,6 +200,11 @@ public getMediosPago() {
 public getUnidades() {
     return this.http.get<UnidadDTO[]>(this.apiUrl + `tablas/unidades`);
  } 
+
+public getTiposGasto() {
+    return this.http.get<TGastoDTO[]>(this.apiUrl + `tablas/tiposgasto`);
+ } 
+
 
  // ** CLIENTES ** //
 

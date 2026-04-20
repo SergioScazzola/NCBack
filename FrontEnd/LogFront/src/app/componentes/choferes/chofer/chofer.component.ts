@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatSelectModule } from '@angular/material/select';
 import { ServiciosService } from '../../../servicios/service';
 import { NotiserviceService } from '../../../servicios/notiservice.service';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, forkJoin, Subscription } from 'rxjs';
 import { choferDTO, intChofer } from '../../../../entidades/choferDTO';
 import { CommonModule } from '@angular/common';
 import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input';
@@ -12,6 +12,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { empTpteDTO } from '../../../../entidades/empTpteDTO';
 import { CuitFormatDirective } from '../../../Directivas/cuit-format.directive';
 import { cuitValidator } from '../../../servicios/cuit.validator';
+import { camionDTO } from '../../../../entidades/camionDTO';
 
 
 export class AppModule {}
@@ -40,6 +41,7 @@ export class ChoferComponent {
   nchofalta        : number;
   maxchof          : number;
   cempresas        : empTpteDTO[]=[];
+  ccamiones        : camionDTO[]=[];
   idEmpresaSel     : number = 1;
   isloading        : boolean = true;
   private choferr  : choferDTO;  
@@ -57,25 +59,16 @@ export class ChoferComponent {
   }
  
   ngOnInit(){
-      this.formChofer = this.fb.group({        
-          nrochof     : [''], 
-          nombre     : ['',[Validators.required]],
-          domicilio  : [''],
-          localidad  : [''],
-       //   cuit       : ['',[Validators.pattern("^(20|23|24|25|27|30|33|34|40|41|45|46|47|49|55)[0-9]{8}[0-9]{1}$" )]],          
-          // cuitValidator esta definida en servicios, y determina si el cuit el valido ó no
-          cuit       : ['',[Validators.required,cuitValidator]],          
-          nrodoc     : [''],   
-          telefono   : [''],          
-          nroempresa : [1],
-          notas      : [''],     
-          saldoini   : ['']   
-      })
-      var subs1 : Subscription;
-      subs1 = this.servicio.getEmpresas()
-          .subscribe((data:any):void =>{
-            this.cempresas = data;
-            if (this.data.accion=="M"){ 
+     this.initFormulario();
+     forkJoin({
+            empresas: this.servicio.getEmpresas(),
+            camiones: this.servicio.getCamiones(),
+
+           }).subscribe(res => {   
+            this.cempresas = res.empresas;
+            this.ccamiones = res.camiones;
+
+           if (this.data.accion=="M"){ 
                // MODIFICAR
                var subs2 : Subscription;            
                subs2 = this.servicio.leerChofer(this.data.nrochof)
@@ -101,28 +94,37 @@ export class ChoferComponent {
             }
           })                                
    }
+   initFormulario(){
+     this.formChofer = this.fb.group({        
+          nrochof     : [''], 
+          nombre     : ['',[Validators.required]],
+          domicilio  : [''],
+          localidad  : [''],       
+          cuit       : ['',[Validators.required,cuitValidator]],          
+          nrodoc     : [''],   
+          telefono   : [''],          
+          nroempresa : [1],
+          idCamion   : [1],
+          notas      : [''],     
+          saldoini   : ['']   
+      })
+    }
   actualizarControles(){
     // Actualiza controles para modificar
-         var subscri1 : Subscription;
-        
-         subscri1 =  this.servicio.leerChofer(this.data.nrochof)            
-                .pipe(finalize(() => {                                        
-                  this.formChofer.controls["nrochof"].setValue(this.choferr.idChofer), 
-                  this.formChofer.controls["nombre"].setValue(this.choferr.nombre), 
-                  this.formChofer.controls["domicilio"].setValue(this.choferr.domicilio),                    
-                  this.formChofer.controls["localidad"].setValue(this.choferr.localidad),
-                  this.formChofer.controls["cuit"].setValue(this.choferr.cuit),                    
-                  this.formChofer.controls["nrodoc"].setValue(this.choferr.nrodoc),   
-                  this.formChofer.controls["telefono"].setValue(this.choferr.telefono),   
-                  this.formChofer.controls["nroempresa"].setValue(this.choferr.idEmpresa),                    
-                  this.formChofer.controls["notas"].setValue(this.choferr.notas),      
-                  this.formChofer.controls["saldoini"].setValue(this.choferr.saldoini),    
-                  this.idEmpresaSel = this.choferr.idEmpresa;
-                  subscri1.unsubscribe;
-                }))                                              
-                .subscribe((data : any): void => {
-                       this.choferr = data});
-                           
+                                           
+      this.formChofer.controls["nrochof"].setValue(this.choferr.idChofer), 
+      this.formChofer.controls["nombre"].setValue(this.choferr.nombre), 
+      this.formChofer.controls["domicilio"].setValue(this.choferr.domicilio),                    
+      this.formChofer.controls["localidad"].setValue(this.choferr.localidad),
+      this.formChofer.controls["cuit"].setValue(this.choferr.cuit),                    
+      this.formChofer.controls["nrodoc"].setValue(this.choferr.nrodoc),   
+      this.formChofer.controls["telefono"].setValue(this.choferr.telefono),   
+      this.formChofer.controls["nroempresa"].setValue(this.choferr.idEmpresa),   
+      this.formChofer.controls["idCamion"].setValue(this.choferr.idCamion),   
+      this.formChofer.controls["notas"].setValue(this.choferr.notas),      
+      this.formChofer.controls["saldoini"].setValue(this.choferr.saldoini),    
+      this.idEmpresaSel = this.choferr.idEmpresa;
+      
    }
 
    AgregarChofer(){
@@ -139,7 +141,8 @@ export class ChoferComponent {
         localidad    : this.formChofer.controls["localidad"].value,
         cuit         : cuitingre.slice(0,11)+"-"+cuitingre.slice(11),
         nrodoc       : this.formChofer.controls["nrodoc"].value,
-        telefono     : this.formChofer.controls["telefono"].value,                  
+        telefono     : this.formChofer.controls["telefono"].value,     
+        idCamion     : this.formChofer.controls["idCamion"].value,             
         notas        : this.formChofer.controls["notas"].value,
         saldoini     : 0
  
@@ -175,7 +178,8 @@ export class ChoferComponent {
         localidad    : this.formChofer.controls["localidad"].value,
         cuit         : cuitingre,
         nrodoc       : this.formChofer.controls["nrodoc"].value,
-        telefono     : this.formChofer.controls["telefono"].value,                  
+        telefono     : this.formChofer.controls["telefono"].value,    
+        idCamion     : this.formChofer.controls["idCamion"].value,              
         notas        : this.formChofer.controls["notas"].value,
         saldoini     : this.formChofer.controls["saldoini"].value,
    
@@ -198,7 +202,10 @@ onSelectionEmpresa($event : any){
  this.idEmpresaSel = $event.value;
  console.log("empresa : "+this.idEmpresaSel);
 }
-
+onSelectionCamion(event :any ){
+  // recibo un idCamion
+  this.formChofer.controls["idCamion"].setValue(event.value);
+}
 
 Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})

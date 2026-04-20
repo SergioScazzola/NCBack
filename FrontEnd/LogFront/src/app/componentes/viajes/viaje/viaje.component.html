@@ -113,21 +113,24 @@
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Cant.KM</mat-label>
-          <input matInput selecText formControlName="cantkm"         
-             (blur)="onBlurCantKm($event)"/>        
+          <input matInput appImporte formControlName="cantkm"         
+             (blur)="onBlurCantKm($event)"
+             style="text-align: right;"/>        
         </mat-form-field>
       </div>
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Carga (Toneladas)</mat-label>
-          <input matInput selecText formControlName="cargaton"/>         
+          <input matInput appImporte formControlName="cargaton"
+              style="text-align: right;"/>         
         </mat-form-field>
       </div>
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Tarifa Plena</mat-label>
-          <input matInput selecText formControlName="tarifap"         
-             (blur)="onBlurTarifaP($event)"/>        
+          <input matInput appImporte formControlName="tarifap"         
+             (blur)="onBlurTarifaP($event)"
+             style="text-align: right;"/>        
         </mat-form-field>
       </div>
     </div>
@@ -136,8 +139,8 @@
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Litros Gasoil</mat-label>
-          <input matInput selecText formControlName="ltsgasoil"  
-              />  
+          <input matInput appImporte formControlName="ltsgasoil"  
+              style="text-align: right;"/>  
           </mat-form-field>
       </div>
       <div class="col-md-4">

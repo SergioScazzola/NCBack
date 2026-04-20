@@ -8,30 +8,6 @@ export class ImporteDirective {
 
   constructor(private el: ElementRef, private control: NgControl) {}
 
-  // 👉 Cuando entra al input (quita formato)
-/* @HostListener('focus')
-onFocus() {
-  let valor = this.control.control?.value;
-
-  if (valor == null) return;
-
-  // ✅ si ya es número, no tocarlo
-  if (typeof valor === 'number') {
-    this.el.nativeElement.value = valor.toString();
-    return;
-  }
-
-  // ✅ si es string formateado
-  valor = valor.toString()
-    .replace(/\./g, '')
-    .replace(/,/g, '.');
-
-  this.el.nativeElement.value = valor;
-  this.control.control?.setValue(valor, { emitEvent: false });
-  requestAnimationFrame(() => {
-      this.el.nativeElement.select();
-  });
-}*/
 @HostListener('focus')
 onFocus() {
   let valor = this.control.control?.value;
