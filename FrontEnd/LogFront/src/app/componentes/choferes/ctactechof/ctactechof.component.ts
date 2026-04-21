@@ -342,7 +342,7 @@ modifSaldoInicial(){
     accion      : acc,
     fecprmv     : fec     // fecha del movimiento mas antiguo
   }    
-  console.log(JSON.stringify(datas));
+
   const dialogConfig = new MatDialogConfig();   
     dialogConfig.autoFocus = false;
     dialogConfig.data = datas;
@@ -354,8 +354,9 @@ modifSaldoInicial(){
   const dialogRef =  this.dialog.open(SaldochofComponent, dialogConfig);
         dialogRef.afterClosed().subscribe( // 
         (data:any) => { if (data.clicked === 'Alta' || data.clicked === 'Modi'){ // agrego o modifico saldo inicial
-                        this.saldoinicial = data.nsaldo.saldo; //refrescar saldo
-                        this.regenerarSaldo();   // volver a leer los saldos                                                       // leer ultimo cobro y agregar a cmovims y recalcular totales                                            
+                        this.saldoinicial = data.nsaldo.saldo; //refrescar saldo                        
+                        this.regenerarSaldo();   // volver a leer los saldos    
+                        this.cdr.detectChanges();                                                   // leer ultimo cobro y agregar a cmovims y recalcular totales                                            
                          }
                         })
 

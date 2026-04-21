@@ -361,6 +361,15 @@ public getTiposGasto() {
    public getFacsTP() {
     return this.http.get<factpDTO[]>(this.apiUrl + `factp/facstp`);
   }
+   /*@GetMapping(value="/infofactpxfecha",params={"feci","fecf"})*/
+
+  public getFacsTPxFecha(fechi : string, fechh : string) {
+    return this.http.get<factpDTO[]>(this.apiUrl + `factp/infofactpxfecha?feci=`+fechi+`&fecf=`+fechh);
+  }
+
+  public getFacsTPxChoferYF(idchof : number, fechi : string, fechh : string) {
+    return this.http.get<factpDTO[]>(this.apiUrl + `factp/factxchoferYF?idchof=`+idchof+`&feci=`+fechi+`&fecf=`+fechh);
+  }
 
   public getCantFacsTP() {
     return this.http.get<number>(this.apiUrl + `factp/max`);

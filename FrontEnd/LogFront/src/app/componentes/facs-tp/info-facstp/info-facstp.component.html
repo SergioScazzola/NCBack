@@ -1,0 +1,145 @@
+ <div class="facturas-container">
+    <form  [formGroup]="formInfoFacs" class="row mt-1">        
+      <div class="col-auto">
+        <div class="header">
+           <h4>INF.DE FACTURAS DE CHOFERES</h4>
+        </div>        
+      </div>            
+      <div class="col-auto">        
+            <mat-form-field style="width: 160px;font-size: 16px;" > 
+              <input matInput [matDatepicker]="picker" 
+                  placeholder = "fecha inicial"                 
+                  (dateChange)="ondFechaChange($event)"                 
+                  formControlName="dfecha">
+            <mat-datepicker-toggle  matSuffix [for]="picker" > </mat-datepicker-toggle> 
+            <mat-datepicker #picker> </mat-datepicker>  
+            <!--mat-hint>{{ formInfoLab.controls['dfecha'].value | date : "dd/MM/yyyy HH:mm"}}</mat-hint--> 
+        </mat-form-field >
+      </div>
+      <div class="col-auto">
+        <mat-form-field style="width: 160px;font-size: 16px;" > 
+            <input #fechalab matInput #inputFocus [matDatepicker]="pickerh"  
+                  placeholder = "fecha final" 
+                  (dateChange)="onhFechaChange($event)"
+                  formControlName="hfecha" > 
+            <mat-datepicker-toggle  matSuffix [for]="pickerh" > </mat-datepicker-toggle> 
+            <mat-datepicker #pickerh> </mat-datepicker>  
+            <!--mat-hint>{{ formInfoLab.controls['hfecha'].value | date : "dd/MM/yyyy HH:mm"}}</mat-hint--> 
+        </mat-form-field >      
+      </div>
+      <!--div class="col-3">        
+      </div-->
+       <div class="col">
+        <mat-form-field style="width:200px;margin-left:30px;font-size: 14px;">
+          <mat-label>Tipo Informe</mat-label>
+          <mat-select  formControlName="tipoinfo"            
+               (selectionChange)="onSelectionChangeInforme($event)">
+               @for (tinfo of this.tipoinforme; track $index;let i = $index){
+                 <mat-option [value]="i">
+                {{ tipoinforme[i] }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>  
+      <div class="col">
+        <mat-form-field style="width:200px;margin-left:30px;font-size: 14px;">
+          <mat-label>Chofer</mat-label>
+          <mat-select  formControlName="chof"            
+               (selectionChange)="onSelectionChangeChofer($event)">
+               @for (chof of this.cchoferes; track chof.idChofer){
+                 <mat-option [value]="chof.idChofer">
+                {{ chof.nombre }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>  
+   
+      <div class="col">
+        <button class="btn btn-primary btn-sm add-button" (click)="desplegarInforme()">
+          Det X Chofer
+        </button>
+      </div>
+      <div class="col-auto">
+        <button 
+          [disabled]="eligiochof || cfacssubt==undefined || cfacssubt.length==0"
+          mat-icon-button
+          class="action-btn ml-10"
+          title="imprimir informe de facturas"
+          (click)="generarPDF('')"
+        >
+         <i class="bi bi-printer"></i>               
+        </button>
+      </div>  
+      <div class="col-auto">
+        <button 
+          [disabled]="!eligiochof || cfacssubt==undefined || cfacssubt.length==0"
+          mat-icon-button
+          class="action-btn-cli ml-10"                
+          title="informe de facturas del chofer"
+          (click)="generarPDF(cfacssubt[0].nomchofer)"
+        >
+         <i class="bi bi-printer"></i>               
+        </button>
+      </div>  
+  </form>   
+  <!-- Tabla de detalle -->
+  @if (cfacssubt.length>0){
+  <div class="table-container" style="overflow-x: auto">
+     @if (cfacssubt){
+     <table  
+      mat-table
+      class="mat-elevation-z8"
+      [dataSource]="cfacssubt"
+      style="width: 100%"
+      >
+      <ng-container matColumnDef="idFactura">
+        <th mat-header-cell *matHeaderCellDef>Nro</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.idFactura }}</td>
+      </ng-container>
+      <ng-container matColumnDef="fecha">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.fecha | date  : "dd/MM/yyyy" }}</td>
+      </ng-container>
+      <ng-container matColumnDef="nrofactura">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Nro.factura</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.nrofactura }}</td>
+      </ng-container>
+      <ng-container matColumnDef="facndc">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Campo</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.facndc }}</td>
+      </ng-container>
+      <ng-container matColumnDef="idChofer">
+        <th mat-header-cell *matHeaderCellDef>NroCh</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.idChofer }}</td>
+      </ng-container>
+      <ng-container matColumnDef="nomchofer">
+        <th mat-header-cell *matHeaderCellDef>Chofer</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.nomchofer }}</td>
+      </ng-container>
+      <ng-container matColumnDef="cantitems">
+        <th mat-header-cell *matHeaderCellDef>Items</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.cantitems }}</td>
+      </ng-container>
+       <ng-container matColumnDef="impneto">
+        <th mat-header-cell *matHeaderCellDef style="text-align:right;">Importe NETO</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.impneto | number : "1.2-2"}}</td>
+      </ng-container>
+      <ng-container matColumnDef="impiva">
+        <th mat-header-cell *matHeaderCellDef style="text-align:right;">Importe IVA</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.impiva | number : "1.2-2"}}</td>
+      </ng-container>
+      <ng-container matColumnDef="imptotal">
+        <th mat-header-cell *matHeaderCellDef style="text-align:right;">Total Factura</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.imptotal | number : "1.2-2"}}</td>
+      </ng-container>
+      
+        <!-- Definición de filas -->
+      <tr mat-header-row *matHeaderRowDef="colFacs; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; let index = index; columns: colFacs"
+                [ngClass]="{'fila-totales':  cfacssubt[index].idChofer===0}"></tr>
+    </table>
+    }
+  </div>
+  }

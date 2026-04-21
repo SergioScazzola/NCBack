@@ -19,6 +19,6 @@ h4 {
     width: 100%
 }
 .custom-dialog-container {
-  background-color:lightgray;  /*quita el fondo blanco */
+  background-color:lightgray !important;  /*quita el fondo blanco */
   border-radius: 0px;
 }

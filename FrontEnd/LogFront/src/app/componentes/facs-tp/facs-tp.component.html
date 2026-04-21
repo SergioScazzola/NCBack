@@ -1,14 +1,20 @@
 <!--@if (!isloading){-->
 <div class="factp-container">
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
        <div class="header">
          <h4>Facturas de Transporte</h4>
        </div>
     </div>  
-    <div class="col-md-4">
+    <div class="col-md-3">
        <input #filtroInput (keyup)="aplicarFiltro(filtroInput.value)" placeholder="Filtrar por chofer">
-    </div>            
+    </div>       
+    <div class="col-md-2">
+      <button class="btn btn-warning" (click)="informeFacturasTP()">
+        Informe de Facturas
+      </button>
+    </div>  
+      
     <div class="col-md-2">
       <button class="btn btn-primary add-button" (click)="agFacTP()">
         <i class="bi bi-plus-circle me-1"></i>Agregar
