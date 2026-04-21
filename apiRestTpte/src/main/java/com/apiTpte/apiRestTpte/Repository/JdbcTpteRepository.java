@@ -4,9 +4,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.apiTpte.apiRestTpte.Entidades.Camion;
 import com.apiTpte.apiRestTpte.Entidades.Chofer;
@@ -560,6 +563,18 @@ public class JdbcTpteRepository implements TpteRepository {
          return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class), idchofer);
        }
 
+       @Override
+       public List<FactTpte> infoFactpxFecha(String fechai, String fechaf ) {   
+      // fechas : AAAA-MM-DD
+      String selec = "SELECT * FROM facstpte WHERE fecha BETWEEN ? AND ? ORDER BY nomchofer ASC,fecha ASC";
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class),fechai,fechaf);
+    }    
+    @Override        
+    public List<FactTpte> FacTXChoferYF(int idchof, String fechai, String fechaf ) {   
+      // fechas : AAAA-MM-DD
+      String selec = "SELECT * FROM facstpte WHERE idChofer=? AND fecha BETWEEN ? AND ? ORDER BY fecha ASC";
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class),idchof,fechai,fechaf);
+    }    
       @Override
       public int getMaxFacstp(){
         String consulta = "SELECT MAX(idFactura) FROM facstpte";

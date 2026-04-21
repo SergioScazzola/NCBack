@@ -49,7 +49,9 @@ public interface TpteRepository {
     List<Gasto> GastosXChofer(int idchofer);
     List<Pago> PagosXChofer(int idchofer);
     List<FactTpte> FacTXChofer(int idchofer);
-    
+    List<FactTpte> infoFactpxFecha(String fechai, String fechaf );
+ 
+
     List<EmpTpte> AllEmpresas();
     int getMaxEmpresas();
     EmpTpte findEmpresaById(int idempresa);
@@ -92,7 +94,7 @@ public interface TpteRepository {
     int saveItemFactp(ItfactT itfac);
     int actualizarItemFactp(ItfactT itfac);   
     int deleteItemFactp(int nrofac, int nroit);
-    
+    List<FactTpte> FacTXChoferYF(int idchofer, String fecin, String fecfin);   
 
     // FACTURA AL CLIENTE
           

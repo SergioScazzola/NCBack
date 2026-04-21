@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +39,43 @@ public class FactTpteController {
    
   }
 
+    @GetMapping(value="/infofactpxfecha",params={"feci","fecf"})
+    public ResponseEntity<List<FactTpte>> getInfoLaboreosxFecha(@RequestParam("feci") String fechaini,
+                                                                @RequestParam("fecf") String fechafin) {
+    try {
+      List<FactTpte> facturas = null;
+            
+      facturas = tpteRepository.infoFactpxFecha(fechaini,fechafin);
+    
+      if (facturas.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } else {
+         return new ResponseEntity<>(facturas, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+   @SuppressWarnings("null")
+   @RequestMapping(value="/factxchoferYF", params={"idchof","feci","fecf"})
+    public ResponseEntity<List<FactTpte>> getFactTpteXChofer(@RequestParam("idchof") Integer idchofer,
+                                                             @RequestParam("feci")   String  fecin,
+                                                             @RequestParam("fecf")   String  fecfin  ) {
+    try {
+      List<FactTpte> facturas = null;
+            
+      facturas = tpteRepository.FacTXChoferYF(idchofer,fecin,fecfin);
+    
+      if (facturas.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } else {
+         return new ResponseEntity<>(facturas, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
   @RequestMapping(value="/max")
   public int getCantFacstp(){
      int cantf = tpteRepository.getMaxFacstp();
