@@ -95,6 +95,7 @@ public interface TpteRepository {
     int actualizarItemFactp(ItfactT itfac);   
     int deleteItemFactp(int nrofac, int nroit);
     List<FactTpte> FacTXChoferYF(int idchofer, String fecin, String fecfin);   
+    List<FactTpte> FacTAgrupXChofer(String fecin, String fecfin);
 
     // FACTURA AL CLIENTE
           

@@ -575,6 +575,14 @@ public class JdbcTpteRepository implements TpteRepository {
       String selec = "SELECT * FROM facstpte WHERE idChofer=? AND fecha BETWEEN ? AND ? ORDER BY fecha ASC";
       return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class),idchof,fechai,fechaf);
     }    
+    @Override
+     List<FactTpte> FacTAgrupXChofer(String fecin, String fecfin){
+      // Agrupa las Facturas del Transporte por Chofer, sumando el importe neto, el IVA y el total de cada factura
+      String selec = "SELECT idChofer,COUNT(idChofer) AS cuenta ,nomchofer,SUM(impneto) AS impneto, SUM(impiva) AS impiva, SUM(totalfac) AS totalfac "+
+                      "FROM facstpte WHERE fecha BETWEEN ? AND ? GROUP BY idChofer,nomchofer ORDER BY nomchofer ASC";
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class),fecin,fecfin); 
+     }
+
       @Override
       public int getMaxFacstp(){
         String consulta = "SELECT MAX(idFactura) FROM facstpte";

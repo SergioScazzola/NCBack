@@ -76,6 +76,26 @@ public class FactTpteController {
        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+   @SuppressWarnings("null")
+   @RequestMapping(value="/agrupchof", params={"feci","fecf"})
+    public ResponseEntity<List<FactTpte>> getFacAgrupXChofer(   @RequestParam("feci")   String  fecin,
+                                                             @RequestParam("fecf")   String  fecfin  ) {
+    try {
+      List<FactTpte> facturas = null;
+            
+      facturas = tpteRepository.FacTAgrupXChofer(fecin,fecfin);
+    
+      if (facturas.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } else {
+         return new ResponseEntity<>(facturas, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @RequestMapping(value="/max")
   public int getCantFacstp(){
      int cantf = tpteRepository.getMaxFacstp();
