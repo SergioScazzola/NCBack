@@ -149,7 +149,7 @@ initFormulario(){
        this.hfec = cad!=null?cad:" ";
        this.borrarArreglos();
     }
-    desplegarInforme(){
+    desplegarInformeSubtotales(){
     var subs : Subscription;
    
     this.borrarArreglos();
@@ -217,11 +217,70 @@ initFormulario(){
         totalfac     : total
       };
     this.cfacssubt.push(fact);
-    
-   
+       
   }
 
-  Cancelar() {
+  armarconTotales(){
+    // genera el array "cfacssubt" a partir de "cfacstp" insertando totales al final       
+    var totalneto  = 0;
+    var totaliva   = 0;
+    var total      = 0;    
+    var i          = 0;    
+    while (i<this.cfacstp.length){
+      this.cfacssubt.push(this.cfacstp[i]);  
+      totalneto += this.cfacstp[i].impneto;          
+      totaliva  += this.cfacstp[i].impiva;          
+      total     += this.cfacstp[i].totalfac;          
+      i++;
+    }
+    var fact : factpDTO = {
+        idFactura    : 0,
+        fecha        : new Date(),        
+        nrofactura   : "",
+        facndc       : "",
+        idChofer     : 0,
+        nomchofer    : "* TOTALES - Cant.: "+(i-1)+" *",
+        cantit       : 0,
+        impneto      : totalneto,
+        impiva       : totaliva,
+        totalfac     : total
+      };   
+    this.cfacssubt.push(fact);
+       
+  }
+
+  armarconTotalesChofer(){
+    // genera el array "cfacssubt" a partir de "cfacstp" insertando totales de chofer al final       
+    var totalneto  = 0;
+    var totaliva   = 0;
+    var total      = 0;    
+    var i          = 0;    
+    var nrochof    = this.cfacstp[0].idChofer;
+    var nomchof    = this.cfacstp[0].nomchofer;
+    while (i<this.cfacstp.length){
+      this.cfacssubt.push(this.cfacstp[i]);  
+      totalneto += this.cfacstp[i].impneto;          
+      totaliva  += this.cfacstp[i].impiva;          
+      total     += this.cfacstp[i].totalfac;          
+      i++;
+    }
+    var fact : factpDTO = {
+        idFactura    : 0,
+        fecha        : new Date(),        
+        nrofactura   : "",
+        facndc       : "",
+        idChofer     : 0,
+        nomchofer    : "* TOTALES "+nomchof+"("+nrochof+") - Cant.: "+(i-1)+" *",
+        cantit       : 0,
+        impneto      : totalneto,
+        impiva       : totaliva,
+        totalfac     : total
+      };   
+    this.cfacssubt.push(fact);
+       
+  }
+
+Cancelar() {
   // Volver a la página de laboreos con filtro
   
   this.router.navigate(['/laboreos',this.filter]);
@@ -312,48 +371,23 @@ generarPDF(nomchof : string):void{
 
 desplegarXChofer(nrochof : number){
   var subs : Subscription;
-  subs = this.servicio.getFactTpteXChoferyFecha(nrochof,this.dfec,this.hfec) //laboreos del cliente en rango de fechas
+  subs = this.servicio.getFacsTPxChoferYF(nrochof, this.dfec, this.hfec) // factura del chofer en el rengo de fechas
       .pipe(
          finalize(() => {
-            this.totalizarCliente();
+            this.armarconTotalesChofer();
             subs.unsubscribe();          
          }))
       .subscribe((data: any): void => {
-               this.claboreos = data;
+               this.cfacstp = data;
              });
 } 
-totalizarChoferes(){
-  var cantlab  = 0;
-  var tothast  = 0;
-  var totvalor = 0;
-  var totneto  = 0;
-  for(let i=0;i<this.cresucult.length;i++){
-    cantlab  += this.cresucult[i].clab;
-    tothast  += this.cresucult[i].hasTrab;
-    totvalor += this.cresucult[i].valorLaboreo;
-    totneto  += this.cresucult[i].valorNeto
-  };
-  var resucult : resuCult = {
-      ncultivo      : "TOTALES",
-      clab          : cantlab,
-      hasTrab       : tothast,
-      valorLaboreo  : totvalor,
-      valorNeto     : totneto,
-  }
-  this.cresucult.push(resucult);
-}
 
 onSelectionChangeChofer(event:any){
-    
-    this.eligiohof = true;
+      
     this.desplegarXChofer(event.value);
 }
 onSelectionChangeInforme(event:any){
-    this.clabosubt = [];
-    this.cresucamp = [];
-    this.cresucult = [];
-    this.cresulab  = [];
-    this.cresumaq  = [];
+  'Tipo de Informe','Informe Detallado','Con Subtotales x Chofer' ,'Resumen x Chofer','Informe de chofer'
     console.log("Tipo de informe : "+event.value);
     switch (event.value){
       case 1 : {  
