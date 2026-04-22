@@ -2,8 +2,7 @@ package com.apiTpte.apiRestTpte.Repository;
 
 import java.util.List;
 
-
-
+import com.apiTpte.apiRestTpte.Entidades.AgChof;
 import com.apiTpte.apiRestTpte.Entidades.Camion;
 import com.apiTpte.apiRestTpte.Entidades.Chofer;
 import com.apiTpte.apiRestTpte.Entidades.Cliente;
@@ -95,7 +94,7 @@ public interface TpteRepository {
     int actualizarItemFactp(ItfactT itfac);   
     int deleteItemFactp(int nrofac, int nroit);
     List<FactTpte> FacTXChoferYF(int idchofer, String fecin, String fecfin);   
-    List<FactTpte> FacTAgrupXChofer(String fecin, String fecfin);
+    List<AgChof> FacTAgrupXChofer(String fecin, String fecfin);
 
     // FACTURA AL CLIENTE
           

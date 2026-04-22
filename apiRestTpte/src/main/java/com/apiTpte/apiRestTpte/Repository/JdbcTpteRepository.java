@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.apiTpte.apiRestTpte.Entidades.AgChof;
 import com.apiTpte.apiRestTpte.Entidades.Camion;
 import com.apiTpte.apiRestTpte.Entidades.Chofer;
 import com.apiTpte.apiRestTpte.Entidades.Cliente;
@@ -576,11 +577,12 @@ public class JdbcTpteRepository implements TpteRepository {
       return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class),idchof,fechai,fechaf);
     }    
     @Override
-     List<FactTpte> FacTAgrupXChofer(String fecin, String fecfin){
+    public List<AgChof> FacTAgrupXChofer(String fecin, String fecfin){
       // Agrupa las Facturas del Transporte por Chofer, sumando el importe neto, el IVA y el total de cada factura
-      String selec = "SELECT idChofer,COUNT(idChofer) AS cuenta ,nomchofer,SUM(impneto) AS impneto, SUM(impiva) AS impiva, SUM(totalfac) AS totalfac "+
+      String selec = "SELECT idChofer,COUNT(idChofer) AS cuenta ,nomchofer,"+
+                             "SUM(impneto) AS impneto, SUM(impiva) AS impiva, SUM(totalfac) AS totalfac "+
                       "FROM facstpte WHERE fecha BETWEEN ? AND ? GROUP BY idChofer,nomchofer ORDER BY nomchofer ASC";
-      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactTpte.class),fecin,fecfin); 
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(AgChof.class),fecin,fecfin); 
      }
 
       @Override

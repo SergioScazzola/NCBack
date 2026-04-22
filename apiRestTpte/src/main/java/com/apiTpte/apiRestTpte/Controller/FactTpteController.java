@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apiTpte.apiRestTpte.Entidades.AgChof;
 import com.apiTpte.apiRestTpte.Entidades.FactTpte;
 import com.apiTpte.apiRestTpte.Entidades.ItfactT;
 import com.apiTpte.apiRestTpte.Repository.TpteRepository;
@@ -26,7 +27,7 @@ import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 
 @RestController
-@RequestMapping("/api/factp/")
+@RequestMapping("/api/factp")
  
 public class FactTpteController {
     @Autowired
@@ -37,7 +38,7 @@ public class FactTpteController {
     public ResponseEntity<List<FactTpte>> getAllFacstp() {
         return ResponseEntity.ok(tpteRepository.AllFacstp());
    
-  }
+    }
 
     @GetMapping(value="/infofactpxfecha",params={"feci","fecf"})
     public ResponseEntity<List<FactTpte>> getInfoLaboreosxFecha(@RequestParam("feci") String fechaini,
@@ -79,14 +80,14 @@ public class FactTpteController {
 
    @SuppressWarnings("null")
    @RequestMapping(value="/agrupchof", params={"feci","fecf"})
-    public ResponseEntity<List<FactTpte>> getFacAgrupXChofer(   @RequestParam("feci")   String  fecin,
+   public ResponseEntity<List<AgChof>> getFacAgrupXChofer(   @RequestParam("feci")   String  fecin,
                                                              @RequestParam("fecf")   String  fecfin  ) {
     try {
-      List<FactTpte> facturas = null;
+      List<AgChof> facturas = null;
             
       facturas = tpteRepository.FacTAgrupXChofer(fecin,fecfin);
     
-      if (facturas.isEmpty()) {
+    if (facturas.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
       } else {
          return new ResponseEntity<>(facturas, HttpStatus.OK);
