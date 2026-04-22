@@ -1,8 +1,10 @@
+
  <div class="facturas-container">
+    
     <form  [formGroup]="formInfoFacs" class="row mt-1">        
       <div class="col-auto">
         <div class="header">
-           <h4>INF.DE FACTURAS DE CHOFERES</h4>
+           <h4>INFORME FACT.TPTE</h4>
         </div>        
       </div>            
       <div class="col-auto">        
@@ -56,11 +58,11 @@
         </mat-form-field>
       </div>  
    
-      <div class="col">
+      <!--div class="col">
         <button class="btn btn-primary btn-sm add-button" (click)="desplegarInforme()">
           Det X Chofer
         </button>
-      </div>
+      </div-->
       <div class="col-auto">
         <button 
           [disabled]="eligiochof || cfacssubt==undefined || cfacssubt.length==0"
@@ -83,11 +85,12 @@
          <i class="bi bi-printer"></i>               
         </button>
       </div>  
-  </form>   
+  </form>  
+ 
   <!-- Tabla de detalle -->
-  @if (cfacssubt.length>0){
+  @if (cfacssubt!==null && cfacssubt.length > 0){
   <div class="table-container" style="overflow-x: auto">
-     @if (cfacssubt){
+   
      <table  
       mat-table
       class="mat-elevation-z8"
@@ -107,32 +110,32 @@
         <td mat-cell *matCellDef="let renInfo">{{ renInfo.nrofactura }}</td>
       </ng-container>
       <ng-container matColumnDef="facndc">
-        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Campo</th>
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Fac/Ndc</th>
         <td mat-cell *matCellDef="let renInfo">{{ renInfo.facndc }}</td>
       </ng-container>
       <ng-container matColumnDef="idChofer">
         <th mat-header-cell *matHeaderCellDef>NroCh</th>
-        <td mat-cell *matCellDef="let renInfo">{{ renInfo.idChofer }}</td>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.idChofer==0?'':renInfo.idChofer }}</td>
       </ng-container>
       <ng-container matColumnDef="nomchofer">
-        <th mat-header-cell *matHeaderCellDef>Chofer</th>
+        <th mat-header-cell *matHeaderCellDef style="text-align:center;">Chofer</th>
         <td mat-cell *matCellDef="let renInfo">{{ renInfo.nomchofer }}</td>
       </ng-container>
-      <ng-container matColumnDef="cantitems">
+      <ng-container matColumnDef="cantit">
         <th mat-header-cell *matHeaderCellDef>Items</th>
-        <td mat-cell *matCellDef="let renInfo">{{ renInfo.cantitems }}</td>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.cantit }}</td>
       </ng-container>
        <ng-container matColumnDef="impneto">
-        <th mat-header-cell *matHeaderCellDef style="text-align:right;">Importe NETO</th>
+        <th mat-header-cell *matHeaderCellDef style="text-align:center;">Importe NETO</th>
         <td mat-cell *matCellDef="let renInfo">{{ renInfo.impneto | number : "1.2-2"}}</td>
       </ng-container>
       <ng-container matColumnDef="impiva">
-        <th mat-header-cell *matHeaderCellDef style="text-align:right;">Importe IVA</th>
+        <th mat-header-cell *matHeaderCellDef style="text-align:center;">Importe IVA</th>
         <td mat-cell *matCellDef="let renInfo">{{ renInfo.impiva | number : "1.2-2"}}</td>
       </ng-container>
-      <ng-container matColumnDef="imptotal">
-        <th mat-header-cell *matHeaderCellDef style="text-align:right;">Total Factura</th>
-        <td mat-cell *matCellDef="let renInfo">{{ renInfo.imptotal | number : "1.2-2"}}</td>
+      <ng-container matColumnDef="totalfac">
+        <th mat-header-cell *matHeaderCellDef style="text-align:center;">Total Factura</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.totalfac | number : "1.2-2"}}</td>
       </ng-container>
       
         <!-- Definición de filas -->
@@ -140,6 +143,49 @@
       <tr mat-row *matRowDef="let row; let index = index; columns: colFacs"
                 [ngClass]="{'fila-totales':  cfacssubt[index].idChofer===0}"></tr>
     </table>
-    }
   </div>
   }
+   <!-- Resumen de Facturas x Chofer-->
+  @if ( resFacChof.length>0){
+  <div class="row justify-content-md-center">
+    <div class="col-6">    
+      <div class="table-container">     
+        <table  mat-table
+            class="mat-elevation-z8"
+            [dataSource]="resFacChof"
+            style="width: 50%">
+        <ng-container matColumnDef="nomchofer">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Chofer</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.nomchofer }}</td>
+      </ng-container>
+      <ng-container matColumnDef="idChofer">
+        <th mat-header-cell *matHeaderCellDef>Nro</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.idChofer }}</td>
+      </ng-container>
+      <ng-container matColumnDef="cuenta" style="text-align: center;">
+        <th mat-header-cell *matHeaderCellDef>Cant.Fac/Ndc</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.cuenta }}</td>
+      </ng-container>
+        <ng-container matColumnDef="impneto">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Neto S/IVA</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.impneto | number : "1.2-2" }}</td>
+      </ng-container>
+      <ng-container matColumnDef="impiva">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Imp. IVA</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.impiva | number : "1.2-2" }}</td>
+      </ng-container>
+      <ng-container matColumnDef="totalfac">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Total</th>
+        <td mat-cell *matCellDef="let renInfo">{{ renInfo.totalfac | number : "1.2-2" }}</td>
+      </ng-container>
+       
+      <tr mat-header-row *matHeaderRowDef= "colresChof; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; let index = index; columns: colresChof"
+          [ngClass]="{'fila-totales':  resFacChof[index].nomchofer==='TOTALES'}"></tr>
+    </table>   
+    </div>
+  </div>
+  </div>  
+  }
+
+ 

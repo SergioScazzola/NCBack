@@ -9,7 +9,7 @@ import { camionDTO } from '../../entidades/camionDTO';
 import { marcaDTO, MPagoDTO, TGastoDTO, UnidadDTO } from '../../entidades/marcaDTO';
 import { clienteDTO } from '../../entidades/clienteDTO';
 import { viajeDTO } from '../../entidades/viajeDTO';
-import { factpDTO} from '../../entidades/factpDTO';
+import { AgChof, factpDTO} from '../../entidades/factpDTO';
 import { facclDTO } from '../../entidades/facclDTO';
 import { itfactpDTO } from '../../entidades/itfactpDTO';
 import { itfacclDTO } from '../../entidades/itfacclDTO';
@@ -371,6 +371,9 @@ public getTiposGasto() {
     return this.http.get<factpDTO[]>(this.apiUrl + `factp/factxchoferYF?idchof=`+idchof+`&feci=`+fechi+`&fecf=`+fechh);
   }
 
+  public getFacsAgrupxChof(fechi : string, fechh : string) {
+    return this.http.get<AgChof[]>(this.apiUrl + `factp/agrupchof?feci=`+fechi+`&fecf=`+fechh);
+  }
   public getCantFacsTP() {
     return this.http.get<number>(this.apiUrl + `factp/max`);
   }

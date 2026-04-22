@@ -19,4 +19,15 @@ export interface intFacTp {
     accion       : string,
    
 }
+export interface AgChof {
+   idChofer      : number;
+   cuenta        : number;        
+   nomchofer     : string;
+   impneto       : number;   
+   impiva        : number;
+   totalfac      : number;
+}
+    
+
+
 

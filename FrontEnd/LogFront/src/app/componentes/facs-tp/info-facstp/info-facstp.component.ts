@@ -1,5 +1,5 @@
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -17,7 +17,7 @@ import { DateFnsAdapter } from '@angular/material-date-fns-adapter';
 
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 
-import { factpDTO } from '../../../../entidades/factpDTO';
+import { AgChof, factpDTO } from '../../../../entidades/factpDTO';
 import { choferDTO } from '../../../../entidades/choferDTO';
 
 export const DATE_FORMATS : MatDateFormats = {
@@ -66,7 +66,7 @@ export class InfoFacstpComponent {
   private  filter     : string;   //filtro de laboreos para devolver
   private  dfec       : string = " ";
   private  hfec       : string = " ";
-
+  public   isloading  : boolean = true;
   private  hoy        : Date = new Date();
   private  fecprim    : Date = new Date();
 
@@ -97,11 +97,15 @@ export class InfoFacstpComponent {
     'totalfac',    
   ];
   
-  tipoinforme : string[] = [ 'Tipo de Informe','Informe Detallado', 'Agrupado x Chofer','Informe de chofer'];
+  resFacChof : AgChof[] = [];
+ 
+  colresChof  : string[] = [ 'nomchofer','idChofer','cuenta','impneto','impiva','totalfac'];
+  tipoinforme : string[] = [ 'Tipo de Informe','Informe Detallado','Con Subtotales x Chofer','Agrupado x Chofer'];
    constructor(private servicio : ServiciosService,
                private rutaActiva : ActivatedRoute,
                private router   : Router,
                public  fb       : FormBuilder,
+               private cdr      : ChangeDetectorRef,
                public datepipe  : DatePipe,
                private currencyPipe: CurrencyPipe,){}
 
@@ -165,7 +169,7 @@ initFormulario(){
                this.cfacstp = data;
              }); 
     }
-    armarconSubtotales(){
+armarconSubtotales(){
     // genera el array "cfacssubt" a partir de "cfacstp" insertando subtotales por chofer
    
     var subtchof   = 0;    
@@ -239,7 +243,7 @@ initFormulario(){
         nrofactura   : "",
         facndc       : "",
         idChofer     : 0,
-        nomchofer    : "* TOTALES - Cant.: "+(i-1)+" *",
+        nomchofer    : "* TOTALES - Cant.: "+i+" *",
         cantit       : 0,
         impneto      : totalneto,
         impiva       : totaliva,
@@ -270,7 +274,7 @@ initFormulario(){
         nrofactura   : "",
         facndc       : "",
         idChofer     : 0,
-        nomchofer    : "* TOTALES "+nomchof+"("+nrochof+") - Cant.: "+(i-1)+" *",
+        nomchofer    : "* TOTALES "+nomchof+"("+nrochof+") - Cant.: "+i+" *",
         cantit       : 0,
         impneto      : totalneto,
         impiva       : totaliva,
@@ -369,7 +373,43 @@ generarPDF(nomchof : string):void{
  
 }
 
-desplegarXChofer(nrochof : number){
+desplegarDetallado(){
+  var subs : Subscription;
+  subs = this.servicio.getFacsTPxFecha(this.dfec, this.hfec) // factura del chofer en el rengo de fechas
+      .pipe(
+         finalize(() => {
+            this.armarconTotales();
+            subs.unsubscribe();          
+         }))
+      .subscribe((data: any): void => {
+               this.cfacstp = data;
+             });
+}
+desplegarResumenxChofer(){
+  var subs : Subscription;
+  subs = this.servicio.getFacsAgrupxChof(this.dfec, this.hfec)  // informe agrupado x Chofer
+      .pipe(
+         finalize(() => {
+            //this.armarconTotales();
+            subs.unsubscribe();          
+         }))
+      .subscribe((data: any): void => {
+               this.resFacChof = data;
+             });
+}
+desplegarConSubtotales(){
+  var subs : Subscription;
+  subs = this.servicio.getFacsTPxFecha(this.dfec, this.hfec) // factura del chofer en el rengo de fechas
+      .pipe(
+         finalize(() => {
+            this.armarconSubtotales();
+            subs.unsubscribe();          
+         }))
+      .subscribe((data: any): void => {
+               this.cfacstp = data;
+             });
+}
+desplegarChofer(nrochof : number){
   var subs : Subscription;
   subs = this.servicio.getFacsTPxChoferYF(nrochof, this.dfec, this.hfec) // factura del chofer en el rengo de fechas
       .pipe(
@@ -382,37 +422,42 @@ desplegarXChofer(nrochof : number){
              });
 } 
 
-onSelectionChangeChofer(event:any){
-      
-    this.desplegarXChofer(event.value);
+onSelectionChangeChofer(event:any){      
+    this.desplegarChofer(event.value);
 }
 onSelectionChangeInforme(event:any){
-  'Tipo de Informe','Informe Detallado','Con Subtotales x Chofer' ,'Resumen x Chofer','Informe de chofer'
+ // 'Tipo de Informe','Informe Detallado','Con Subtotales x Chofer' ,'Resumen x Chofer'
     console.log("Tipo de informe : "+event.value);
     switch (event.value){
-      case 1 : {  
-                  this.desplegarXCultivo();
+      case 1 : {  this.borrarArreglos();
+                  this.desplegarDetallado();  
+                  this.isloading = false;  
+                  this.cdr.detectChanges();           
                   break
                };
-      case 2 : { this.desplegarXLabor();
+      case 2 : { this.borrarArreglos();
+                 this.desplegarConSubtotales();
+                 this.isloading = false;  
+                 this.cdr.detectChanges();           
                  break
                };
-      case 3 : { this.desplegarXCampo();
+      case 3 : { this.borrarArreglos();
+                 this.desplegarResumenxChofer();
+                 this.isloading = false;  
+                 this.cdr.detectChanges();           
                  break
                };
-      case 4 : { this.desplegarXMaquina();
+     /* case 4 : { this.desplegarXMaquina();
                  break
-               };               
+               };               */
       default : {break};
       
     }
 }
 borrarArreglos(){
-  this.cresucult = [];
-  this.cresucamp = [];
-  this.cresulab  = []; // para ocultar tablas de resumenes
-  this.cresumaq  = [];
-  this.clabosubt = [];
+  this.cfacssubt   = [];
+  this.cfacstp     = [];
+  this.resFacChof  = [];
 }
 }
 

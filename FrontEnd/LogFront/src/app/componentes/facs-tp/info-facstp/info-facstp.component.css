@@ -160,68 +160,54 @@
   border: none !important;
   border-radius: 2px !important;
 }
-.mat-column-idLaboreo {
+
+.mat-column-idFactura {
+  padding-left: 0rem;
+  width: 50px;
+  text-align: center;
+}
+.mat-column-idChofer {
   /*padding-left: 5px !important;*/
   width: 50px;
-  text-align: left;
+  text-align: center;
 }
 .mat-column-fecha {
   padding-left: 0rem;
   width: 100px;
   text-align: center;
 }
-.mat-column-ncliente {
-  padding-left: 0rem;
-  width: 150px;
-  text-align: left;
-}
-.mat-column-ncampo {
-  padding-left: 10px;
-  width: 100px;
-  text-align: left;
-}
-.mat-column-hasTrab {
-  padding-left: 0rem;
-  width: 100px;
-  text-align: right;
-}
-.mat-column-potreros {
+.mat-column-nrofactura {
   padding-left: 0rem;
   width: 80px;
   text-align: center;
 }
-.mat-column-nlabor {
-  padding-left: 10px;
-  width: 100px;
-  text-align: left;
-}
-.mat-column-ncultivo {
-  padding-left: 10px;
-  width: 80px;
-  text-align: left;
-}
-.mat-column-nmaquina { 
+.mat-column-nomchofer {
+  padding-left: 0rem;
   width: 200px;
   text-align: left;
 }
-.mat-column-nmaquina1 {
+.mat-column-facndc {
   padding-left: 10px;
-  width: 400px;
-  text-align: left;
-}
-.mat-column-valorxHect {
-  padding-left: 0rem;
-  width: 100px;
-  text-align: right;
-}
-.mat-column-valorLaboreo,
- .mat-column-valorNeto {
-  padding-left: 0rem;
-  width: 100px;
-  text-align: right;
-}
-.mat-column-clab {
-  /*padding-left: 5px !important;*/
-  width: 80px;
+  width: 50px;
   text-align: center;
+}
+.mat-column-cantit {
+  padding-left: 0rem;
+  width: 50px;
+  text-align: center;
+}
+.mat-column-impneto {
+  padding-left: 0rem;
+  width: 100px;
+  text-align: right;
+}
+.mat-column-impiva {
+  padding-left: 10px;
+  width: 100px;
+  text-align: right;
+}
+.mat-column-totalfac {
+  padding-left: 10px;
+  width: 100px;
+  text-align: right;
 }

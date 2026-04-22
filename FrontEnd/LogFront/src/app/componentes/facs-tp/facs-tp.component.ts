@@ -170,7 +170,7 @@ export class FacsTPComponent {
     this.dataSource.filter = valor.trim().toLowerCase();
  }
 informeFacturasTP(){  
-    this.router.navigate(['/facstp','infofacstp']);
+    this.router.navigate(['/factpte','infofacstp']);
 }
 
 }
