@@ -1,6 +1,5 @@
 
- <div class="facturas-container">
-    
+ <div class="facturas-container">    
     <form  [formGroup]="formInfoFacs" class="row mt-1">        
       <div class="col-auto">
         <div class="header">
@@ -89,8 +88,7 @@
  
   <!-- Tabla de detalle -->
   @if (cfacssubt!==null && cfacssubt.length > 0){
-  <div class="table-container" style="overflow-x: auto">
-   
+  <div class="table-container" style="overflow-x: auto">   
      <table  
       mat-table
       class="mat-elevation-z8"
@@ -122,7 +120,7 @@
         <td mat-cell *matCellDef="let renInfo">{{ renInfo.nomchofer }}</td>
       </ng-container>
       <ng-container matColumnDef="cantit">
-        <th mat-header-cell *matHeaderCellDef>Items</th>
+        <th mat-header-cell *matHeaderCellDef style="text-align:center;">Items</th>
         <td mat-cell *matCellDef="let renInfo">{{ renInfo.cantit }}</td>
       </ng-container>
        <ng-container matColumnDef="impneto">
@@ -162,8 +160,8 @@
         <th mat-header-cell *matHeaderCellDef>Nro</th>
         <td mat-cell *matCellDef="let renInfo">{{ renInfo.idChofer }}</td>
       </ng-container>
-      <ng-container matColumnDef="cuenta" style="text-align: center;">
-        <th mat-header-cell *matHeaderCellDef>Cant.Fac/Ndc</th>
+      <ng-container matColumnDef="cuenta">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;">Cant</th>
         <td mat-cell *matCellDef="let renInfo">{{ renInfo.cuenta }}</td>
       </ng-container>
         <ng-container matColumnDef="impneto">

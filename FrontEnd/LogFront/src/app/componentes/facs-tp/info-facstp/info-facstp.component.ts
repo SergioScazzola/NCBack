@@ -214,7 +214,7 @@ armarconSubtotales(){
         nrofactura   : "",
         facndc       : "",
         idChofer     : 0,
-        nomchofer    : "* TOTALES - Cant.: "+(i-1)+" *",
+        nomchofer    : "* TOTALES - Cant.: "+i+" *",
         cantit       : 0,
         impneto      : totalneto,
         impiva       : totaliva,
