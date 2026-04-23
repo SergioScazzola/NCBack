@@ -23,6 +23,7 @@
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+
 /* Estilos de la tabla */
 .mat-mdc-table {  
   table-layout: fixed;
@@ -91,7 +92,10 @@
 .mat-mdc-header-cell {
   padding: 0 8px;
 }*/
-
+.fila-totales {
+  font-size: 14px;
+  font-weight: 400;
+}
 /* Asegurar que los encabezados no se truncan */
 .mat-mdc-header-cell {
   text-align: center;
@@ -166,6 +170,13 @@
   width: 50px;
   text-align: center;
 }
+
+.mat-column-cuenta {
+  padding-left: 0rem;
+  width: 50px;
+  text-align: center;
+}
+
 .mat-column-idChofer {
   /*padding-left: 5px !important;*/
   width: 50px;

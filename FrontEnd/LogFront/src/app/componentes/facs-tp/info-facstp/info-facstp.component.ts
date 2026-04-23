@@ -196,7 +196,7 @@ armarconSubtotales(){
       // corte de chofer
       var fact : factpDTO = {
         idFactura    : 0,
-        fecha        : new Date(),        
+        fecha        : null,        
         nrofactura   : "",
         facndc       : "",
         idChofer     : nrochof,
@@ -210,7 +210,7 @@ armarconSubtotales(){
     }
     var fact : factpDTO = {
         idFactura    : 0,
-        fecha        : new Date(),        
+        fecha        : null,        
         nrofactura   : "",
         facndc       : "",
         idChofer     : 0,
@@ -239,7 +239,7 @@ armarconSubtotales(){
     }
     var fact : factpDTO = {
         idFactura    : 0,
-        fecha        : new Date(),        
+        fecha        : null,        
         nrofactura   : "",
         facndc       : "",
         idChofer     : 0,
@@ -270,7 +270,7 @@ armarconSubtotales(){
     }
     var fact : factpDTO = {
         idFactura    : 0,
-        fecha        : new Date(),        
+        fecha        : null,        
         nrofactura   : "",
         facndc       : "",
         idChofer     : 0,

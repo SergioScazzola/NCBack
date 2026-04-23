@@ -139,7 +139,7 @@
         <!-- Definición de filas -->
       <tr mat-header-row *matHeaderRowDef="colFacs; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; let index = index; columns: colFacs"
-                [ngClass]="{'fila-totales':  cfacssubt[index].idChofer===0}"></tr>
+                [ngClass]="{'fila-totales':  cfacssubt[index].idFactura===0}"></tr>
     </table>
   </div>
   }

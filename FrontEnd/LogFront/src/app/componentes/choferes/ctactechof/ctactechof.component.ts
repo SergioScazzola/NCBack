@@ -249,6 +249,10 @@ agregarPago(){
                              }
                             })
 }
+
+agregarGasto(){
+  
+}
 modificarPago(idmov:number ){
   const data : intPago = {
     idPago     : idmov,

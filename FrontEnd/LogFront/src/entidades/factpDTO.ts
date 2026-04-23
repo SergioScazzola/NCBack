@@ -3,7 +3,7 @@ export interface factpDTO {
      idFactura      : number;
      nrofactura     : string;
      facndc         : string;  // fac : suma, ndc : resta
-     fecha          : Date;
+     fecha          : Date|null;
      idChofer       : number;
      nomchofer      : string;
      cantit         : number;        

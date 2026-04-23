@@ -1,15 +1,18 @@
-
+.custom-dialog-container {
+  background-color:lightgray !important;  /*quita el fondo blanco */
+  border-radius: 0px;
+}
 h4 {
     background-color:lightblue;
     text-align: center;
 }
 
-.container {
+/*.container {
     background-color:lightgray;
     width : 500px;
     height: 400px;
 
-}
+}*/
 .botonera {    
     background-color:lightgray;
     display: flex;
@@ -18,7 +21,4 @@ h4 {
     margin-bottom: 5px;
     width: 100%
 }
-.custom-dialog-container {
-  background-color:lightgray !important;  /*quita el fondo blanco */
-  border-radius: 0px;
-}
+

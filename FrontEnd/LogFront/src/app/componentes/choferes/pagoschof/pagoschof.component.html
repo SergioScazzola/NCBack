@@ -85,7 +85,7 @@
           <div class="col-md-3">
             <mat-form-field class="w-100" appearance="fill">
               <mat-label>Medio de Pago</mat-label>
-              <mat-select formControlName="idmpago2"    
+              <mat-select formControlName="idmpago2"                   
                   (selectionChange)="onSelectionChangeMPago($event,2)">      
                   @for (mpago of this.cmediospago; track mpago.idmediopago){
                   <!--mat-option *ngFor="let labo of this.claboreos; let i = index" [value]="labo.idLaboreo"-->
@@ -175,7 +175,7 @@
         <div class="row">
           <div class="botonera">           
             <button class="btn btn-sm btn-outline-primary me-5" 
-                     [disabled]="formPag.invalid || data.accion!='A'" 
+                     [disabled]="formPag.invalid || data.accion!='A' || deshAlta==true"
                      (click)="GrabarPago()">Agregar Pago</button>                                
             <button class="btn btn-sm btn-outline-success me-5" 
                      [disabled]="formPag.invalid || data.accion!='M'" 

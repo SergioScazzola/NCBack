@@ -52,6 +52,11 @@ table {
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+/* Estilos de la tabla */
+.mat-mdc-table {  
+  table-layout: fixed;
+  width: 100%;
+}
 .footer-container {
   
   padding-top: 5px;
@@ -64,7 +69,7 @@ table {
   background-color: #c6ccdd; /* Asegurar que el fondo sea visible */
 }
 .mat-mdc-header-row {
-  background-color: #b6c1dd;
+  background-color: #9caedd;
   height: 24px;
   font-size: 14px;
   font-weight: 500;
@@ -102,7 +107,7 @@ table {
 
   .laboreo-info {
     /*background-color: #f5f7fa;*/
-    background-color: #b6c1dd;
+    background-color: #ced3df;
     border-radius: 4px;
     padding: 1px;
     margin-bottom: 1px;
@@ -177,4 +182,29 @@ table {
 .total span {
   color: #2c3e50;
   margin-left: 10px;
+}
+
+.mat-column-idMov {
+  padding-left: 0;
+  width: 50px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mat-column-tipomov {
+  padding-left: 0;
+  width: 50px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mat-column-fecha {
+  padding-left: 0;
+  width: 80px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -29,6 +29,7 @@ import { factpDTO } from '../../../../entidades/factpDTO';
 import { intPago, pagoDTO } from '../../../../entidades/pagoDTO';
 import { ImporteDecimalDirective } from "../../../Directivas/importeDecimal";
 import { ImporteDirective } from "../../../Directivas/importeDirective";
+import { SinoService } from '../../../servicios/sino.service';
 
 export const DATE_FORMATS : MatDateFormats = {
 
@@ -82,7 +83,7 @@ export class PagoschofComponent {
   public  isloading     : boolean = true;
   private maxpago       : number;
   private pagopalta     : number;
-
+  public  deshAlta      : boolean = false; // para deshabilitar boton de alta
 
   private mpagoSel      : number;
   private factpSel       : number;
@@ -93,6 +94,7 @@ export class PagoschofComponent {
                   public dialogRef       : MatDialogRef<PagoschofComponent>,
                   @Inject(MAT_DIALOG_DATA) public data: intPago,  
                   private zone           : NgZone,
+                   private sinoServicio : SinoService,
                   private cdr            : ChangeDetectorRef,  
                   private currencyPipe   : CurrencyPipe,
                   public  dialog         : MatDialog,                                
@@ -119,14 +121,19 @@ export class PagoschofComponent {
            //this.cviajes     = res2.viajeschof;
            this.cfacsTpte   = res2.facturaschof;
            this.cmediospago = res2.mediospago;
+
            if (this.data.accion=="A"){  // Alta de Pago
                     this.mostrarHora();
                     this.pagopalta =  this.data.idPago;                                                       
                     this.operacion = "Agregar Pago al Chofer : "+this.data.nombre;
                   
-                    this.prepararAlta();
-                    this.isloading = false;
-                    this.cdr.detectChanges()
+                    if (this.prepararAlta()){
+                       this.isloading = false;
+                       this.cdr.detectChanges()
+                    } else {
+                      this.deshAlta = true; // deshabilita el boton de alta, eligio no agregar el pago
+                    }
+                    
               } else if (this.data.accion=="M"){   // Modificación de un pago  -> Lee el pago
                     var subs2 : Subscription;
                     subs2 = this.servicio.leerPagoChofer(this.data.idPago)
@@ -156,17 +163,22 @@ export class PagoschofComponent {
           nrompago1   : [''],
           banco1      : [''],                   
           importe1    : ['',[Validators.required]],
-          idmpago2    : [1],                        
-          nrompago2   : [''],
-          banco2      : [''],                   
-          importe2    : [''],
-          idmpago3    : [1],                     
-          nrompago3   : [''],
-          banco3      : [''],                   
-          importe3    : [''],
+          idmpago2    : [{ value : 1, disabled : true}],                        
+          nrompago2   : [{ value : '', disabled : true}],
+          banco2      : [{ value : '', disabled : true}],                   
+          importe2    : [{ value : 0, disabled : true}],
+          idmpago3    : [{ value : 1, disabled : true}],                     
+          nrompago3   : [{ value : '', disabled : true}],
+          banco3      : [{ value : '', disabled : true}],                   
+          importe3    : [{ value : 0, disabled : true}],
           imptotal    : [''],
           observ      : ['']
         }) 
+       /* this.formPag.get('idmpago2')?.disable;
+        this.formPag.get('nrompago2')?.disable;
+        this.formPag.get('banco2')?.disable;
+        this.formPag.get('importe2')?.disable;*/
+
   }
   mostrarHora() {
    this.zone.runOutsideAngular(() => {
@@ -211,14 +223,34 @@ export class PagoschofComponent {
   onSelectionChangeMedioPago(event : any){
       this.mpagoSel = event.value;
   }
-prepararAlta(){
-   this.formPag.controls['nropag'].setValue(this.pagopalta);
-   this.formPag.controls['fecha'].setValue(this.hoy);
-   this.formPag.controls['idChofer'].setValue(1);
-   this.formPag.controls['idFactura'].setValue(this.cfacsTpte[0].idFactura);
-   this.formPag.controls['idmpago1'].setValue(1);
-   this.formPag.controls['nrompago1'].setValue(' ');
-   this.formPag.controls['banco1'].setValue(' ');
+prepararAlta(): boolean{
+   var retorno = true;
+   if (this.cfacsTpte==undefined || this.cfacsTpte.length==0){ // no hay facturas para el chofer
+       this.sinoServicio.abrirSiNoDialogo("Confirmación", "El chofer "+this.data.nombre+" no tiene facturas emitidas "+
+                                          "¿ Continúa con agregar Pago ?")
+        .then(result => {
+            if (result) {  //continua con agregar pago
+              this.inicializarFormulario(0);                          
+            } else {
+               retorno = false;              
+            }
+          })   
+  } else {
+    var idf = this.cfacsTpte[0].idFactura;
+    this.inicializarFormulario(idf);
+   
+  }
+  return retorno;
+}
+  
+  inicializarFormulario(idfac : number){
+     this.formPag.controls['nropag'].setValue(this.pagopalta);
+     this.formPag.controls['fecha'].setValue(this.hoy);
+     this.formPag.controls['idChofer'].setValue(1);
+     this.formPag.controls['idFactura'].setValue(idfac);
+     this.formPag.controls['idmpago1'].setValue(1);
+     this.formPag.controls['nrompago1'].setValue(' ');
+     this.formPag.controls['banco1'].setValue(' ');
    this.formPag.controls['importe1'].setValue(' ');
 
    this.formPag.controls['idmpago2'].setValue(1);
@@ -233,9 +265,8 @@ prepararAlta(){
 
    this.formPag.controls['imptotal'].setValue(0);
    this.formPag.controls['observ'].setValue('');
-
   }
-  
+
   prepararModificacion(){
 
    this.formPag.controls['nropag'].setValue(this.pagochof.idPago);
@@ -280,6 +311,13 @@ prepararAlta(){
   const valor = parseFloat(cadena);
   this.imps[nro-1] = valor; // pongo el valor en el array para sumar      
   this.totalizarPago(); // refresco valor del pago
+  if (nro < 3){
+    nro++
+    this.formPag.get('idmpago'+nro)?.enable();
+    this.formPag.get('nrompago'+nro)?.enable();
+    this.formPag.get('banco'+nro)?.enable();
+    this.formPag.get('importe'+nro)?.enable();
+  }
   
   }
   formatearNumero(nro : number) : string {
