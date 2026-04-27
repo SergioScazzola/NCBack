@@ -4,12 +4,13 @@ import { ServiciosService } from '../../servicios/service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SinoService } from '../../servicios/sino.service';
 import { NotiserviceService } from '../../servicios/notiservice.service';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, forkJoin, Subscription } from 'rxjs';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { ChoferComponent } from './chofer/chofer.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { camionDTO } from '../../../entidades/camionDTO';
 
 @Component({
   selector: 'app-choferes',
@@ -25,14 +26,14 @@ export class ChoferesComponent {
    //public inputRef    = viewChild.required<ElementRef>('filtroInput');
    public filtro       : string;
    public cchoferes    : choferDTO[]=[];
-
+   public ccamiones    : camionDTO[]=[]; //para acceder al camion del chofer 
    cantchof            : number;
    formchof            : boolean;
    chofmod             : number;
    dataSource = new MatTableDataSource<any>();
    
         
-   colChoferes : string[] = ["idChofer" , "nombre","domicilio","localidad","empresa","cuit","telefono","notas","CC","M","B" ];
+   colChoferes : string[] = ["idChofer" , "nombre","idCamion","localidad","empresa","cuit","notas","CC","M","B" ];
  
    
    constructor(     private servicio     : ServiciosService,               
@@ -56,24 +57,27 @@ export class ChoferesComponent {
  }
        
    leerChoferes(){
-        var subs : Subscription;
-        subs = this.servicio.getChoferes()
-           .pipe(finalize(()=> {
-               this.cantchof = this.cchoferes.length;
-                this.dataSource.data = this.cchoferes;         
-                this.dataSource.filterPredicate = (dato : choferDTO, fil : string) => {
-                     return dato.nombre.toLowerCase().includes(fil);
+         forkJoin({  
+                     
+          choferes:  this.servicio.getChoferes(),                          
+          camiones:  this.servicio.getCamiones(),
+   
+         }).subscribe(res2 => {
+            this.cchoferes = res2.choferes,
+            this.ccamiones = res2.camiones
+        
+            this.cantchof = this.cchoferes.length;
+            this.dataSource.data = this.cchoferes;         
+            this.dataSource.filterPredicate = (dato : choferDTO, fil : string) => {
+                return dato.nombre.toLowerCase().includes(fil);
                                      };    
                 // Aplica filtro si hay uno
                 if (this.filtro!=='') {                                 
                     this.dataSource.filter = this.filtro;                                                                       
                     this.inputRef.nativeElement.value = this.filtro;//setAttribute('value', this.filtro);
-                }
-               subs.unsubscribe();
-           }))
-           .subscribe((data : any): void => {
-                            this.cchoferes = data});  
-     } 
+                }        
+           })     
+   } 
    agChofer(){
      const data = {
           nrochof    : 0,    

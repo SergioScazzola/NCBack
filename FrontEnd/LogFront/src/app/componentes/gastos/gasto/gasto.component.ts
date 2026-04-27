@@ -158,9 +158,9 @@ export class GastoComponent {
     this.formGasto.controls["idViaje"].setValue(this.gastoo.idViaje);
     this.formGasto.controls["compgasto"].setValue(this.gastoo.compgasto);
     this.formGasto.controls["provgasto"].setValue(this.gastoo.provgasto);
-    this.formGasto.controls["ntipogasto"].setValue(indt);
+    this.formGasto.controls["ntipogasto"].setValue(this.ctiposgasto[indt].idtipogasto);
     this.formGasto.controls["cantgasto"].setValue(this.gastoo.cantgasto);
-    this.formGasto.controls["nunidgasto"].setValue(indu);
+    this.formGasto.controls["nunidgasto"].setValue(this.cunidades[indu].idUnidad);
     this.formGasto.controls["pregasto"].setValue(this.gastoo.pregasto);
     this.formGasto.controls["descgasto"].setValue(this.gastoo.descgasto);
     this.formGasto.controls["impgasto"].setValue(this.gastoo.impgasto);

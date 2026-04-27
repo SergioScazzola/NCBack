@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, EventEmitter, Inject, Input, Output, viewChild, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, Inject, Input, Output, viewChild, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { ServiciosService } from '../../../servicios/service';
@@ -43,6 +43,7 @@ export class ClienteComponent {
   constructor(  public fb           : FormBuilder,
                 public servicio     : ServiciosService,
                 public dialogRef    : MatDialogRef<ClienteComponent>,
+                private cdr         : ChangeDetectorRef,
                 @Inject(MAT_DIALOG_DATA) public data: intCliente,  
                 private notiService : NotiserviceService )
    { effect(() => {
@@ -73,6 +74,7 @@ export class ClienteComponent {
                     this.operacion = "Modificar Cliente Nro. "+this.data.nrocliente+" - "+this.data.nombre;
                     this.actualizarControles();
                     this.isloading = false;
+                    this.cdr.detectChanges();
                   })                 
             } else { // ALTA -> accion = "A"
                var subs2 : Subscription;
@@ -83,6 +85,7 @@ export class ClienteComponent {
                     this.operacion = "Agregar Cliente Nro. "+this.nclialta;
                     this.formCliente.controls["nrocliente"].setValue(this.nclialta);
                     this.isloading = false;
+                    this.cdr.detectChanges();
                    })                                              
             }
           

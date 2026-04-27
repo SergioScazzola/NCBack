@@ -39,13 +39,19 @@
 
       <!-- Columna Nombre -->
       <ng-container matColumnDef="nombre">
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
-        <td mat-cell *matCellDef="let renChof">{{ renChof.nombre }}</td>
+        <th mat-header-cell *matHeaderCellDef  class="center-col">Nombre</th>
+        <td mat-cell *matCellDef="let renChof">{{ renChof.nombre}}</td>
+      </ng-container>
+
+      <!-- Columna camion -->
+      <ng-container matColumnDef="idCamion">
+        <th mat-header-cell *matHeaderCellDef class="center-col">Camión</th>
+        <td mat-cell *matCellDef="let renChof">{{ this.ccamiones[this.ccamiones.findIndex(p=>p.idCamion==renChof.idCamion)].descrip }}</td>
       </ng-container>
 
       <!-- Columna Domicilio -->
       <ng-container matColumnDef="domicilio">
-        <th mat-header-cell *matHeaderCellDef>Domicilio</th>
+        <th mat-header-cell *matHeaderCellDef class="center-col">Domicilio</th>
         <td mat-cell *matCellDef="let renChof">{{ renChof.domicilio }}</td>
       </ng-container>
 
@@ -63,19 +69,19 @@
 
       <!-- Columna Cuit -->
       <ng-container matColumnDef="cuit">
-        <th mat-header-cell *matHeaderCellDef>Cuit</th>
+        <th mat-header-cell *matHeaderCellDef  class="center-col">Cuit</th>
         <td mat-cell *matCellDef="let renChof">{{ renChof.cuit }}</td>
       </ng-container>
 
-      <!-- Columna Telefono -->
+      <!-- Columna Telefono >
       <ng-container matColumnDef="telefono">
         <th mat-header-cell *matHeaderCellDef>Telefono</th>
         <td mat-cell *matCellDef="let renChof">{{ renChof.telefono }}</td>
-      </ng-container>
+      </ng-container-->
 
       <!-- Columna Notas -->
       <ng-container matColumnDef="notas">
-        <th mat-header-cell *matHeaderCellDef>Notas</th>
+        <th mat-header-cell *matHeaderCellDef class="center-col">Notas</th>
         <td mat-cell *matCellDef="let renChof">{{ renChof.notas }}</td>
       </ng-container>
       
