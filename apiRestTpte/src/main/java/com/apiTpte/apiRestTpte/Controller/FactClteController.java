@@ -83,9 +83,9 @@ public class FactClteController {
       } 
     }
      @DeleteMapping(value="/faccl", params={"id"})    
-    public ResponseEntity<String> borrarFactp(@RequestParam("id") Integer idfac){
+    public ResponseEntity<String> borrarFacCL(@RequestParam("id") Integer idfac){
       try {
-        int nrofac = tpteRepository.deleteFactp(idfac);
+        int nrofac = tpteRepository.deleteFaccl(idfac);
         return new ResponseEntity<>(Integer.toString(nrofac),HttpStatus.OK);
       } catch (Exception e) {
         return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR );
