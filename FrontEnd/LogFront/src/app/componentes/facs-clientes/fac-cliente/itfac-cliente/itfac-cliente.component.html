@@ -92,8 +92,8 @@
        <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe Neto</mat-label>
-          <input matInput readonly="true" formControlName="impneto"
-           [value]="formItfac.get('impneto')?.value | currency:'ARS':'symbol':'1.2-2'"
+          <input matInput readonly="true"
+           [value]="formItfac.get('impneto')?.value | number :'1.2-2'"
             style="text-align: right"/>
         </mat-form-field>
       </div>
@@ -101,16 +101,16 @@
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe IVA</mat-label>
-          <input matInput readonly="true" formControlName="impiva"
-           [value]="formItfac.get('impiva')?.value | currency:'ARS':'symbol':'1.2-2'"
+          <input matInput readonly="true"
+           [value]="formItfac.get('impiva')?.value | number :'1.2-2'"
             style="text-align: right"/>
         </mat-form-field>        
       </div>
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe Item</mat-label>
-          <input matInput readonly="true" formControlName="totalitem"
-           [value]="formItfac.get('totalitem')?.value | currency:'ARS':'symbol':'1.2-2'"
+          <input matInput readonly="true"
+           [value]="formItfac.get('totalitem')?.value  | currency:'$ ':'symbol':'1.2-2'"
             style="text-align: right"/>
         </mat-form-field>
       </div>

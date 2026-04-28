@@ -76,10 +76,10 @@ export class ItfacClienteComponent {
                  this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Cliente : "+this.data.nomcli;    
                  this.formItfac.controls["nroitem"].setValue(this.data.nroitem);
                  this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje);
-                 this.formItfac.controls["nomchofer"].setValue(this.cviajes[0].nomchofer);
-                 this.seleccionoViaje(0);
+                 this.formItfac.controls["nomchofer"].setValue(this.cviajes[0].nomchofer);                 
                  if (this.cviajes.length > 0) {
-                   this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje);
+                   this.idviajeSel = this.cviajes[0].idViaje;
+                   this.formItfac.controls["idViaje"].setValue(this.idviajeSel);                   
                    this.seleccionoViaje(0);
                    this.isloading = false;
                    this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores  //     
@@ -130,15 +130,11 @@ actualizarFormulario(){
 }
     onSelectionViaje(event : any){
       // Selecciono un viaje, calcular datos del item
-      var indv     : number;
-      var nroviaje : number;
-      if (typeof(event)=='number'){ // recibi un numero
-         indv = 0;
-      } else { // recibi un evento
-         nroviaje = event.value;
-         this.idviajeSel = nroviaje;
-         indv = this.cviajes.findIndex(p=>p.idViaje==nroviaje);
-      }
+      var indv     : number;    
+      var nroviaje = event.value;
+      this.idviajeSel = nroviaje;
+      indv = this.cviajes.findIndex(p=>p.idViaje==nroviaje);
+      
      this.formItfac.controls['nomchofer'].setValue(this.cviajes[indv].nomchofer);        
      this.formItfac.controls['origen'].setValue(this.cviajes[indv].origen);
      this.formItfac.controls['destino'].setValue(this.cviajes[indv].destino);
@@ -201,6 +197,7 @@ actualizarFormulario(){
 retornarItemFactp(){ // Devuelve un objeto "itfactpDTO" para que el componente padre lo agregue a la lista
   // Completa los datos del item agregado 
     var indv = this.cviajes.findIndex(p=>p.idViaje == this.idviajeSel);
+    console.log("indice de Viajeeeeeeeee : "+indv);
     var iteem : itfacclDTO = {
        idFactura    : this.data.ditFac.idFactura,
        nroitem      : this.formItfac.controls["nroitem"].value,      

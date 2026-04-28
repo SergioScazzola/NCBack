@@ -5,7 +5,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
 import { SinoService } from '../../servicios/sino.service';
 import { NotiserviceService } from '../../servicios/notiservice.service';
-import { finalize, forkJoin, Subscription } from 'rxjs';
+import { finalize, forkJoin, Subscription, switchMap } from 'rxjs';
 import { DatePipe,DecimalPipe} from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { facclDTO } from '../../../entidades/facclDTO';
@@ -137,37 +137,40 @@ export class FacsClientesComponent {
    }
 
    borrarFacCL(idfac : number, nrofac : string){
+    // Desmarca los registros de viaje de acuerdo al detalle y luego
+    // borra la factura y el detalle en cascada (definido en BD)
      var resu : string;
-     this.sinoServicio.abrirSiNoDialogo("Confirmación",
-                               "¿ Está seguro de quiere borrar Definitivamente la Factura Nro."+idfac+"-"+nrofac+" ?")
-        .then(result => {
-           if (result) {
-             
-             this.servicio.getItemsFacsCL(idfac)
-             // por cada item de detalle de Fac.del cliente, desmarco el viaje como no facturado
-               .subscribe((data:any):void =>{ 
-                  this.cdetfaccl = data
-                  const observables = this.cdetfaccl.map(item => {                         
-                        return this.servicio.updateFactC(item.idViaje,0)});
-                        forkJoin(observables).subscribe({
-                            next: (results) => {
-                              console.log('Todos los items grabados:', results);                                   
-                              }, 
-                            error: (err) => {
-                              console.error('Error al grabar items:', err);
-                            }
-                  });
-               })
+     this.servicio.getItemsFacsCL(idfac).subscribe((data:any) => { 
+        this.cdetfaccl = data;
 
-            this.servicio.elimFacCL(idfac)
-              .subscribe((data:any):void => { 
-                   resu = data;
-                   this.notiServicio.showNotification("Factura : "+nrofac+" Eliminada",'Aceptar','mensaje',500)
-                   })
-            }
-         });      
-                                            
-  }
+        const observables = this.cdetfaccl.map(item => {                         
+        return this.servicio.updateFactC(item.idViaje, 0);
+     });
+
+     forkJoin(observables).subscribe({
+      next: (results) => {
+       console.log('Todos los items grabados:', results);
+
+      // 👉 recién acá eliminar
+       this.servicio.elimFacCL(idfac).subscribe((data:any) => { 
+        resu = data;
+        this.leerCFacsCL();  // refrescar lista de facturas
+        this.notiServicio.showNotification(
+          "Factura : " + nrofac + " Eliminada (" + resu + ")",
+          'Aceptar',
+          'mensaje',
+          500
+        );
+      });
+
+    }, 
+    error: (err) => {
+      console.error('Error al grabar items:', err);
+    }
+  });
+});
+
+}
   
    manejarOperacion($event:any){
      if ($event==="Alta" || $event==="Modi"){

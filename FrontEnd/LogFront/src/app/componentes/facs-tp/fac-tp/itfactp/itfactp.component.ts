@@ -67,23 +67,22 @@ export class ItfactpComponent {
       forkJoin({
               viajes: this.servicio.getViajesxChofer(this.data.ditFac.idChofer),                          
       }).subscribe(res => {         
-            this.cviajes   = res.viajes;      
-             this.isloading = false;
-             this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores  //        
+            this.cviajes   = res.viajes || [];      
+              
             if (this.data.accion === "V") {  // sólo visualizar item
                  this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Chofer: "+this.data.nomchof;    
                  this.actualizarFormulario();
+                 this.isloading = false;
+                 this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores  //       
             } else if (this.data.accion === "A") { // data.accion = "A" -> Alta
-           
+               if (this.cviajes.length > 0) {
                  this.operacion = "Item "+this.data.nroitem+" - Fac."+this.data.nrofactura+" - Chofer: "+this.data.nomchof;    
                  this.formItfac.controls["nroitem"].setValue(this.data.nroitem);
-                 this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje)
+                 this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje)                          
                  this.seleccionoViaje(0);
-                 if (this.cviajes.length > 0) {
-                   this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje);
-                   this.seleccionoViaje(0);
-                  
-                 } else {
+                 this.isloading = false;
+                 this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores  //            
+              } else {
                     this.notiService.showNotification("El chofer seleccionado no tiene viajes disponibles", "Cerrar", "error", 5000);
                     
                  };

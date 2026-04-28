@@ -113,9 +113,9 @@ export class FacTpComponent {
   }
   colDFactp : string[] = ["nroitem","idViaje","origen","destino","cantkm","ltsgasoil","totalitem","M"]
 
-  ngAfterViewInit(){
-    this.isloading = false
-  }
+  //ngAfterViewInit(){
+  //  this.isloading = false
+  //}
   ngOnInit(){             
     
      //setTimeout(() => {
@@ -137,24 +137,25 @@ export class FacTpComponent {
            this.operacion = `Consulta Factura tpte Nro. ${this.factpp.idFactura} - ${this.factpp.nrofactura}`;
            this.actualizarFormulario();
            this.isloading = false;
-           this.cdr.markForCheck()// <--- Importante: fuerza la detección si sigue el error
+           this.cdr.detectChanges()// <--- Importante: fuerza la detección si sigue el error
         });
       }
       if (this.data.accion === "A") { // data.accion = "A" -> Alta
           var subs : Subscription 
           subs = this.servicio.getChoferes()
               .pipe(finalize(()=> {
-                this.mostrarHora();
+                //this.mostrarHora();
                 //this.servicio.getCantFacsTP().subscribe(max => {           
                 this.nfactpalta = this.data.idFactura;
                 console.log("Factura para alta: " + this.nfactpalta);
                 this.operacion = "Agregar Factura tpte. Nro. " + this.nfactpalta;
                 this.formFactp.controls["idFactura"].setValue(this.nfactpalta);
                 console.log("Datos Recibidos : " + JSON.stringify(this.data));
-                var indchofer = this.cchoferes.findIndex(p=>p.idChofer=this.idchoferSel);
-                this.factpp.nomchofer = this.cchoferes[indchofer].nombre;                            
+               
+                this.factpp.nomchofer = this.cchoferes[0].nombre;                            
+                this.idchoferSel      = this.cchoferes[0].idChofer;                            
                 this.isloading = false;
-                this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores
+                this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
             }))
 
           .subscribe(datas => {

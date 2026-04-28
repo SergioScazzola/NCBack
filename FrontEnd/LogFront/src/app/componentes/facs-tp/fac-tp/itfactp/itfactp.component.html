@@ -1,6 +1,4 @@
-@if (isloading){  
-  <div style="padding:20px">Cargando...</div>
-} @else {
+@if (!isloading){  
 <div class="custom-dialog-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
   <h4>{{ operacion }}</h4>
   <form [formGroup]="formItfac" class="p-3">

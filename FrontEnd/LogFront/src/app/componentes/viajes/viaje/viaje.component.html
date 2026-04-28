@@ -25,8 +25,7 @@
       <div class="col-3">         
             <mat-checkbox 
                 formControlName="fact"
-                [checked]="formViaje.controls['fact'].value==1"
-             
+                [checked]="formViaje.controls['fact'].value==1"             
                 >Fact.Tpte
             </mat-checkbox>
         </div> 
@@ -146,16 +145,16 @@
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe Neto</mat-label>
-          <input matInput [readonly]="true" formControlName="impneto"
-                 [value]="formViaje.get('impneto')?.value | currency:'$':'symbol':'1.2-2'"
+          <input matInput [readonly]="true"
+                 [value]="formViaje.get('impneto')?.value | number :'1.2-2'"
                  style="text-align: right;">	
          </mat-form-field>   
       </div>
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe del Viaje</mat-label>
-          <input matInput [readonly]="true" formControlName="impviaje"
-                 [value]="formViaje.get('impviaje')?.value  | currency:'$':'symbol':'1.2-2'"
+          <input matInput [readonly]="true"                
+              [value]="formViaje.get('impviaje')?.value | currency:'$ ':'symbol':'1.2-2'"
                  style="text-align: right;">	
          </mat-form-field>   
       </div>

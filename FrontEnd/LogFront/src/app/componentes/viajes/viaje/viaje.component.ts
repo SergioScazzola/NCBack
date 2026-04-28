@@ -152,7 +152,7 @@ export class ViajeComponent {
   }
   actualizarControles(){
     // Actualiza controles para modificar
-                        
+                   
     this.formViaje.controls["nroviaje"].setValue(this.viajee.idViaje), 
     this.formViaje.controls["fecha"].setValue(this.viajee.fecha), 
     this.formViaje.controls["idChofer"].setValue(this.viajee.idChofer), 
@@ -178,6 +178,14 @@ export class ViajeComponent {
                            
    }
 
+   formNro(nro : number):string{
+    var formateado = "";
+    formateado = new Intl.NumberFormat('es-AR', {
+       minimumFractionDigits: 2,
+       maximumFractionDigits: 2
+    }).format(nro);   
+    return formateado;
+   }
    AgregarViaje(){
 
     var indchof = this.cchoferes.findIndex(p=>p.idChofer==this.idChoferSel);

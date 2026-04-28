@@ -5,12 +5,13 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
 import { SinoService } from '../../servicios/sino.service';
 import { NotiserviceService } from '../../servicios/notiservice.service';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, forkJoin, Subscription } from 'rxjs';
 import { DatePipe,DecimalPipe} from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { factpDTO } from '../../../entidades/factpDTO';
 import { FacTpComponent } from './fac-tp/fac-tp.component';
 import { MatDateFormats } from '@angular/material/core';
+import { itfactpDTO } from '../../../entidades/itfactpDTO';
 
 
 
@@ -33,6 +34,7 @@ export class FacsTPComponent {
    formFactp             : boolean;
    factpmod              : number; 
    cfacsTP               : factpDTO[]=[];
+   cdetfacTP             : itfactpDTO[]=[];
    dataSource            = new MatTableDataSource<any>();
 
  
@@ -133,25 +135,40 @@ export class FacsTPComponent {
  
    }
    borrarFacTP(idfac : number, nrofac : string){
-     var resu : string;
-      this.sinoServicio.abrirSiNoDialogo("Confirmación",
-                               "¿ Está seguro de quiere borrar Definitivamente la Factura Nro."+idfac+"-"+nrofac+" ?")
-        .then(result => {
-           if (result) {
-               var subscri : Subscription;
-               subscri = this.servicio.elimFacTP(idfac)               
-                  .pipe(finalize(() => {
-                     this.notiServicio.showNotification("La Factura Nro "+idfac+" se ha eliminado con éxito "+resu,'Aceptar','mensaje',500); 
-                     subscri.unsubscribe();
-                    this.leerFacsTP(); // refrescar lista
- 
-                   }))
-                   .subscribe((data : any): void => {
-                        resu = data});       
-           } else {
-             console.log('El usuario seleccionó "No"');
-           }
-     })
+    var resu : string;
+    // Desmarca los registros de viaje de acuerdo al detalle y luego
+    // borra la factura y el detalle en cascada (definido en BD)
+    var resu : string;
+    this.servicio.getItemsFacsTP(idfac).subscribe((data:any) => { 
+            this.cdetfacTP    = data;
+    
+            const observables = this.cdetfacTP.map(item => {                         
+            return this.servicio.updateFactT(item.idViaje, 0);
+         });
+    
+         forkJoin(observables).subscribe({
+          next: (results) => {
+           console.log('Todos los items grabados:', results);
+    
+          // 👉 recién acá eliminar
+           this.servicio.elimFacTP(idfac).subscribe((data:any) => { 
+            resu = data;
+            this.leerFacsTP();  // refrescar lista de facturas
+            this.notiServicio.showNotification(
+              "Factura : " + nrofac + " Eliminada (" + resu + ")",
+              'Aceptar',
+              'mensaje',
+              500
+            );
+          });
+    
+        }, 
+        error: (err) => {
+          console.error('Error al grabar items:', err);
+        }
+      });
+    });
+    
   }
   
    manejarOperacion($event:any){
