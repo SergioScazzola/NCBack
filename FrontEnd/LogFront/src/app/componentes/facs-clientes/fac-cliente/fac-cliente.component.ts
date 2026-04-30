@@ -147,10 +147,9 @@ export class FacClienteComponent {
                 this.mostrarHora();
                 //this.servicio.getCantFacsTP().subscribe(max => {           
                 this.nfaccpalta = this.data.idFactura;
-                console.log("Factura para alta: " + this.nfaccpalta);
-                this.operacion = "Agregar Factura Nro. " + this.nfaccpalta;
-                this.formFaccl.controls["idFactura"].setValue(this.nfaccpalta);
-                console.log("Datos Recibidos : " + JSON.stringify(this.data));
+                
+                this.operacion = "Agregar Factura al Cliente Nro. " + this.nfaccpalta;
+                this.formFaccl.controls["idFactura"].setValue(this.nfaccpalta);                
                 var indcliente = this.cclientes.findIndex(p=>p.idCliente=this.idclienteSel);
                 this.factpp.nomcliente = this.cclientes[indcliente].nombre;                            
                 this.isloading = false;

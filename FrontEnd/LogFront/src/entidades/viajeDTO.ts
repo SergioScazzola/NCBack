@@ -1,6 +1,6 @@
 export interface viajeDTO {
     idViaje        : number;
-    fecha          : Date;
+    fecha          : Date|null;
     idChofer       : number;
     nomchofer      : string;
     idCliente      : number;

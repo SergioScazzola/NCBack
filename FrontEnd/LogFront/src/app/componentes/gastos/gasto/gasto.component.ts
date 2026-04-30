@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, Inject, Input, Output, viewChild, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, Inject, Input, NgZone, Output, viewChild, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { ServiciosService } from '../../../servicios/service';
@@ -76,11 +76,33 @@ export class GastoComponent {
   
   isloading        : boolean = true;
   private gastoo   : gastoDTO;  
-  
+  private viaje0   : viajeDTO = {
+    
+    idViaje        : 0,
+    fecha          : null,
+    idChofer       : 0,
+    nomchofer      : "",
+    idCliente      : 0,
+    nomcliente     : "",   
+    idCamion       : 0,
+    descrip        : "",
+    origen         : "Origen",
+    destino        : "Destino",
+    ctg            : "",
+    cantkm         : 0,
+    cargaton       : 0,
+    tarifap        : 0,
+    ltsgasoil      : 0,
+    impneto        : 0,
+    impviaje       : 0,
+    fact           : 0,
+    facc           : 0
+  }
   constructor(  public fb           : FormBuilder,
                 public servicio     : ServiciosService,
                 public dialogRef    : MatDialogRef<GastoComponent>,
                 private cdr         : ChangeDetectorRef,
+                private zone        : NgZone,
                 @Inject(MAT_DIALOG_DATA) public data: intGasto,  
                 private notiService : NotiserviceService )
    { effect(() => {
@@ -244,17 +266,47 @@ export class GastoComponent {
     // Establecer la fecha con hora en el form
     this.formGasto.controls['fecha'].setValue(nuevaFecha);
   }
+
+  mostrarHora() {
+   this.zone.runOutsideAngular(() => {
+    setInterval(() => {
+      const hoy = new Date();
+      const valorControl = this.formGasto.controls['fecha'].value;
+      
+      if (valorControl) {
+        const fechaform = new Date(valorControl);
+        fechaform.setHours(hoy.getHours(), hoy.getMinutes(), hoy.getSeconds());
+
+        // Volvemos a la zona de Angular solo para actualizar el valor
+        this.zone.run(() => {
+          this.formGasto.controls['fecha'].setValue(fechaform, { emitEvent: false });
+          this.cdr.detectChanges(); // Forzamos la actualización sin romper el ciclo
+        });
+      }
+    }, 1000);
+  }) 
+  }
 onSelectionChofer($event : any){
     // al seleccionar un chofer
     this.selchofer = $event.value; // idChofer seleccionado
     if (this.selchofer != 0){ // si se selecciona un chofer
       var subs : Subscription;            
       subs = this.servicio.getViajesxChofer(this.selchofer)
-                  .subscribe((datas:any):void =>{ this.cviajes = datas;
-                           subs.unsubscribe(); 
+                  .subscribe((datas:any):void =>{ this.cviajes = datas || [];
+                      subs.unsubscribe(); 
+                      if (this.cviajes.length > 0){
+                           this.cviajes = [this.viaje0, ...this.cviajes];
+                           this.formGasto.controls["idViaje"].setValue(this.cviajes[0].idViaje);
                            this.formGasto.controls["idViaje"].enable(); // limpio el campo viaje                           
                            this.isloading = false;
-                           this.cdr.detectChanges(); })   
+                           this.cdr.detectChanges();   
+                      } else {
+                        this.notiService.showNotification("No existen Viajes ingresados para este chofer, "+
+                                         " el gasto se asignará al chofer",'Aceptar','mensaje',500); 
+                           this.formGasto.controls["idViaje"].setValue(0);
+                           this.formGasto.controls["idViaje"].disable(); // limpio el campo viaje                           
+                      }                          
+                  }) 
     } else { // si se selecciona "Sin Chofer"
       subs = this.servicio.getViajes()  // los ultimos viajes
              .subscribe((datas:any):void =>{ this.cviajes = datas;

@@ -1,6 +1,6 @@
 .content-style {    
     border: 1px solid black;
-    border-radius: 4px;
+    border-radius: 1px;
     padding: 10px;
     color : black;    
     margin-top: 10px;
@@ -12,7 +12,7 @@
     padding-right: 10px;
     padding-bottom: 20px;
     color: black;
-    background-color :#80c4f9;
+    background-color :#c7e7ff;
 }
 .botonera {
   justify-content:space-between;
