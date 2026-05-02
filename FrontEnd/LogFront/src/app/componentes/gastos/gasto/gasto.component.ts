@@ -130,7 +130,7 @@ export class GastoComponent {
                subs2 = this.servicio.leerGasto(this.data.idgasto)
                   .subscribe((datas:any):void =>{                           
                     this.gastoo = datas;
-                    this.operacion = "Modificar Gasto Nro. "+this.data.idgasto+" - "+this.data.descrip;
+                    this.operacion = "Modificar Gasto Nro. "+this.data.idgasto+" - "+this.gastoo.provgasto;
                     this.actualizarControles();
                     subs2.unsubscribe();
                     this.isloading = false;

@@ -296,6 +296,18 @@ prepararAlta(): boolean{
   this.imps[0] = this.pagochof.importe1;
   this.imps[1] = this.pagochof.importe2;
   this.imps[2] = this.pagochof.importe3;
+  if (this.pagochof.importe2>0){ // habilito segunda fila si el importe es mayor a cero
+    this.formPag.get('idmpago2')?.enable();
+    this.formPag.get('nrompago2')?.enable();
+    this.formPag.get('banco2')?.enable();
+    this.formPag.get('importe2')?.enable();
+  }
+  if (this.pagochof.importe3>0){ // habilito tercera fila si el importe es mayor a cero
+    this.formPag.get('idmpago3')?.enable();
+    this.formPag.get('nrompago3')?.enable();
+    this.formPag.get('banco3')?.enable();
+    this.formPag.get('importe3')?.enable();
+  }
   this.totalizarPago()
   
   }
@@ -336,9 +348,7 @@ prepararAlta(): boolean{
 
   GrabarPago(){
    
-      var imp1 = this.formPag.controls['importe1'].value;
-      var imp2 = this.formPag.controls['importe2'].value;
-      var imp3 = this.formPag.controls['importe3'].value;
+   
       var impt = this.formPag.controls['imptotal'].value;
     
 
@@ -351,17 +361,17 @@ prepararAlta(): boolean{
          idmpago1       : this.formPag.controls['idmpago1'].value,
          nrompago1      : this.formPag.controls['nrompago1'].value,      
          banco1         : this.formPag.controls['banco1'].value,        
-         importe1       : parseFloat(imp1),
+         importe1       : this.imps[0],
                                                                
          idmpago2       : this.formPag.controls['idmpago2'].value,
          nrompago2      : this.formPag.controls['nrompago2'].value,      
          banco2         : this.formPag.controls['banco2'].value,
-         importe2       : parseFloat(imp2),
+         importe2       : this.imps[1],
 
          idmpago3       : this.formPag.controls['idmpago3'].value,
          nrompago3      : this.formPag.controls['nrompago3'].value,      
          banco3         : this.formPag.controls['banco3'].value,
-         importe3       : parseFloat(imp3),
+         importe3       : this.imps[2],
       
         imptotal       : parseFloat(impt),
         observ         : this.formPag.controls['observ'].value
@@ -382,9 +392,7 @@ prepararAlta(): boolean{
     
 }
 ModificarPago(){
-  var impo1 = this.formPag.controls['importe1'].value;
-  var impo2 = this.formPag.controls['importe2'].value;
-  var impo3 = this.formPag.controls['importe3'].value;
+ 
   var impt  = this.formPag.controls['imptotal'].value;
 
   var pago : pagoDTO = {
@@ -396,15 +404,15 @@ ModificarPago(){
     nrompago1      : this.formPag.controls['nrompago1'].value,
     banco1         : this.formPag.controls['banco1'].value,
 
-    importe1       : parseFloat(impo1),
+    importe1       :  this.imps[0],
     idmpago2       : this.formPag.controls['idmpago2'].value,
     nrompago2      : this.formPag.controls['nrompago2'].value,
     banco2         : this.formPag.controls['banco2'].value,
-    importe2       : parseFloat(impo2),
+    importe2       :  this.imps[1],
     idmpago3       : this.formPag.controls['idmpago3'].value,
     nrompago3      : this.formPag.controls['nrompago3'].value,
     banco3         : this.formPag.controls['banco3'].value,
-    importe3       : parseFloat(impo3),
+    importe3       : this.imps[2],
     imptotal       : parseFloat(impt),
     observ         : this.formPag.controls['observ'].value,
   }

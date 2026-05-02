@@ -49,7 +49,7 @@
             (selectionChange)="onSelectionChofer($event)">
             @for (chofer of cchoferes; track chofer.idChofer) {
               <mat-option [value]="chofer.idChofer">
-                {{ chofer.idChofer+" - "+chofer.nombre }}
+                {{ chofer.nombre+" - "+chofer.idChofer }}
               </mat-option>
             }
           </mat-select>
@@ -63,7 +63,7 @@
             (selectionChange)="onSelectionCliente($event)">
             @for (cliente of cclientes; track cliente.idCliente) {
               <mat-option [value]="cliente.idCliente">
-                {{ cliente.idCliente+" - "+cliente.nombre }}
+                {{ cliente.nombre+" - "+cliente.idCliente }}
               </mat-option>
             }
           </mat-select>
@@ -77,7 +77,7 @@
             (selectionChange)="onSelectionCamion($event)">
             @for (camion of ccamiones; track camion.idCamion) {
               <mat-option [value]="camion.idCamion">
-                {{ camion.idCamion+" - "+camion.descrip }}
+                {{ camion.domChasis+" - "+camion.idCamion }}
               </mat-option>
             }
           </mat-select>

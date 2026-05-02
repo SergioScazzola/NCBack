@@ -48,7 +48,7 @@
             (selectionChange)="onSelectionChofer($event)">
             @for (chofer of cchoferes; track chofer.idChofer) {
               <mat-option [value]="chofer.idChofer">
-                {{ chofer.idChofer+" - "+chofer.nombre }}
+                {{ chofer.nombre+" - "+chofer.idChofer }}
               </mat-option>
             }
           </mat-select>
@@ -62,7 +62,7 @@
             (selectionChange)="onSelectionViaje($event)">
             @for (viaje of cviajes; track viaje.idViaje) {
               <mat-option [value]="viaje.idViaje">
-                {{ viaje.idViaje+" - "+viaje.origen+"-"+viaje.destino }}
+                {{ viaje.origen+"-"+viaje.destino+" - "+viaje.idViaje }}
               </mat-option>
             }
           </mat-select>
