@@ -30,6 +30,8 @@ import { intPago, pagoDTO } from '../../../../entidades/pagoDTO';
 import { ImporteDecimalDirective } from "../../../Directivas/importeDecimal";
 import { ImporteDirective } from "../../../Directivas/importeDirective";
 import { SinoService } from '../../../servicios/sino.service';
+import { facclDTO } from '../../../../entidades/facclDTO';
+import { intPagocli, pagocliDTO } from '../../../../entidades/pagocliDTO';
 
 export const DATE_FORMATS : MatDateFormats = {
 
@@ -45,7 +47,7 @@ export const DATE_FORMATS : MatDateFormats = {
 }
 
 @Component({
-  selector: 'app-pagoschof',
+  selector: 'app-pagoscli',
  imports: [MatFormField,
     MatLabel,
     MatInputModule,
@@ -67,17 +69,16 @@ export const DATE_FORMATS : MatDateFormats = {
           { provide : MAT_DATE_LOCALE, useValue: es},
           { provide : LOCALE_ID, useValue: 'es-AR' }
   ],                        
-  templateUrl: './pagoschof.component.html',
-  styleUrl: './pagoschof.component.css',
+  templateUrl: './pagoscli.component.html',
+  styleUrl: './pagoscli.component.css',
 })
-export class PagoschofComponent {
-  public  operacion     : string;
+export class PagoscliComponent {
+ public   operacion     : string;
   public  formPag       : FormGroup;
   public  cmediospago   : MPagoDTO[]=[];
-  public  cviajes       : viajeDTO[]=[];
-  public  cfacsTpte     : factpDTO[]=[];
+  public  cfacsCli      : facclDTO[]=[];
   public  hoy           : Date = new Date();
-  public  pagochof      : pagoDTO;
+  public  pagocli       : pagocliDTO;
   public  imppago       : number;
   private imps          : number[]=[0,0,0];
   public  isloading     : boolean = true;
@@ -85,14 +86,14 @@ export class PagoschofComponent {
   private pagopalta     : number;
   public  deshAlta      : boolean = false; // para deshabilitar boton de alta
 
-  private mpagoSel      : number;
-  private factpSel       : number;
+  private mpagoSel        : number;
+  private facclSel        : number;
   public  imprimeconcepto : boolean = true;
 
  constructor(     public  fb             : FormBuilder,
                   private servicio       : ServiciosService,                
-                  public dialogRef       : MatDialogRef<PagoschofComponent>,
-                  @Inject(MAT_DIALOG_DATA) public data: intPago,  
+                  public dialogRef       : MatDialogRef<PagoscliComponent>,
+                  @Inject(MAT_DIALOG_DATA) public data: intPagocli,  
                   private zone           : NgZone,
                    private sinoServicio : SinoService,
                   private cdr            : ChangeDetectorRef,  
@@ -109,23 +110,18 @@ export class PagoschofComponent {
     this.imppago = 0;
     this.initFormulario();
      forkJoin({  // consultas traer info para pago
-          
-           //viajeschof:    this.servicio.getViajesxChofer(this.data.idChofer),
-           facturaschof:  this.servicio.getFactTpteXChofer(this.data.idChofer),  
-             
-           //chofer:        this.servicio.leerPagoChofer(this.data.idPago),
+                    
+           facturascli:  this.servicio.getFactCliXCliente(this.data.idCliente),                        
            mediospago:    this.servicio.getMediosPago(),
    
          }).subscribe(res2 => {
-       
-           //this.cviajes     = res2.viajeschof;
-           this.cfacsTpte   = res2.facturaschof;
+           this.cfacsCli = res2.facturascli;
            this.cmediospago = res2.mediospago;
 
            if (this.data.accion=="A"){  // Alta de Pago
                     this.mostrarHora();
-                    this.pagopalta =  this.data.idPago;                                                       
-                    this.operacion = "Agregar Pago al Chofer : "+this.data.nombre;
+                    this.pagopalta =  this.data.idPago;  // viene del modulo que llama                                                     
+                    this.operacion = "Agregar Pago del Cliente : "+this.data.nombre;
                   
                     if (this.prepararAlta()){
                        this.isloading = false;
@@ -136,9 +132,9 @@ export class PagoschofComponent {
                     
               } else if (this.data.accion=="M"){   // Modificación de un pago  -> Lee el pago
                     var subs2 : Subscription;
-                    subs2 = this.servicio.leerPagoChofer(this.data.idPago)
+                    subs2 = this.servicio.leerPagoCliente(this.data.idPago)
                        .pipe(finalize(() => {  
-                            this.operacion = "Modificar Pago Nro.: "+this.data.idPago+" al Chofer : "+this.data.nombre;                
+                            this.operacion = "Modificar Pago Nro.: "+this.data.idPago+" del Cliente : "+this.data.nombre;                
                             subs2.unsubscribe;
                             this.prepararModificacion();
                             this.isloading = false;
@@ -146,7 +142,7 @@ export class PagoschofComponent {
                          
                        }))
                        .subscribe((datas:any):void =>{
-                           this.pagochof = datas
+                           this.pagocli = datas
                        })                                                                                                
                   }
           })
@@ -157,7 +153,7 @@ export class PagoschofComponent {
      this.formPag = this.fb.group({        
           nropag      : [''], 
           fecha       : [''],           
-          idChofer    : ['',[Validators.required]],    
+          idCliente    : ['',[Validators.required]],    
           idFactura   : [0,[Validators.required]],    
           idmpago1    : [1,[Validators.required]],                            
           nrompago1   : [''],
@@ -174,10 +170,7 @@ export class PagoschofComponent {
           imptotal    : [''],
           observ      : ['']
         }) 
-       /* this.formPag.get('idmpago2')?.disable;
-        this.formPag.get('nrompago2')?.disable;
-        this.formPag.get('banco2')?.disable;
-        this.formPag.get('importe2')?.disable;*/
+      
 
   }
   mostrarHora() {
@@ -205,9 +198,7 @@ export class PagoschofComponent {
 
   }
 
-  onSelectionChangeMPago($event: any, nro : number){
 
-  }
   onFechaChange(event: any) {
     const nuevaFecha: Date = event.value; // Fecha seleccionada en el datepicker
     const ahora = new Date(); // Hora actual
@@ -225,9 +216,9 @@ export class PagoschofComponent {
   }
 prepararAlta(): boolean{
    var retorno = true;
-   if (this.cfacsTpte==undefined || this.cfacsTpte.length==0){ // no hay facturas para el chofer
-       this.sinoServicio.abrirSiNoDialogo("Confirmación", "El chofer "+this.data.nombre+" no tiene facturas emitidas "+
-                                          "¿ Continúa con agregar Pago ?")
+   if (this.cfacsCli==undefined || this.cfacsCli.length==0){ // no hay facturas del cliente
+       this.sinoServicio.abrirSiNoDialogo("Confirmación", "No hay facturas emitidas para el cliente "+this.data.nombre+
+                                          ". ¿Desea agregar el pago sin vincularlo a una factura?")
         .then(result => {
             if (result) {  //continua con agregar pago
               this.inicializarFormulario(0);                          
@@ -236,7 +227,7 @@ prepararAlta(): boolean{
             }
           })   
   } else {
-    var idf = this.cfacsTpte[0].idFactura;
+    var idf = this.cfacsCli[0].idFactura;
     this.inicializarFormulario(idf);
    
   }
@@ -246,22 +237,22 @@ prepararAlta(): boolean{
   inicializarFormulario(idfac : number){
      this.formPag.controls['nropag'].setValue(this.pagopalta);
      this.formPag.controls['fecha'].setValue(this.hoy);
-     this.formPag.controls['idChofer'].setValue(1);
+     this.formPag.controls['idCliente'].setValue(1);
      this.formPag.controls['idFactura'].setValue(idfac);
      this.formPag.controls['idmpago1'].setValue(1);
      this.formPag.controls['nrompago1'].setValue(' ');
      this.formPag.controls['banco1'].setValue(' ');
-   this.formPag.controls['importe1'].setValue(' ');
+     this.formPag.controls['importe1'].setValue(' ');
 
-   this.formPag.controls['idmpago2'].setValue(1);
-   this.formPag.controls['nrompago2'].setValue(' ');
-   this.formPag.controls['banco2'].setValue(' ');
-   this.formPag.controls['importe2'].setValue(' ');
+     this.formPag.controls['idmpago2'].setValue(1);
+     this.formPag.controls['nrompago2'].setValue(' ');
+     this.formPag.controls['banco2'].setValue(' ');
+     this.formPag.controls['importe2'].setValue(' ');
 
-   this.formPag.controls['idmpago3'].setValue(1);
-   this.formPag.controls['nrompago3'].setValue(' ');
-   this.formPag.controls['banco3'].setValue(' ');
-   this.formPag.controls['importe3'].setValue(' ');
+     this.formPag.controls['idmpago3'].setValue(1);
+     this.formPag.controls['nrompago3'].setValue(' ');
+     this.formPag.controls['banco3'].setValue(' ');
+     this.formPag.controls['importe3'].setValue(' ');
 
    this.formPag.controls['imptotal'].setValue(0);
    this.formPag.controls['observ'].setValue('');
@@ -269,40 +260,40 @@ prepararAlta(): boolean{
 
   prepararModificacion(){
 
-   this.formPag.controls['nropag'].setValue(this.pagochof.idPago);
-   this.formPag.controls['fecha'].setValue(this.pagochof.fecha);
-   this.formPag.controls['idChofer'].setValue(this.pagochof.idChofer);
-   this.formPag.controls['idFactura'].setValue(this.pagochof.idFactura);
-   this.formPag.controls['idmpago1'].setValue(this.pagochof.idmpago1);
-   this.formPag.controls['nrompago1'].setValue(this.pagochof.nrompago1);
-   this.formPag.controls['banco1'].setValue(this.pagochof.banco1);  
-   this.formPag.controls['importe1'].setValue(this.formatearNumero(this.pagochof.importe1));  
+   this.formPag.controls['nropag'].setValue(this.pagocli.idPago);
+   this.formPag.controls['fecha'].setValue(this.pagocli.fecha);
+   this.formPag.controls['idCliente'].setValue(this.pagocli.idCliente);
+   this.formPag.controls['idFactura'].setValue(this.pagocli.idFactura);
+   this.formPag.controls['idmpago1'].setValue(this.pagocli.idmpago1);
+   this.formPag.controls['nrompago1'].setValue(this.pagocli.nrompago1);
+   this.formPag.controls['banco1'].setValue(this.pagocli.banco1);  
+   this.formPag.controls['importe1'].setValue(this.formatearNumero(this.pagocli.importe1));  
 
-   this.formPag.controls['idmpago2'].setValue(this.pagochof.idmpago2);
-   this.formPag.controls['nrompago2'].setValue(this.pagochof.nrompago2);
-   this.formPag.controls['banco2'].setValue(this.pagochof.banco2);  
+   this.formPag.controls['idmpago2'].setValue(this.pagocli.idmpago2);
+   this.formPag.controls['nrompago2'].setValue(this.pagocli.nrompago2);
+   this.formPag.controls['banco2'].setValue(this.pagocli.banco2);  
 
    
-   this.formPag.controls['importe2'].setValue(this.formatearNumero(this.pagochof.importe2));  
+   this.formPag.controls['importe2'].setValue(this.formatearNumero(this.pagocli.importe2));  
 
-   this.formPag.controls['idmpago3'].setValue(this.pagochof.idmpago3);
-   this.formPag.controls['nrompago3'].setValue(this.pagochof.nrompago3);
-   this.formPag.controls['banco3'].setValue(this.pagochof.banco3);  
+   this.formPag.controls['idmpago3'].setValue(this.pagocli.idmpago3);
+   this.formPag.controls['nrompago3'].setValue(this.pagocli.nrompago3);
+   this.formPag.controls['banco3'].setValue(this.pagocli.banco3);  
    
-   this.formPag.controls['importe3'].setValue(this.formatearNumero(this.pagochof.importe3));  
+   this.formPag.controls['importe3'].setValue(this.formatearNumero(this.pagocli.importe3));  
 
-   this.formPag.controls['imptotal'].setValue(this.pagochof.imptotal);  
-   this.formPag.controls['observ'].setValue(this.pagochof.observ);
-  this.imps[0] = this.pagochof.importe1;
-  this.imps[1] = this.pagochof.importe2;
-  this.imps[2] = this.pagochof.importe3;
-  if (this.pagochof.importe2>0){ // habilito segunda fila si el importe es mayor a cero
+   this.formPag.controls['imptotal'].setValue(this.pagocli.imptotal);  
+   this.formPag.controls['observ'].setValue(this.pagocli.observ);
+  this.imps[0] = this.pagocli.importe1;
+  this.imps[1] = this.pagocli.importe2;
+  this.imps[2] = this.pagocli.importe3;
+  if (this.pagocli.importe2>0){ // habilito segunda fila si el importe es mayor a cero
     this.formPag.get('idmpago2')?.enable();
     this.formPag.get('nrompago2')?.enable();
     this.formPag.get('banco2')?.enable();
     this.formPag.get('importe2')?.enable();
   }
-  if (this.pagochof.importe3>0){ // habilito tercera fila si el importe es mayor a cero
+  if (this.pagocli.importe3>0){ // habilito tercera fila si el importe es mayor a cero
     this.formPag.get('idmpago3')?.enable();
     this.formPag.get('nrompago3')?.enable();
     this.formPag.get('banco3')?.enable();
@@ -323,7 +314,7 @@ prepararAlta(): boolean{
   const valor = parseFloat(cadena);
   this.imps[nro-1] = valor; // pongo el valor en el array para sumar      
   this.totalizarPago(); // refresco valor del pago
-  if (nro < 3){
+  if (nro < 3){ // habilito siguiente fila si el importe es mayor a cero
     nro++
     this.formPag.get('idmpago'+nro)?.enable();
     this.formPag.get('nrompago'+nro)?.enable();
@@ -352,11 +343,11 @@ prepararAlta(): boolean{
       var impt = this.formPag.controls['imptotal'].value;
     
 
-      var pago : pagoDTO = {
+      var pago : pagocliDTO = {
              
          idPago         : this.formPag.controls['nropag'].value,
          fecha          : this.formPag.controls['fecha'].value,
-         idChofer       : this.data.idChofer,
+         idCliente       : this.data.idCliente,
          idFactura      : this.formPag.controls['idFactura'].value,
          idmpago1       : this.formPag.controls['idmpago1'].value,
          nrompago1      : this.formPag.controls['nrompago1'].value,      
@@ -379,10 +370,10 @@ prepararAlta(): boolean{
       }
       var subs : Subscription;
       var resu : number;
-      subs = this.servicio.grabarPagoChofer(pago)
+      subs = this.servicio.grabarPagoCli(pago)
         .pipe(finalize(() => {  
            this.notiService.showNotification("El Pago Nro : "+pago.idPago+
-                                      " al Chofer : "+this.data.nombre+" ("+resu+") se ha agregado con éxito",'Aceptar','mensaje',500);      
+                                      " del Cliente : "+this.data.nombre+" ("+resu+") se ha agregado con éxito",'Aceptar','mensaje',500);      
            this.dialogRef.close({ clicked : "Alta"})
            subs.unsubscribe
         }))
@@ -395,15 +386,14 @@ ModificarPago(){
  
   var impt  = this.formPag.controls['imptotal'].value;
 
-  var pago : pagoDTO = {
+  var pago : pagocliDTO = {
     idPago         : this.formPag.controls['nropag'].value,
     fecha          : this.formPag.controls['fecha'].value,
-    idChofer       : this.data.idChofer,
+    idCliente      : this.data.idCliente,
     idFactura      : this.formPag.controls['idFactura'].value,
     idmpago1       : this.formPag.controls['idmpago1'].value,
     nrompago1      : this.formPag.controls['nrompago1'].value,
     banco1         : this.formPag.controls['banco1'].value,
-
     importe1       :  this.imps[0],
     idmpago2       : this.formPag.controls['idmpago2'].value,
     nrompago2      : this.formPag.controls['nrompago2'].value,
@@ -418,10 +408,10 @@ ModificarPago(){
   }
   var subs : Subscription;
   var resu : number;
-  subs = this.servicio.updatePagoChofer(pago.idPago,pago)
+  subs = this.servicio.updatePagoCli(pago.idPago,pago)
   .pipe(finalize(() => {  
     this.notiService.showNotification("El Pago Nro : "+pago.idPago+
-                                      " al chofer : "+this.data.nombre+" ("+resu+") ha sido modificado con éxito",'Aceptar','mensaje',500);      
+                                      " del Cliente : "+this.data.nombre+" ("+resu+") ha sido modificado con éxito",'Aceptar','mensaje',500);      
     this.dialogRef.close({ clicked : "Modi"})
     subs.unsubscribe
 }))
@@ -524,4 +514,3 @@ ModificarPago(){
       this.imprimeconcepto = checked;
     }*/
 }
-

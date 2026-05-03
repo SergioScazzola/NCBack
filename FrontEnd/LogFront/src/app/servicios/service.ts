@@ -16,6 +16,7 @@ import { itfacclDTO } from '../../entidades/itfacclDTO';
 import { saldoChofDTO } from '../../entidades/saldoChofDTO';
 import { gastoDTO } from '../../entidades/gastoDTO';
 import { pagoDTO } from '../../entidades/pagoDTO';
+import { pagocliDTO } from '../../entidades/pagocliDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -240,6 +241,28 @@ public getTiposGasto() {
     );
   }
 
+  // PAGOS DEL CLIENTE
+   public getCantPagosCli() {
+    return this.http.get<number>(this.apiUrl + `pagocli/pago/max`);
+  }
+  public elimPagoCli(nropago: number) {
+    return this.http.delete(
+      environment.apiUrl + `pagocli/pago?id=` + nropago
+    );
+  }
+
+  public grabarPagoCli(pago : pagocliDTO) {
+    return this.http.post<pagocliDTO>(this.apiUrl + `pagocli/pago/nuevo`,pago);
+  }
+
+  public updatePagoCli(nropago : number, pagocli : pagocliDTO){
+     return this.http.put<pagocliDTO>(environment.apiUrl + `pagocli/pago/actualizar?id=`+nropago,pagocli);
+  }
+
+  public leerPagoCliente(nropago: number) {
+    return this.http.get<pagocliDTO>( this.apiUrl + `pagocli/pago?id=`+nropago);
+  }
+
    // ** VIAJES ** //
 
    public getViajes() {
@@ -307,7 +330,13 @@ public getTiposGasto() {
    public getFacsCL() {
     return this.http.get<facclDTO[]>(this.apiUrl + `faccl/facscl`);
   }
- 
+  public getFactCliXCliente(nrocli : number) {
+    return this.http.get<facclDTO[]>(this.apiUrl + `faccl/factxcliente?idcli=`+nrocli);
+  }
+  
+  public getFacsCliXClienteYF(idcliente : number, fechi : string, fechh : string) {
+    return this.http.get<facclDTO[]>(this.apiUrl + `faccl/factxclienteYF?idcli=`+idcliente+`&feci=`+fechi+`&fecf=`+fechh);
+  }
   public getCantFacsCL() {
     return this.http.get<number>(this.apiUrl + `faccl/max`);
   }

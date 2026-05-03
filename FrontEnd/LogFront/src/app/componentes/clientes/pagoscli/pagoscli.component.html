@@ -1,0 +1,192 @@
+@if (isloading){  
+  <div style="padding:20px">Cargando...</div>
+} @else {
+<div class="custom-dialog-container px-3" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+    <h4 mat-dialog-title >{{operacion}}</h4>  
+      <form [formGroup]="formPag" >        
+         <!-- Fila 1 -->
+         <div class="row mt-1" >
+            <div class="col-md-3">
+              <mat-form-field class="w-100" appearance="fill">
+               <mat-label>Nro.Pago</mat-label>
+               <input
+                 matInput
+                 readonly
+                 formControlName="nropag"
+                 style="text-align: center"/>
+               </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field class="w-100" appearance="fill"> 
+              <input #fechaviaje matInput #inputFocus [matDatepicker]="picker"  
+                  placeholder = "Elija una fecha" 
+                  (dateChange)="onFechaChange($event)"
+                  formControlName="fecha" > 
+              <mat-datepicker-toggle  matSuffix [for]="picker" > </mat-datepicker-toggle> 
+              <mat-datepicker #picker> </mat-datepicker>  
+              <mat-hint>{{ formPag.controls['fecha'].value | date : "dd/MM/yyyy HH:mm"}}</mat-hint> 
+              </mat-form-field >
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="w-100" appearance="fill">
+              <mat-label>Facturas de {{data.nombre}}</mat-label>
+              <mat-select
+                formControlName="idFactura"
+                (selectionChange)="onSelectionFactura($event)">
+               @for (factu of this.cfacsTpte; track factu.idFactura) {
+                <mat-option [value]="factu.idFactura">
+                  {{ factu.idFactura+" - "+factu.nrofactura+"    -    "+(factu.totalfac | currency:'$':'symbol':'1.2-2') }}
+                </mat-option>
+               }
+               </mat-select>
+               </mat-form-field>
+            </div>  
+        </div>
+        <!-- Medio de Pago 1 -->
+        <div class="row mt-1 " >
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+              <mat-label>Medio de Pago</mat-label>
+              <mat-select formControlName="idmpago1"    
+                  (selectionChange)="onSelectionChangeMPago($event,1)">      
+                  @for (mpago of this.cmediospago; track mpago.idmediopago){
+                  <!--mat-option *ngFor="let labo of this.claboreos; let i = index" [value]="labo.idLaboreo"-->
+                    <mat-option [value]="mpago.idmediopago">
+                    {{ mpago.mediopago }}
+                    </mat-option>            
+                  }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Nro. Medio de Pago</mat-label>
+               <input matInput formControlName="nrompago1"/>        
+            </mat-form-field>
+          </div> 
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Banco</mat-label>
+               <input matInput formControlName="banco1"/>        
+            </mat-form-field>
+          </div> 
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Importe</mat-label>
+            <input matInput selecText appImporte  formControlName="importe1"   
+                 (blur)="modificoImporte('importe1',1)"                             
+                 style="text-align: right;">	
+            </mat-form-field>   
+         </div>
+        </div>
+
+        <!-- Medio de Pago 2 -->
+        <div class="row mt-1 " >
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+              <mat-label>Medio de Pago</mat-label>
+              <mat-select formControlName="idmpago2"                   
+                  (selectionChange)="onSelectionChangeMPago($event,2)">      
+                  @for (mpago of this.cmediospago; track mpago.idmediopago){
+                  <!--mat-option *ngFor="let labo of this.claboreos; let i = index" [value]="labo.idLaboreo"-->
+                    <mat-option [value]="mpago.idmediopago">
+                    {{ mpago.mediopago }}
+                    </mat-option>            
+                  }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Nro. Medio de Pago</mat-label>
+               <input matInput formControlName="nrompago2"/>        
+            </mat-form-field>
+          </div> 
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Banco</mat-label>
+               <input matInput formControlName="banco2"/>        
+            </mat-form-field>
+          </div> 
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Importe</mat-label>
+            <input matInput selecText appImporte formControlName="importe2"                     
+               (blur)="modificoImporte('importe2',2)"    
+                 style="text-align: right;">	
+            </mat-form-field>   
+         </div>
+        </div>
+
+        <!-- Medio de Pago 3 -->
+        <div class="row mt-1 " >
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+              <mat-label>Medio de Pago</mat-label>
+              <mat-select formControlName="idmpago3"    
+                  (selectionChange)="onSelectionChangeMPago($event,3)">      
+                  @for (mpago of this.cmediospago; track mpago.idmediopago){
+                  <!--mat-option *ngFor="let labo of this.claboreos; let i = index" [value]="labo.idLaboreo"-->
+                    <mat-option [value]="mpago.idmediopago">
+                    {{ mpago.mediopago }}
+                    </mat-option>            
+                  }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Nro. Medio de Pago</mat-label>
+               <input matInput formControlName="nrompago3"/>        
+            </mat-form-field>
+          </div> 
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Banco</mat-label>
+               <input matInput formControlName="banco3"/>        
+            </mat-form-field>
+          </div> 
+          <div class="col-md-3">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Importe</mat-label>
+            <input matInput appImporte formControlName="importe3"                    
+               (blur)="modificoImporte('importe3',3)"    
+                 style="text-align: right;">	
+            </mat-form-field>   
+         </div>
+        </div>
+        <div class="row mt-1" >
+           <div class="col-md-4">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Total Pago</mat-label>
+            <input matInput readonly="true" 
+               [value]="formPag.get('imptotal')?.value | currency:'$':true"            
+                 style="text-align:  right;">	
+            </mat-form-field>   
+           </div>
+           <div class="col-md-8">
+            <mat-form-field class="w-100" appearance="fill">
+            <mat-label>Nota</mat-label>
+               <input matInput formControlName="observ"/>        
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- Fila de botones  -->
+        <div class="row">
+          <div class="botonera">           
+            <button class="btn btn-sm btn-outline-primary me-5" 
+                     [disabled]="formPag.invalid || data.accion!='A' || deshAlta==true"
+                     (click)="GrabarPago()">Agregar Pago</button>                                
+            <button class="btn btn-sm btn-outline-success me-5" 
+                     [disabled]="formPag.invalid || data.accion!='M'" 
+                     (click)="ModificarPago()">Modificar Pago</button>  
+            <!--button class="btn btn-sm btn-outline-info me-5" 
+                     [disabled]="formPag.invalid || data.accion!='M'" 
+                     (click)="generarReciboPDF()">Imprimir Recibo</button-->                       
+            <button class="btn btn-sm btn-outline-secondary"                
+                     (click)="Anular()">Cancelar</button>                       
+        </div>  
+      </div>  
+    </form>
+  </div>  
+}
