@@ -6,7 +6,7 @@ import com.apiTpte.apiRestTpte.Entidades.AgChof;
 import com.apiTpte.apiRestTpte.Entidades.Camion;
 import com.apiTpte.apiRestTpte.Entidades.Chofer;
 import com.apiTpte.apiRestTpte.Entidades.Cliente;
-import com.apiTpte.apiRestTpte.Entidades.Cobro;
+import com.apiTpte.apiRestTpte.Entidades.Pagocli;
 import com.apiTpte.apiRestTpte.Entidades.EmpTpte;
 import com.apiTpte.apiRestTpte.Entidades.FactCli;
 import com.apiTpte.apiRestTpte.Entidades.FactTpte;
@@ -104,11 +104,21 @@ public interface TpteRepository {
     int saveFaccl(FactCli fac);
     int actualizarFaccl(int idfac, FactCli faccl);    
     int deleteFaccl(int idfac);
+    List<FactCli> FacCXClienteYF(int idcliente, String fecin, String fecfin);
+    List<FactCli> FacCXCliente(int idcliente);
 
     List<ItfactC> getDetalleFaccl(int nrofac);
     int saveItemFaccl(ItfactC itfac);
     int actualizarItemFaccl(ItfactC itfac);   
     int deleteItemFaccl(int nrofac, int nroit);
+
+    // PAGOS DEL CLIENTE //
+    List<Pagocli> AllPagosCli();
+    int getMaxPagosCli();
+    Pagocli findPagoCliById(int idpago);
+    int savePagoCli(Pagocli pago);
+    int actualizarPagoCli(int idpago, Pagocli pago);
+    int deletePagoCli(int idpago);
 
     // PAGOS A LA EMPRESA DE TPTE. //
 
@@ -119,14 +129,7 @@ public interface TpteRepository {
     int actualizarPago(int idpago, Pago pago);    
     int deletePago(int idpago);     
 
-    // COBROS AL CLIENTE //
-
-    List<Cobro> AllCobros();
-    int getMaxCobros();
-    Cobro findCobroById(int idcobro);
-    int saveCobro(Cobro cobro);
-    int actualizarCobro(int idcobro, Cobro cobro);    
-    int deleteCobro(int idcobro); 
+  
 
     // GASTOS DE VIAJES Y GASTOS GENERALES
 

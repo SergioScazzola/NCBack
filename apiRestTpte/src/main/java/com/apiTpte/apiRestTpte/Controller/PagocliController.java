@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,31 +16,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.Pagocli;
 import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 
 
-
+// PAGOS DEL CLIENTE
 @RestController
-@RequestMapping("/api/cobro/")
+@RequestMapping("/api/pagocli/")
  
-public class CobroController {
+public class PagocliController {
     @Autowired
     TpteRepository tpteRepository;
    
     @SuppressWarnings("null")
-    @GetMapping("/cobros")
-    public ResponseEntity<List<Pagocli>> getAllCobros() {
+    @GetMapping("/pagos")
+    public ResponseEntity<List<Pagocli>> getAllPagos() {
     try {
-      List<Pagocli> cobros = null;
+      List<Pago> pagos = null;
             
-      cobros = tpteRepository.AllCobros();
+      pagos = tpteRepository.AllPagosCli();
     
-      if (cobros.isEmpty()) {
+      if (pagos.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
       } else {
-         return new ResponseEntity<>(cobros, HttpStatus.OK);
+         return new ResponseEntity<>(pagos, HttpStatus.OK);
       }
     } catch (Exception e) {
        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -48,47 +49,47 @@ public class CobroController {
   }
 
   @RequestMapping(value="/max")
-  public int getCantCobros(){
-     int cantc = tpteRepository.getMaxCobros();
-     return cantc;
+  public int getCantPagos(){
+     int cantp = tpteRepository.getMaxPagosCli();
+     return cantp;
   }
   
-  @RequestMapping(value ="/cobro" , params={"id"} )
-  public ResponseEntity<Pagocli> getPagoById(@RequestParam("id") Integer idcobro) {
-    Pagocli cobro = tpteRepository.findCobroById(idcobro);
-    if (cobro != null){
-      return new ResponseEntity<>(cobro, HttpStatus.OK);
+  @RequestMapping(value ="/pago" , params={"id"} )
+  public ResponseEntity<Pagocli> getPagoById(@RequestParam("id") Integer idpago) {
+    Pagocli pago = tpteRepository.findPagoCliById(idpago);
+    if (pago != null){
+      return new ResponseEntity<>(pago, HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
-    @PostMapping(value="/cobro/nuevo")
-    // Graba un nuevo Cobro al Cliente
-    public ResponseEntity<String> crearPago(@RequestBody Pagocli cobro) {
+  @PostMapping(value="/pago/nuevo")
+    // Graba un nuevo Pago del Cliente
+    public ResponseEntity<String> crearPago(@RequestBody Pagocli pago) {
        try {
-        int nroc = tpteRepository.saveCobro(cobro);
-        return new ResponseEntity<>(Integer.toString(nroc), HttpStatus.CREATED);
+        int nrop = tpteRepository.savePagoCli(pago);
+        return new ResponseEntity<>(Integer.toString(nrop), HttpStatus.CREATED);
        } catch (Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
 
-    @PutMapping(value="/cobro/actualizar", params={"id"})
-    public ResponseEntity<String> updateCobro(@RequestParam("id") Integer idcobro,
-                                                @RequestBody Pagocli cobro){
+    @PutMapping(value="/pago/actualizar", params={"id"})
+    public ResponseEntity<String> updatePago(@RequestParam("id") Integer idpago,
+                                             @RequestBody Pagocli pago){
       try {
-        int resultado = tpteRepository.actualizarCobro(idcobro,cobro); 
+        int resultado = tpteRepository.actualizarPagoCli(idpago,pago);    
         return new ResponseEntity<>(Integer.toString(resultado), HttpStatus.OK);
       } catch (Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
      
       } 
     }
-    @DeleteMapping(value="/cobro", params={"id"})    
-    public ResponseEntity<String> borrarCobro(@RequestParam("id") Integer idcobro){
+    @DeleteMapping(value="/pago", params={"id"})    
+    public ResponseEntity<String> borrarPago(@RequestParam("id") Integer idpago){
       try {
-        int nrocobro = tpteRepository.deleteCobro(idcobro);
-        return new ResponseEntity<>(Integer.toString(nrocobro),HttpStatus.OK);
+        int nropago = tpteRepository.deletePagoCli(idpago);
+        return new ResponseEntity<>(Integer.toString(nropago),HttpStatus.OK);
       } catch (Exception e) {
         return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR );
       }

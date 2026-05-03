@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.apiTpte.apiRestTpte.Entidades.Camion;
+
 import com.apiTpte.apiRestTpte.Entidades.FactCli;
+import com.apiTpte.apiRestTpte.Entidades.FactTpte;
 import com.apiTpte.apiRestTpte.Entidades.ItfactC;
 import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
@@ -45,7 +46,43 @@ public class FactClteController {
     }       
     }
 
-  @RequestMapping(value="/max")
+   @SuppressWarnings("null")
+   @RequestMapping(value="/factxclienteYF", params={"idcli","feci","fecf"})
+    public ResponseEntity<List<FactCli>> getFactCliXCliente(@RequestParam("idcli") Integer idcliente,
+                                                             @RequestParam("feci")   String  fecin,
+                                                             @RequestParam("fecf")   String  fecfin  ) {
+    try {
+      List<FactCli> facturas = null;
+            
+      facturas = tpteRepository.FacCXClienteYF(idcliente,fecin,fecfin);
+    
+      if (facturas.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } else {
+         return new ResponseEntity<>(facturas, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @RequestMapping(value="/faccl/factxcliente", params={"idcli"})
+    public ResponseEntity<List<FactCli>> getFactCliXCliente(@RequestParam("idcli") Integer idcliente) {
+    try {
+      List<FactCli> facturas = null;
+            
+      facturas = tpteRepository.FacCXCliente(idcliente);
+    
+      if (facturas.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } else {
+         return new ResponseEntity<>(facturas, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   public int getCantFacscl(){
      int cantf = tpteRepository.getMaxFacscl();
      return cantf;

@@ -15,7 +15,7 @@ import com.apiTpte.apiRestTpte.Entidades.AgChof;
 import com.apiTpte.apiRestTpte.Entidades.Camion;
 import com.apiTpte.apiRestTpte.Entidades.Chofer;
 import com.apiTpte.apiRestTpte.Entidades.Cliente;
-import com.apiTpte.apiRestTpte.Entidades.Cobro;
+import com.apiTpte.apiRestTpte.Entidades.Pagocli;
 import com.apiTpte.apiRestTpte.Entidades.EmpTpte;
 import com.apiTpte.apiRestTpte.Entidades.FactCli;
 import com.apiTpte.apiRestTpte.Entidades.FactTpte;
@@ -714,6 +714,20 @@ public class JdbcTpteRepository implements TpteRepository {
         String selec = "SELECT * FROM facscli ORDER BY fecha DESC";
         return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactCli.class));
       }
+      
+      @Override
+      public List<FactCli> FacCXCliente(int idcliente) {   
+        String selec = "SELECT * FROM facscli WHERE idCliente=? ORDER BY fecha DESC";
+        return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactCli.class),idcliente);
+      }
+
+       
+    @Override        
+    public List<FactCli> FacCXClienteYF(int idcliente, String fechai, String fechaf ) {   
+      // fechas : AAAA-MM-DD
+      String selec = "SELECT * FROM facscli WHERE idCliente=? AND fecha BETWEEN ? AND ? ORDER BY fecha ASC";
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(FactCli.class),idcliente,fechai,fechaf);
+    }   
       @Override
       public int getMaxFacscl(){
         String consulta = "SELECT MAX(idFactura) FROM facscli";
@@ -837,16 +851,16 @@ public class JdbcTpteRepository implements TpteRepository {
      return resu;
     }
 
-    // COBROS A CLIENTES //
+    // PAGOS DEL CLIENTE //
 
       @Override
-      public List<Cobro> AllCobros() {   
-        String selec = "SELECT * FROM cobros ORDER BY fecha";
-        return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Cobro.class));
+      public List<Pagocli> AllPagosCli() {   
+        String selec = "SELECT * FROM pagoscli ORDER BY fecha";
+        return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Pagocli.class));
       }
       @Override
-      public int getMaxCobros(){
-        String consulta = "SELECT MAX(idCobro) FROM cobros";
+      public int getMaxPagosCli(){
+        String consulta = "SELECT MAX(idPago) FROM pagoscli";
      
         Object obj = jdbcTemplate.queryForObject(consulta,Integer.class);    
         if (obj==null){
@@ -856,31 +870,31 @@ public class JdbcTpteRepository implements TpteRepository {
         }         
       }   
       @Override
-      public Cobro findCobroById(int id) {
-        String q = "SELECT * FROM cobros WHERE idCobro=?";
+      public Pagocli findPagoCliById(int id) {
+        String q = "SELECT * FROM pagoscli WHERE idPago=?";
         try {
-          Cobro cobro = jdbcTemplate.queryForObject(q,
-              BeanPropertyRowMapper.newInstance(Cobro.class), id);          
-          return cobro;
+          Pagocli pago = jdbcTemplate.queryForObject(q,
+              BeanPropertyRowMapper.newInstance(Pagocli.class), id);          
+          return pago;
         } catch (IncorrectResultSizeDataAccessException e) {
           return null;
         }
       }  
  
       @Override
-      public int actualizarCobro(int nroc, Cobro cobro){      
+      public int actualizarPagoCli(int nroc, Pagocli pago){      
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("UPDATE cobros SET fecha=?,idCliente=?,nomcliente=?,nrofactura=?,"+
-                                    "idmpago1=?,mediopago1=?,nrompago1=?,banco1=?,importe1=?,"+
-                                    "idmpago2=?,mediopago2=?,nrompago2=?,banco2=?,importe2=?,"+
-                                    "idmpago3=?,mediopago3=?,nrompago3=?,banco3=?,importe3=?,"+
-                                    "imptotal=?,observaciones=? WHERE idCobro=?",
-                    new Object[] { cobro.getFecha(),cobro.getIdCliente(),cobro.getNomcliente(),cobro.getNrofactura(),
-                                   cobro.getIdmpago1(),cobro.getMediopago1(),cobro.getNrompago1(),cobro.getBanco1(),cobro.getImporte1(),
-                                   cobro.getIdmpago2(),cobro.getMediopago2(),cobro.getNrompago2(),cobro.getBanco2(),cobro.getImporte2(),
-                                   cobro.getIdmpago3(),cobro.getMediopago3(),cobro.getNrompago3(),cobro.getBanco3(),cobro.getImporte3(),
-                                   cobro.getImptotal(),cobro.getObservaciones(),cobro.getIdCobro()
+          resu = jdbcTemplate.update("UPDATE pagoscli SET fecha=?,idCliente=?,idFactura=?,"+
+                                    "idmpago1=?,nrompago1=?,banco1=?,importe1=?,"+
+                                    "idmpago2=?,nrompago2=?,banco2=?,importe2=?,"+
+                                    "idmpago3=?,nrompago3=?,banco3=?,importe3=?,"+
+                                    "imptotal=?,observ=? WHERE idCobro=?",
+                    new Object[] { pago.getFecha(),pago.getIdCliente(),pago.getIdFactura(),
+                                   pago.getIdmpago1(),pago.getNrompago1(),pago.getBanco1(),pago.getImporte1(),
+                                   pago.getIdmpago2(),pago.getNrompago2(),pago.getBanco2(),pago.getImporte2(),
+                                   pago.getIdmpago3(),pago.getNrompago3(),pago.getBanco3(),pago.getImporte3(),
+                                   pago.getImptotal(),pago.getObserv(),pago.getIdCobro()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -888,20 +902,20 @@ public class JdbcTpteRepository implements TpteRepository {
       return resu; 
     }
     @Override
-      public int saveCobro(Cobro cobro){     
+      public int savePagoCli(Pagocli pago){     
       // Graba nuevo Cobro 
       int resu = 0;
       try {                   
-          resu = jdbcTemplate.update("INSERT cobros(idCobro,fecha,idCliente,nomcliente,nrofactura,"+
-                                    "idmpago1,mediopago1,nrompago1,banco1,importe1,"+
-                                    "idmpago2,mediopago2,nrompago2,banco2,importe2,"+
-                                    "idmpago3,mediopago3,nrompago3,banco3,importe3,"+
-                                    "imptotal,observaciones) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
-                    new Object[] { cobro.getIdCobro(),cobro.getFecha(),cobro.getIdCliente(),cobro.getNomcliente(),cobro.getNrofactura(),
-                                   cobro.getIdmpago1(),cobro.getMediopago1(),cobro.getNrompago1(),cobro.getBanco1(),cobro.getImporte1(),
-                                   cobro.getIdmpago2(),cobro.getMediopago2(),cobro.getNrompago2(),cobro.getBanco2(),cobro.getImporte2(),
-                                   cobro.getIdmpago3(),cobro.getMediopago3(),cobro.getNrompago3(),cobro.getBanco3(),cobro.getImporte3(),
-                                   cobro.getImptotal(),cobro.getObservaciones()
+          resu = jdbcTemplate.update("INSERT pagoscli(idPago,fecha,idCliente,idFactura,"+
+                                    "idmpago1,nrompago1,banco1,importe1,"+
+                                    "idmpago2,nrompago2,banco2,importe2,"+
+                                    "idmpago3,nrompago3,banco3,importe3,"+
+                                    "imptotal,observ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ",
+                    new Object[] { pago.getIdPago(),pago.getFecha(),pago.getIdCliente(),pago.getIdFactura(),
+                                   pago.getIdmpago1(),pago.getNrompago1(),pago.getBanco1(),pago.getImporte1(),
+                                   pago.getIdmpago2(),pago.getNrompago2(),pago.getBanco2(),pago.getImporte2(),
+                                   pago.getIdmpago3(),pago.getNrompago3(),pago.getBanco3(),pago.getImporte3(),
+                                   pago.getImptotal(),pago.getObserv()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -909,15 +923,16 @@ public class JdbcTpteRepository implements TpteRepository {
       return resu; 
     }
     @Override
-    public int deleteCobro(int nrocobro){
+    public int deletePagoCli(int nropago){
       int resu = 0;
       try {
-        resu = jdbcTemplate.update("DELETE FROM cobros WHERE idCobro="+nrocobro);
+        resu = jdbcTemplate.update("DELETE FROM pagoscli WHERE idPago="+ nropago);
       } catch (DataAccessException dae){
         resu = -5;   
       }
       return resu;
     }   
+
      // PAGOS A EMP. DE TPTE //
 
       @Override

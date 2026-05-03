@@ -2,14 +2,13 @@ package com.apiTpte.apiRestTpte.Entidades;
 
 import java.util.Date;
 
-// Entidad de Cobro al Cliente
+// Entidad de Pago del Cliente
 
-public class Cobro {
-  private  int     idCobro;
+public class Pagocli {
+  private  int     idPago;
    private Date    fecha;
    private int     idCliente;
-   private String  nomcliente;
-   private String  nrofactura;
+   private String  idFactura;
    private int     idmpago1;
    private String  mediopago1;
    private String  nrompago1;
@@ -26,16 +25,16 @@ public class Cobro {
    private String  banco3;
    private double  importe3; 
    private double  imptotal;
-   private String  observaciones;
+   private String  observ;
 
-   public Cobro(){}
+   public Pagocli(){}
 
-   public int getIdCobro() {
-     return idCobro;
+   public int getIdPago() {
+     return idPago;
    }
 
-   public void setIdCobro(int idCobro) {
-     this.idCobro = idCobro;
+   public void setIdPago(int idPago) {
+     this.idPago = idPago;
    }
 
    public Date getFecha() {
@@ -54,21 +53,13 @@ public class Cobro {
      this.idCliente = idCliente;
    }
 
-   public String getNomcliente() {
-     return nomcliente;
-   }
+    public String getIdFactura() {
+      return idFactura;
+    }
 
-   public void setNomcliente(String nomcliente) {
-     this.nomcliente = nomcliente;
-   }
-
-   public String getNrofactura() {
-     return nrofactura;
-   }
-
-   public void setNrofactura(String nrofactura) {
-     this.nrofactura = nrofactura;
-   }
+    public void setIdFactura(String idFactura) {
+      this.idFactura = idFactura;
+    }
 
    public int getIdmpago1() {
      return idmpago1;
@@ -190,14 +181,6 @@ public class Cobro {
      this.importe3 = importe3;
    }
 
-   public String getObservaciones() {
-     return observaciones;
-   }
-
-   public void setObservaciones(String observaciones) {
-     this.observaciones = observaciones;
-   }
-
    public double getImptotal() {
      return imptotal;
    }
@@ -206,6 +189,15 @@ public class Cobro {
      this.imptotal = imptotal;
    }
 
+   public String getObserv() {
+     return observ;
+   }
+
+   public void setObserv(String observaciones) {
+     this.observ = observaciones;
+   }
+
+  
  
    
 }
