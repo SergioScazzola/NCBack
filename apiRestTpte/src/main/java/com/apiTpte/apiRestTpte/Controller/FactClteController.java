@@ -66,7 +66,7 @@ public class FactClteController {
     }
   }
 
-  @RequestMapping(value="/faccl/factxcliente", params={"idcli"})
+  @RequestMapping(value="/factxcliente", params={"idcli"})
     public ResponseEntity<List<FactCli>> getFactCliXCliente(@RequestParam("idcli") Integer idcliente) {
     try {
       List<FactCli> facturas = null;

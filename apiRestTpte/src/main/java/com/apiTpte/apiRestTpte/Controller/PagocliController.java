@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.apiTpte.apiRestTpte.Entidades.Pago;
+
 import com.apiTpte.apiRestTpte.Entidades.Pagocli;
+import com.apiTpte.apiRestTpte.Entidades.Viaje;
 import com.apiTpte.apiRestTpte.Repository.TpteRepository;
 
 
@@ -34,7 +35,7 @@ public class PagocliController {
     @GetMapping("/pagos")
     public ResponseEntity<List<Pagocli>> getAllPagos() {
     try {
-      List<Pago> pagos = null;
+      List<Pagocli> pagos = null;
             
       pagos = tpteRepository.AllPagosCli();
     
@@ -47,8 +48,26 @@ public class PagocliController {
        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+  
+   @SuppressWarnings("null")
+   @RequestMapping(value="/pagosxcliente", params={"idcliente"})
+    public ResponseEntity<List<Pagocli>> getPagosxCliente(@RequestParam("idcliente") Integer idcli) {
+    try {
+      List<Pagocli> pagos = null;
+            
+      pagos = tpteRepository.PagosxCliente(idcli);
+    
+      if (pagos.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      } else {
+         return new ResponseEntity<>(pagos, HttpStatus.OK);
+      }
+    } catch (Exception e) {
+       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
-  @RequestMapping(value="/max")
+  @RequestMapping(value="/pago/max")
   public int getCantPagos(){
      int cantp = tpteRepository.getMaxPagosCli();
      return cantp;

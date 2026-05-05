@@ -17,6 +17,7 @@ import com.apiTpte.apiRestTpte.Entidades.MPago;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.SaldoChof;
+import com.apiTpte.apiRestTpte.Entidades.SaldoCli;
 import com.apiTpte.apiRestTpte.Entidades.TGasto;
 import com.apiTpte.apiRestTpte.Entidades.Unid;
 import com.apiTpte.apiRestTpte.Entidades.Usuario;
@@ -64,6 +65,12 @@ public interface TpteRepository {
     int saveCliente(Cliente cliente);
     int actualizarCliente(int idcliente, Cliente cliente);    
     int deleteCliente(int idcliente);
+    List<SaldoCli> getSaldosPorCliente(int ncli);
+    int actSaldoInicial(SaldoCli saldoc);  // en la tabla "clientes"
+    int saveSaldoCliente(SaldoCli saldoc);
+    SaldoCli getSaldoDelCliente(int idcli, int nros);
+    int actSaldodelCliente(SaldoCli saldoc);
+    List<Pagocli> PagosxCliente(int idcli); 
 
     List<Viaje> AllViajes();
     List<Viaje> ViajesXChofer(int idchofer);

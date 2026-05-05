@@ -26,6 +26,7 @@ import com.apiTpte.apiRestTpte.Entidades.MPago;
 import com.apiTpte.apiRestTpte.Entidades.Marca;
 import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.SaldoChof;
+import com.apiTpte.apiRestTpte.Entidades.SaldoCli;
 import com.apiTpte.apiRestTpte.Entidades.TGasto;
 import com.apiTpte.apiRestTpte.Entidades.Unid;
 import com.apiTpte.apiRestTpte.Entidades.Usuario;
@@ -396,7 +397,63 @@ public class JdbcTpteRepository implements TpteRepository {
         resu = -5;   
       }
       return resu;
-    }   
+    }  
+    // SALDOS DE CLIENTES
+
+    @Override
+    // Devuelve todos los saldos registrados del CLIENTE ordenados por fecha
+    public List<SaldoCli> getSaldosPorCliente(int nrocli) {   
+      String selec = "SELECT * FROM saldoscli WHERE idCliente=? ORDER BY fecha";
+      return jdbcTemplate.query(selec,BeanPropertyRowMapper.newInstance(SaldoCli.class),nrocli);
+    }
+    @Override
+    public int saveSaldoCliente(SaldoCli saldoc){
+    // Graba un nuevo saldo para el Cliente
+    //    System.out.println("OBJETO recibido en saveSaldoChofer : "+saldoc.getIdChofer()+" - "+saldoc.getNroSaldo());
+    return jdbcTemplate.update("INSERT INTO saldoscli(idCliente,nrosaldo,fecha,saldo) "+
+                                   "VALUES(?,?,?,?)",
+            new Object[] { saldoc.getIdCliente(),saldoc.getNroSaldo(),saldoc.getFecha(),saldoc.getSaldo()});    
+    }
+
+    @Override
+    public SaldoCli  getSaldoDelCliente(int idcli, int nros){
+      String q = "SELECT * FROM saldoscli WHERE idCliente=? AND nrosaldo=?";
+      try {
+        SaldoCli saldocli = jdbcTemplate.queryForObject(q,
+            BeanPropertyRowMapper.newInstance(SaldoCli.class), idcli,nros);          
+        return saldocli;
+      } catch (IncorrectResultSizeDataAccessException e) {
+        return null;
+      }
+    }
+    @Override
+    // actualiza el saldo inicial del Cliente en la tabla "Clientes"
+    public int actSaldoInicial(SaldoCli saldoc){    
+    int resu = 0;
+    try {                   
+        resu = jdbcTemplate.update("UPDATE clientes SET saldoini=? WHERE idCliente=?",
+                                 
+            new Object[] { saldoc.getSaldo(),saldoc.getIdCliente()});
+      } catch (IncorrectResultSizeDataAccessException e) {
+        return -3;
+    }
+    return resu; 
+    }
+
+ @Override
+    // actualiza un saldo del Cliente en la tabla saldoscli"
+    public int actSaldodelCliente(SaldoCli saldoc){
+    
+    int resu = 0;
+    try {                   
+        resu = jdbcTemplate.update("UPDATE saldoscli SET fecha=?,saldo=? WHERE idCliente=? AND nrosaldo=?",
+                                 
+            new Object[] { saldoc.getFecha(),saldoc.getSaldo(),saldoc.getIdCliente(),saldoc.getNroSaldo()});
+      } catch (IncorrectResultSizeDataAccessException e) {
+        return -3;
+    }
+    return resu; 
+    }
 
     // VIAJES //
 
@@ -889,12 +946,12 @@ public class JdbcTpteRepository implements TpteRepository {
                                     "idmpago1=?,nrompago1=?,banco1=?,importe1=?,"+
                                     "idmpago2=?,nrompago2=?,banco2=?,importe2=?,"+
                                     "idmpago3=?,nrompago3=?,banco3=?,importe3=?,"+
-                                    "imptotal=?,observ=? WHERE idCobro=?",
+                                    "imptotal=?,observ=? WHERE idPago=?",
                     new Object[] { pago.getFecha(),pago.getIdCliente(),pago.getIdFactura(),
                                    pago.getIdmpago1(),pago.getNrompago1(),pago.getBanco1(),pago.getImporte1(),
                                    pago.getIdmpago2(),pago.getNrompago2(),pago.getBanco2(),pago.getImporte2(),
                                    pago.getIdmpago3(),pago.getNrompago3(),pago.getBanco3(),pago.getImporte3(),
-                                   pago.getImptotal(),pago.getObserv(),pago.getIdCobro()
+                                   pago.getImptotal(),pago.getObserv(),pago.getIdPago()
                                 });
         } catch (IncorrectResultSizeDataAccessException e) {
           return -3;
@@ -932,6 +989,12 @@ public class JdbcTpteRepository implements TpteRepository {
       }
       return resu;
     }   
+    
+    @Override
+    public List<Pagocli> PagosxCliente(int idcli){
+      String selec = "SELECT * FROM pagoscli WHERE idCliente=? ORDER BY fecha";
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Pagocli.class),idcli);
+    }
 
      // PAGOS A EMP. DE TPTE //
 
