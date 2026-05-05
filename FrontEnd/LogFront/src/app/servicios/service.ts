@@ -7,7 +7,7 @@ import { choferDTO } from '../../entidades/choferDTO';
 import { empTpteDTO } from '../../entidades/empTpteDTO';
 import { camionDTO } from '../../entidades/camionDTO';
 import { marcaDTO, MPagoDTO, TGastoDTO, UnidadDTO } from '../../entidades/marcaDTO';
-import { clienteDTO } from '../../entidades/clienteDTO';
+import { clienteDTO, saldoCliDTO } from '../../entidades/clienteDTO';
 import { viajeDTO } from '../../entidades/viajeDTO';
 import { AgChof, factpDTO} from '../../entidades/factpDTO';
 import { facclDTO } from '../../entidades/facclDTO';
@@ -241,6 +241,29 @@ public getTiposGasto() {
     );
   }
 
+  // SALDOS DE CLIENTES
+
+  public getSaldosCliente(nrocli : number) {
+  return this.http.get<saldoCliDTO[]>(this.apiUrl + `cliente/saldosxcli?nrocli=`+nrocli);
+  }
+
+  public updateSaldoInicialCli(saldo: saldoCliDTO) {
+    return this.http.put<saldoCliDTO>(
+      environment.apiUrl + `cliente/actsaldoini`,saldo);
+  }
+
+ public AgregarSaldoCliente(saldoc : saldoCliDTO) {
+    return this.http.post<saldoCliDTO>(this.apiUrl + `cliente/saldo/nuevo`,saldoc);
+  }
+  
+  public leerSaldoCliente(nrocli: number, nrosaldo: number) {
+    return this.http.get<saldoCliDTO>( this.apiUrl + `cliente/saldo?idcliente=`+nrocli+`&nrosaldo=`+nrosaldo);    
+  }
+
+
+  public updateSaldoCliente( saldo : saldoCliDTO){
+     return this.http.put<saldoCliDTO>(environment.apiUrl + `cliente/actsaldocli`,saldo);
+  }
   // PAGOS DEL CLIENTE
    public getCantPagosCli() {
     return this.http.get<number>(this.apiUrl + `pagocli/pago/max`);
@@ -261,6 +284,10 @@ public getTiposGasto() {
 
   public leerPagoCliente(nropago: number) {
     return this.http.get<pagocliDTO>( this.apiUrl + `pagocli/pago?id=`+nropago);
+  }
+
+   public getPagosxCliente(nrocli : number) {
+    return this.http.get<pagocliDTO[]>(this.apiUrl + `pagocli/pagosxcliente?idcliente=`+nrocli);
   }
 
    // ** VIAJES ** //

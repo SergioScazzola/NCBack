@@ -14,6 +14,7 @@ import { FacsClientesComponent } from './componentes/facs-clientes/facs-clientes
 import { CtacteComponent } from './componentes/choferes/ctactechof/ctactechof.component';
 import { GastosComponent } from './componentes/gastos/gastos.component';
 import { InfoFacstpComponent } from './componentes/facs-tp/info-facstp/info-facstp.component';
+import { CtactecliComponent } from './componentes/clientes/ctactecli/ctactecli.component';
 
 export const routes: Routes = [
   // Rutas para invitados (no autenticados)
@@ -37,6 +38,7 @@ export const routes: Routes = [
       { path: 'choferes/:nrochofer/:nomchofer/:filtro/ctactec',component: CtacteComponent},     
       { path: 'camiones', component: CamionesComponent },          
       { path: 'clientes', component: ClientesComponent },     
+      { path: 'clientes/:nrocliente/:nomcliente/:filtro/ctactec',component: CtactecliComponent},     
       { path: 'viajes', component: ViajesComponent },     
       { path: 'factpte', component: FacsTPComponent },   
       { path: 'factpte/infofacstp', component: InfoFacstpComponent },            

@@ -33,9 +33,9 @@
               <mat-select
                 formControlName="idFactura"
                 (selectionChange)="onSelectionFactura($event)">
-               @for (factu of this.cfacsTpte; track factu.idFactura) {
+               @for (factu of this.cfacsCli; track factu.idFactura) {
                 <mat-option [value]="factu.idFactura">
-                  {{ factu.idFactura+" - "+factu.nrofactura+"    -    "+(factu.totalfac | currency:'$':'symbol':'1.2-2') }}
+                  {{ factu.nrofactura+" - "+factu.idFactura+(factu.totalfac | currency:'$':'symbol':'1.2-2') }}
                 </mat-option>
                }
                </mat-select>
@@ -48,7 +48,7 @@
             <mat-form-field class="w-100" appearance="fill">
               <mat-label>Medio de Pago</mat-label>
               <mat-select formControlName="idmpago1"    
-                  (selectionChange)="onSelectionChangeMPago($event,1)">      
+                  (selectionChange)="onSelectionChangeMedioPago($event)">      
                   @for (mpago of this.cmediospago; track mpago.idmediopago){
                   <!--mat-option *ngFor="let labo of this.claboreos; let i = index" [value]="labo.idLaboreo"-->
                     <mat-option [value]="mpago.idmediopago">
@@ -86,7 +86,7 @@
             <mat-form-field class="w-100" appearance="fill">
               <mat-label>Medio de Pago</mat-label>
               <mat-select formControlName="idmpago2"                   
-                  (selectionChange)="onSelectionChangeMPago($event,2)">      
+                  (selectionChange)="onSelectionChangeMedioPago($event)">      
                   @for (mpago of this.cmediospago; track mpago.idmediopago){
                   <!--mat-option *ngFor="let labo of this.claboreos; let i = index" [value]="labo.idLaboreo"-->
                     <mat-option [value]="mpago.idmediopago">
@@ -124,7 +124,7 @@
             <mat-form-field class="w-100" appearance="fill">
               <mat-label>Medio de Pago</mat-label>
               <mat-select formControlName="idmpago3"    
-                  (selectionChange)="onSelectionChangeMPago($event,3)">      
+                  (selectionChange)="onSelectionChangeMedioPago($event)">      
                   @for (mpago of this.cmediospago; track mpago.idmediopago){
                   <!--mat-option *ngFor="let labo of this.claboreos; let i = index" [value]="labo.idLaboreo"-->
                     <mat-option [value]="mpago.idmediopago">

@@ -42,7 +42,7 @@ export class ClientesComponent {
    saldoini       : number;   
   
 
-   colClientes : string[] = ["idCliente" , "nombre","domicilio","localidad","telefono","cuit","notas","M","B" ];
+   colClientes : string[] = ["idCliente" , "nombre","domicilio","localidad","telefono","cuit","notas","CC","M","B" ];
  
    
    constructor(     private servicio     : ServiciosService,               
@@ -160,7 +160,10 @@ export class ClientesComponent {
        this.formcliente = false;
      }
     }
-
+  cuentaCorriente(nrocli : number,nomcli : string){
+    var filter = this.inputRef.nativeElement.value;
+    this.router.navigate(['/clientes', nrocli,nomcli,filter,'ctactec']);
+  }
   volver(){
     this.router.navigate(['/ppal']);
  }
