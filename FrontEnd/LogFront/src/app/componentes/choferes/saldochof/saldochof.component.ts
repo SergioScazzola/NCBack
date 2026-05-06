@@ -98,8 +98,14 @@ ngOnInit(){
     this.formSal.controls['nrochof'].setValue(this.data.nrochof);
     this.formSal.controls['nrosaldo'].setValue(this.data.nrosaldo);
     if (this.data.fecprmv!=null){
-      var fechh = this.data.fecprmv as Date;
-      this.formSal.controls['fecha'].setValue(fechh.getDate() - 1);
+      var fechh = new Date(this.data.fecprmv);
+      var soloFecha = new Date( // para que no convierta a la zona horaria, tomar solo DDMMAAAA
+        fechh.getFullYear(),
+        fechh.getMonth(),
+        fechh.getDate()
+      );  
+      soloFecha.setDate(soloFecha.getDate()-1); // seteo el dia anterior y lo asigno al control fecha      
+      this.formSal.controls['fecha'].setValue(soloFecha);
     } 
     if (this.data.nrosaldo==1){
         this.operacion = "Agregar Saldo inicial al Chofer : "+this.data.nomchof  

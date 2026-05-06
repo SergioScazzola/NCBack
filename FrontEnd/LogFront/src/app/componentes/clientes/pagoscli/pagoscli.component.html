@@ -35,7 +35,7 @@
                 (selectionChange)="onSelectionFactura($event)">
                @for (factu of this.cfacsCli; track factu.idFactura) {
                 <mat-option [value]="factu.idFactura">
-                  {{ factu.nrofactura+" - "+factu.idFactura+(factu.totalfac | currency:'$':'symbol':'1.2-2') }}
+                  {{ factu.nrofactura+" - "+factu.idFactura+(factu.totalfac | number :'1.2-2') }}
                 </mat-option>
                }
                </mat-select>
@@ -180,9 +180,10 @@
             <button class="btn btn-sm btn-outline-success me-5" 
                      [disabled]="formPag.invalid || data.accion!='M'" 
                      (click)="ModificarPago()">Modificar Pago</button>  
-            <!--button class="btn btn-sm btn-outline-info me-5" 
+            <button class="btn btn-sm btn-outline-info me-5" 
                      [disabled]="formPag.invalid || data.accion!='M'" 
-                     (click)="generarReciboPDF()">Imprimir Recibo</button-->                       
+                     (click)="generarReciboPDF()">Imprimir Recibo
+            </button>                       
             <button class="btn btn-sm btn-outline-secondary"                
                      (click)="Anular()">Cancelar</button>                       
         </div>  

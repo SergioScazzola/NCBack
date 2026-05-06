@@ -281,24 +281,25 @@ VerFactura(idmov : number){
    }
 
 actualizarxUltPago(){
-  // Vuelve  a  leer los pagos al chofer para reflejar el último en la cta.cte
+  // Vuelve  a  leer los pagos al cliente para reflejar el último en la cta.cte
   var subs1 : Subscription;
   this.cargandoCtaCte = true;  
   this.cmovscc = [];
   this.cpagoscli = [];
-  subs1 = this.servicio.getPagosxChofer(this.numcliente) // traer los pagos al chofer
-      .pipe(
-        finalize(() => {                                    
+  forkJoin({  //   leer pagos y maxpagos porque se agrego un pago
+      pagoscli   :       this.servicio.getPagosxCliente(this.numcliente),  
+      maxpagos   :       this.servicio.getCantPagosCli(),
+
+   }).subscribe(res2 => {
+          this.cpagoscli = res2.pagoscli;
+          this.maxpago   = res2.maxpagos;                  
          
           this.prepararMovimientos();      
           this.generarColSaldo(); 
           this.cargandoCtaCte = false;   
-          this.cdr.detectChanges();                                                          
-          subs1.unsubscribe;
-      }))           
-      .subscribe((data:any):void => {
-        this.cpagoscli = data;
-    })
+          this.cdr.detectChanges();                                                                   
+      })           
+     
 }
 
 modifSaldoInicial(){

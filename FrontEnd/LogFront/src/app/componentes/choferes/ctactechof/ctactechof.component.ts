@@ -307,19 +307,20 @@ actualizarxUltPago(){
   this.cargandoCtaCte = true;  
   this.cmovscc = [];
   this.cpagos = [];
-  subs1 = this.servicio.getPagosxChofer(this.numchofer) // traer los pagos al chofer
-      .pipe(
-        finalize(() => {                                    
+  forkJoin({  //   leer pagos y maxpagos porque se agrego un pago
+      pagoschof   :       this.servicio.getPagosxChofer(this.numchofer),  
+      maxpagos    :       this.servicio.getCantPagos(),
+
+   }).subscribe(res2 => {
+          this.cpagos    = res2.pagoschof;
+          this.maxpago   = res2.maxpagos;                  
          
           this.prepararMovimientos();      
           this.generarColSaldo(); 
           this.cargandoCtaCte = false;   
           this.cdr.detectChanges();                                                          
           subs1.unsubscribe;
-      }))           
-      .subscribe((data:any):void => {
-        this.cpagos = data;
-    })
+      })     
 }
 
 modifSaldoInicial(){
