@@ -81,10 +81,11 @@ export class ItfactpComponent {
                  this.formItfac.controls["idViaje"].setValue(this.cviajes[0].idViaje)                          
                  this.seleccionoViaje(0);
                  this.isloading = false;
-                 this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores  //            
+                 this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores  //            
               } else {
                     this.notiService.showNotification("El chofer seleccionado no tiene viajes disponibles", "Cerrar", "error", 5000);
-                    
+                    this.isloading = false;
+                    this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores  //   
                  };
                 
 

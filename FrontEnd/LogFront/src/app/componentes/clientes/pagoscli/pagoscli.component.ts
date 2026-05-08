@@ -430,7 +430,7 @@ ModificarPago(){
     const doc = new jsPDF('p','mm','A4');
    
     //var indl  =  this.claboreos.findIndex(p=>p.idLaboreo==this.pagoemp.nrolaboreo);//  laboreo del pago
-    const title = 'RECIBO DE PAGO DEL CLIENTE NRO. '+this.pagocli.idPago;
+    const title = "RECIBO DE PAGO Nro. "+this.pagocli.idPago+" DEL CLIENTE";
     
   
     // Fecha actual
@@ -457,7 +457,7 @@ ModificarPago(){
     // Fecha alineada a la derecha
     doc.setFontSize(10);
     doc.text(`Fecha: ${fechaStr}`, doc.internal.pageSize.getWidth() - 20, 15, { align: 'right' });
-
+  
     // Título centrado
     doc.setFontSize(12);
     const xx = doc.internal.pageSize.getWidth() / 2;
@@ -473,8 +473,9 @@ ModificarPago(){
     doc.setLineWidth(0.1);
     doc.setDrawColor(156,156,156);
     doc.rect(rectX , rectY , rectWidth,rectHeight);
-    doc.text(title, xx, yy, { align: 'center' });
-              
+    doc.text(title, xx, yy, { align: 'center' });   // Titulo
+    
+    // Cuerpo Recibo : Recibi...
     doc.setFontSize(12);
     doc.text('Recibí de '+this.data.nombre+', la cantidad de pesos : '+
              this.currencyPipe.transform(this.pagocli.imptotal, '$','code','1.2-2'),10,45,{align:'left'});
@@ -483,7 +484,7 @@ ModificarPago(){
       var indf = this.cfacsCli.findIndex(p=>p.idFactura==this.facclSel);
       doc.text('En concepto de Transporte factura Nro :  '+this.cfacsCli[indf].nrofactura,10,50,{align:'left'});
     }
-    
+    // Numero a Letras y Firma
     doc.setFontSize(10);    
      var cadimpo = this.currencyPipe.transform(this.pagocli.imptotal, 'ARS','code','1.2-2')?.replace('ARS','');
     var cvos = cadimpo?.substring(cadimpo.length-2,cadimpo.length);
@@ -501,32 +502,39 @@ ModificarPago(){
     doc.line(pageWidth-10-60,80,pageWidth-10,80); //margen derecho 10, long linea = 60
     doc.text(this.data.nombre,pageWidth-50,85);
 
-    doc.setFontSize(8);   
-    doc.text('Forma de pago : '+this.cmediospago[this.pagocli.idmpago1-1].mediopago.padEnd(15)+' - '+
-                          this.pagocli.nrompago1.padEnd(15)+' - '+
-                          this.pagocli.banco1.padEnd(15)+' - '+
-                          this.currencyPipe.transform(this.pagocli.importe1, 'ARS','code','1.2-2')?.replace('ARS',''),
-              10,98,{align:'left'});
-    if (this.pagocli.importe2>0){ // si hay importe2
-      doc.text(this.cmediospago[this.pagocli.idmpago2-1].mediopago.padEnd(15)+' - '+
-                          this.pagocli.nrompago2.padEnd(15)+' - '+
-                          this.pagocli.banco2.padEnd(15)+' - '+
-                          this.currencyPipe.transform(this.pagocli.importe2, 'ARS','code','1.2-2')?.replace('ARS',''),
-              32,103,{align:'left'});
-    }      
-    if (this.pagocli.importe3>0){ // si hay importe3
-      doc.text(this.cmediospago[this.pagocli.idmpago3-1].mediopago.padEnd(15)+' - '+
-                          this.pagocli.nrompago3.padEnd(15)+' - '+
-                          this.pagocli.banco3.padEnd(15)+' - '+
-                          this.currencyPipe.transform(this.pagocli.importe3, 'ARS','code','1.2-2')?.replace('ARS',''),
-              32,108,{align:'left'});
-    }      
-    //doc.text('Observaciones : '+this.pagoemp.observaciones,10,110,{align:'left'});
-    doc.save('ReciboDePago'+this.pagocli.idPago);       
-        
+   // Forma de Pago : Máximo 3 
+   doc.setFontSize(8);   
+   var xImporte = 110;
+   var y        = 98; 
+   doc.text( 'Forma de pago : '+
+      this.cmediospago[this.pagocli.idmpago1 - 1].mediopago+' '+
+      this.pagocli.nrompago1+' '+
+      this.pagocli.banco1+' ', 10,98,{ align: 'left' });
+              
+   doc.text(
+      this.currencyPipe.transform(this.pagocli.importe1, 'ARS','code','1.2-2')?.replace('ARS','')||'',
+      xImporte,
+      y,{ align: 'right' });
+    y+=5;  
+    if (this.pagocli.importe2 > 0) {
+      doc.text(this.cmediospago[this.pagocli.idmpago2 - 1].mediopago+' '+
+               this.pagocli.nrompago2+' '+
+               this.pagocli.banco2,32,y,{ align: 'left' });
+      doc.text(
+        this.currencyPipe.transform(this.pagocli.importe2, 'ARS','code','1.2-2')?.replace('ARS','')||'',
+        xImporte,y,{ align: 'right' });
     }
- 
-    updatechecked(checked : boolean){
-      this.imprimeconcepto = checked;
+    y+=5;
+    if (this.pagocli.importe3 > 0) {
+      doc.text(this.cmediospago[this.pagocli.idmpago3 - 1].mediopago+' '+
+               this.pagocli.nrompago3+' '+
+               this.pagocli.banco3,32,y,{ align: 'left' });
+      doc.text(
+        this.currencyPipe.transform(this.pagocli.importe3, 'ARS','code','1.2-2')?.replace('ARS','')||'',
+        xImporte,y,{ align: 'right' });
     }
+
+    doc.save('ReciboDePago'+this.pagocli.idPago);   // Se graba a pdf
+  }
+  
 }

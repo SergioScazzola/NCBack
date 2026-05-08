@@ -180,9 +180,10 @@
             <button class="btn btn-sm btn-outline-success me-5" 
                      [disabled]="formPag.invalid || data.accion!='M'" 
                      (click)="ModificarPago()">Modificar Pago</button>  
-            <!--button class="btn btn-sm btn-outline-info me-5" 
+            <button class="btn btn-sm btn-outline-info me-5" 
                      [disabled]="formPag.invalid || data.accion!='M'" 
-                     (click)="generarReciboPDF()">Imprimir Recibo</button-->                       
+                     (click)="generarReciboPDF()">Imprimir Recibo
+            </button>                       
             <button class="btn btn-sm btn-outline-secondary"                
                      (click)="Anular()">Cancelar</button>                       
         </div>  

@@ -318,8 +318,7 @@ actualizarxUltPago(){
           this.prepararMovimientos();      
           this.generarColSaldo(); 
           this.cargandoCtaCte = false;   
-          this.cdr.detectChanges();                                                          
-          subs1.unsubscribe;
+          this.cdr.detectChanges();                                                                  
       })     
 }
 

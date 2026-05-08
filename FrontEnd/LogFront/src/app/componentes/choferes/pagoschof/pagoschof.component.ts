@@ -108,12 +108,8 @@ export class PagoschofComponent {
     registerLocaleData(localeEsAR, 'es-AR');
     this.imppago = 0;
     this.initFormulario();
-     forkJoin({  // consultas traer info para pago
-          
-           //viajeschof:    this.servicio.getViajesxChofer(this.data.idChofer),
-           facturaschof:  this.servicio.getFactTpteXChofer(this.data.idChofer),  
-             
-           //chofer:        this.servicio.leerPagoChofer(this.data.idPago),
+     forkJoin({  // consultas traer info para pago                     
+           facturaschof:  this.servicio.getFactTpteXChofer(this.data.idChofer),                          
            mediospago:    this.servicio.getMediosPago(),
    
          }).subscribe(res2 => {
@@ -139,7 +135,7 @@ export class PagoschofComponent {
                     subs2 = this.servicio.leerPagoChofer(this.data.idPago)
                        .pipe(finalize(() => {  
                             this.operacion = "Modificar Pago Nro.: "+this.data.idPago+" al Chofer : "+this.data.nombre;                
-                            subs2.unsubscribe;
+                            subs2.unsubscribe();
                             this.prepararModificacion();
                             this.isloading = false;
                             this.cdr.detectChanges()
@@ -202,6 +198,7 @@ export class PagoschofComponent {
   onSelectionFactura(event: any){
     this.formPag.controls['idFactura'].setValue(event.target.value);
     console.log("Factura seleccionada : "+event.target.value);
+    this.factpSel = event.target.value
 
   }
 
@@ -237,6 +234,7 @@ prepararAlta(): boolean{
           })   
   } else {
     var idf = this.cfacsTpte[0].idFactura;
+    this.factpSel = idf;
     this.inicializarFormulario(idf);
    
   }
@@ -273,6 +271,7 @@ prepararAlta(): boolean{
    this.formPag.controls['fecha'].setValue(this.pagochof.fecha);
    this.formPag.controls['idChofer'].setValue(this.pagochof.idChofer);
    this.formPag.controls['idFactura'].setValue(this.pagochof.idFactura);
+   this.factpSel = this.pagochof.idFactura;
    this.formPag.controls['idmpago1'].setValue(this.pagochof.idmpago1);
    this.formPag.controls['nrompago1'].setValue(this.pagochof.nrompago1);
    this.formPag.controls['banco1'].setValue(this.pagochof.banco1);  
@@ -433,13 +432,14 @@ ModificarPago(){
   Anular(){
     this.dialogRef.close({ clicked : "Cancelar"})
   }
-  // Recibo de Pago al Empleado
-  /*generarReciboPDF() : void {
+
+  //Recibo de Pago al Chofer
+  generarReciboPDF() : void {
                
     const doc = new jsPDF('p','mm','A4');
    
-    var indl  =  this.claboreos.findIndex(p=>p.idLaboreo==this.pagoemp.nrolaboreo);//  laboreo del pago
-    const title = 'RECIBO DE PAGO NRO. '+this.data.nropago;
+    
+    const title = 'RECIBO DE PAGO NRO. '+this.data.idPago+" DEL CHOFER";
     
   
     // Fecha actual
@@ -461,7 +461,7 @@ ModificarPago(){
         
         
     doc.setFontSize(10);
-    doc.text("Degros S.A.", 10, 15, { align: 'left' });
+    doc.text("Logistica NC", 10, 15, { align: 'left' });
      
     // Fecha alineada a la derecha
     doc.setFontSize(10);
@@ -485,18 +485,22 @@ ModificarPago(){
     doc.text(title, xx, yy, { align: 'center' });
               
     doc.setFontSize(12);
-    doc.text('Recibí de Degros S.A., la cantidad de pesos : '+
-             this.currencyPipe.transform(this.pagoemp.importe, '$','code','1.2-2'),10,45,{align:'left'});
-    doc.setFontSize(10);         
+    doc.text('Recibí de Logistica NC, la cantidad de pesos : '+
+             this.currencyPipe.transform(this.pagochof.imptotal, '$','code','1.2-2'),10,45,{align:'left'});
+    doc.setFontSize(10);
+    var nrofac = ""; 
+    if (this.cfacsTpte!=null){
+      var indf =  this.cfacsTpte.findIndex(p=>p.idFactura==this.factpSel);
+      nrofac =   this.cfacsTpte[indf].nrofactura;
+    } 
+    
+   
     if (this.imprimeconcepto){
-       doc.text('En concepto de trabajos de '+this.claboreos[indl].nlabor+' - '+
-             this.claboreos[indl].ncultivo+' - Campo : '+this.claboreos[indl].ncampo+' - lotes : '+
-             this.claboreos[indl].potreros+' - '+
-             this.claboreos[indl].hasTrab+' Hectáreas',10,50,{align:'left'})
+       doc.text('En concepto de pago por factura Nro : '+nrofac,10,50,{align:'left'});
     }
     
     doc.setFontSize(10);    
-     var cadimpo = this.currencyPipe.transform(this.pagoemp.importe, 'ARS','code','1.2-2')?.replace('ARS','');
+     var cadimpo = this.currencyPipe.transform(this.pagochof.imptotal, 'ARS','code','1.2-2')?.replace('ARS','');
     var cvos = cadimpo?.substring(cadimpo.length-2,cadimpo.length);
     var centavos = "";
     if (cvos=='00'){
@@ -504,24 +508,50 @@ ModificarPago(){
     } else {
       centavos = ' con '+cvos+'/100.-' 
     }
-    doc.text('Son pesos : '+this.util.numLetras(Math.trunc(this.pagoemp.importe))+
+    doc.text('Son pesos : '+this.util.numLetras(Math.trunc(this.pagochof.imptotal))+
              centavos,10,60,{align:'left'});          
 
     const pageWidth = doc.internal.pageSize.getWidth();
     doc.setDrawColor(156,156,156);
     doc.line(pageWidth-10-60,80,pageWidth-10,80); //margen derecho 10, long linea = 60
-    doc.text(this.pagoemp.nomemp,pageWidth-50,85);
-
-  
-    doc.text('Forma de pago : '+this.pagoemp.mediopago+' - '+this.pagoemp.nrompago+' - '+this.pagoemp.banco,
-              10,98,{align:'left'});
-    doc.text('Observaciones : '+this.pagoemp.observaciones,10,110,{align:'left'});
-    doc.save('ReciboDePago'+this.pagoemp.idPagoemp);       
+    doc.text(this.data.nombre,pageWidth-50,85);
+     // Forma de Pago : Máximo 3 
+   doc.setFontSize(8);   
+   var xImporte = 110;
+   var y        = 98; 
+   doc.text( 'Forma de pago : '+
+      this.cmediospago[this.pagochof.idmpago1 - 1].mediopago+' '+
+      this.pagochof.nrompago1+' '+
+      this.pagochof.banco1+' ', 10,98,{ align: 'left' });
+              
+   doc.text(
+      this.currencyPipe.transform(this.pagochof.importe1, 'ARS','code','1.2-2')?.replace('ARS','')||'',
+      xImporte,
+      y,{ align: 'right' });
+    y+=5;  
+    if (this.pagochof.importe2 > 0) {
+      doc.text(this.cmediospago[this.pagochof.idmpago2 - 1].mediopago+' '+
+               this.pagochof.nrompago2+' '+
+               this.pagochof.banco2,32,y,{ align: 'left' });
+      doc.text(
+        this.currencyPipe.transform(this.pagochof.importe2, 'ARS','code','1.2-2')?.replace('ARS','')||'',
+        xImporte,y,{ align: 'right' });
+    }
+    y+=5;
+    if (this.pagochof.importe3 > 0) {
+      doc.text(this.cmediospago[this.pagochof.idmpago3 - 1].mediopago+' '+
+               this.pagochof.nrompago3+' '+
+               this.pagochof.banco3,32,y,{ align: 'left' });
+      doc.text(
+        this.currencyPipe.transform(this.pagochof.importe3, 'ARS','code','1.2-2')?.replace('ARS','')||'',
+        xImporte,y,{ align: 'right' });
+    }
+    doc.save('ReciboDePago'+this.pagochof.idPago);       
         
     }
  
     updatechecked(checked : boolean){
       this.imprimeconcepto = checked;
-    }*/
+    }
 }
 
