@@ -19,7 +19,6 @@ import { MPagoDTO } from '../../../../entidades/marcaDTO';
 import { finalize, forkJoin, Subscription } from 'rxjs';
 
 import { es } from 'date-fns/locale';
-//import { DATE_FORMATS } from '../../laboreos/laboreo/laboreo.component';
 import { DateFnsAdapter } from '@angular/material-date-fns-adapter';
 import jsPDF from 'jspdf';
 import { UtilService } from '../../../servicios/util.service';
@@ -27,7 +26,6 @@ import autoTable from 'jspdf-autotable';
 import { viajeDTO } from '../../../../entidades/viajeDTO';
 import { factpDTO } from '../../../../entidades/factpDTO';
 import { intPago, pagoDTO } from '../../../../entidades/pagoDTO';
-import { ImporteDecimalDirective } from "../../../Directivas/importeDecimal";
 import { ImporteDirective } from "../../../Directivas/importeDirective";
 import { SinoService } from '../../../servicios/sino.service';
 

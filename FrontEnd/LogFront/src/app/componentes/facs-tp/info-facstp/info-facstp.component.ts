@@ -19,6 +19,7 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
 
 import { AgChof, factpDTO } from '../../../../entidades/factpDTO';
 import { choferDTO } from '../../../../entidades/choferDTO';
+import { NotiserviceService } from '../../../servicios/notiservice.service';
 
 export const DATE_FORMATS : MatDateFormats = {
 
@@ -107,7 +108,8 @@ export class InfoFacstpComponent {
                public  fb       : FormBuilder,
                private cdr      : ChangeDetectorRef,
                public datepipe  : DatePipe,
-               private currencyPipe: CurrencyPipe,){}
+               private currencyPipe: CurrencyPipe,
+               private notiService : NotiserviceService){}
 
 
    ngOnInit(){
@@ -162,7 +164,13 @@ initFormulario(){
           finalize(() => {             
             subs.unsubscribe();
             this.eligiochof = false;
-            this.armarconSubtotales(); // Armar arreglo con subtotales para desplegar
+            if (this.cfacstp==null||this.cfacstp==undefined){
+               this.notiService.showNotification("No existen facturas de chofer en este rango de fechas...",
+                                'Aceptar','mensaje',500);     
+            } else {
+              this.armarconSubtotales(); // Armar arreglo con subtotales para desplegar
+            }
+            
           })
              )
              .subscribe((data: any): void => {
@@ -171,8 +179,10 @@ initFormulario(){
     }
 armarconSubtotales(){
     // genera el array "cfacssubt" a partir de "cfacstp" insertando subtotales por chofer
-   
-    var subtchof   = 0;    
+       
+    var subtneto   = 0;
+    var subtiva    = 0;
+    var subtotal   = 0;
     var totalneto  = 0;
     var totaliva   = 0;
     var total      = 0;    
@@ -181,11 +191,15 @@ armarconSubtotales(){
     while (i<this.cfacstp.length){
 
       facchof  = 0;
-      subtchof = 0;
+      subtneto = 0;
+      subtiva  = 0;
+      subtotal = 0;
       var nrochof = this.cfacstp[i].idChofer;
       var nomchof = this.cfacstp[i].nomchofer;
       while (i<this.cfacstp.length && this.cfacstp[i].idChofer==nrochof){       
-        subtchof  += this.cfacstp[i].totalfac;          
+        subtneto  += this.cfacstp[i].impneto;          
+        subtiva   += this.cfacstp[i].impiva;          
+        subtotal  += this.cfacstp[i].totalfac;          
         totalneto += this.cfacstp[i].impneto;          
         totaliva  += this.cfacstp[i].impiva;          
         total     += this.cfacstp[i].totalfac;          
@@ -202,9 +216,9 @@ armarconSubtotales(){
         idChofer     : nrochof,
         nomchofer    :  "* SUBTOTAL - Cant.: "+facchof+" *",
         cantit       : 0,
-        impneto      : 0,
-        impiva       : 0,
-        totalfac     : subtchof
+        impneto      : subtneto,
+        impiva       : subtiva,
+        totalfac     : subtneto
       };   
       this.cfacssubt.push(fact);
     }

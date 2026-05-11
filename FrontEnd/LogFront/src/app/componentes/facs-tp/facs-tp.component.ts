@@ -44,9 +44,9 @@ export class FacsTPComponent {
    constructor(     private servicio     : ServiciosService,               
                     private rutaActiva   : ActivatedRoute,
                     private router       : Router,
-                    public  dialog       : MatDialog,
-                    private sinoServicio : SinoService,
+                    public  dialog       : MatDialog,                  
                     private cdr          : ChangeDetectorRef,     
+                    private sinoServicio: SinoService,
                     private notiServicio : NotiserviceService
                                ) {    
    }         
@@ -135,41 +135,46 @@ export class FacsTPComponent {
  
    }
    borrarFacTP(idfac : number, nrofac : string){
-    var resu : string;
+   
     // Desmarca los registros de viaje de acuerdo al detalle y luego
     // borra la factura y el detalle en cascada (definido en BD)
-    var resu : string;
-    this.servicio.getItemsFacsTP(idfac).subscribe((data:any) => { 
-            this.cdetfacTP    = data;
+    this.sinoServicio.abrirSiNoDialogo("Confirmación",
+                        "¿ Está seguro de quiere borrar la Factura Nro."+idfac+" del chofer ?")
+    .then(result => {
+        if (result) {
+           var resu : string;
+           this.servicio.getItemsFacsTP(idfac).subscribe((data:any) => { 
+             this.cdetfacTP    = data;
     
-            const observables = this.cdetfacTP.map(item => {                         
-            return this.servicio.updateFactT(item.idViaje, 0);
-         });
+             const observables = this.cdetfacTP.map(item => {                         
+             return this.servicio.updateFactT(item.idViaje, 0);
+             });
     
-         forkJoin(observables).subscribe({
-          next: (results) => {
-           console.log('Todos los items grabados:', results);
+             forkJoin(observables).subscribe({
+               next: (results) => {
+                 console.log('Todos los items grabados:', results);
     
-          // 👉 recién acá eliminar
-           this.servicio.elimFacTP(idfac).subscribe((data:any) => { 
-            resu = data;
-            this.leerFacsTP();  // refrescar lista de facturas
-            this.notiServicio.showNotification(
-              "Factura : " + nrofac + " Eliminada (" + resu + ")",
-              'Aceptar',
-              'mensaje',
-              500
-            );
-          });
-    
-        }, 
-        error: (err) => {
-          console.error('Error al grabar items:', err);
-        }
-      });
-    });
-    
+                 // 👉 recién acá eliminar
+                 this.servicio.elimFacTP(idfac).subscribe((data:any) => { 
+                 resu = data;
+                 this.leerFacsTP();  // refrescar lista de facturas
+                 this.notiServicio.showNotification(
+                    "Factura : " + nrofac + " Eliminada (" + resu + ")",
+                    'Aceptar',
+                    'mensaje',
+                    500
+                 );
+                 });    
+               }, 
+               error: (err) => {
+                  console.error('Error al grabar items:', err);
+                }
+              });
+           })
+          }}) // cierro el .then  
   }
+    
+  
   
    manejarOperacion($event:any){
      if ($event==="Alta" || $event==="Modi"){
