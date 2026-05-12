@@ -70,7 +70,7 @@ export class InfoFacstpComponent {
   public   isloading  : boolean = true;
   private  hoy        : Date = new Date();
   private  fecprim    : Date = new Date();
-
+  private  chofSel    : number = 0;
   colspdf = [
     { header: 'id.Fac', dataKey: 'idFactura' },    
     { header: 'Fecha', dataKey: 'fecha' },    
@@ -101,7 +101,7 @@ export class InfoFacstpComponent {
   resFacChof : AgChof[] = [];
  
   colresChof  : string[] = [ 'nomchofer','idChofer','cuenta','impneto','impiva','totalfac'];
-  tipoinforme : string[] = [ 'Tipo de Informe','Informe Detallado','Con Subtotales x Chofer','Agrupado x Chofer'];
+  tipoinforme : string[] = [ 'Tipo de Informe','Informe Detallado','Con Subtotales x Chofer','Informe Chofer','Agrupado x Chofer'];
    constructor(private servicio : ServiciosService,
                private rutaActiva : ActivatedRoute,
                private router   : Router,
@@ -155,16 +155,17 @@ initFormulario(){
        this.hfec = cad!=null?cad:" ";
        this.borrarArreglos();
     }
+
+
     desplegarInformeSubtotales(){
-    var subs : Subscription;
-   
-    this.borrarArreglos();
+    var subs : Subscription;      
     subs = this.servicio.getFacsTPxFecha(this.dfec,this.hfec)
        .pipe(
           finalize(() => {             
             subs.unsubscribe();
             this.eligiochof = false;
-            if (this.cfacstp==null||this.cfacstp==undefined){
+         
+            if (this.cfacstp==null||this.cfacstp==undefined||this.cfacstp.length==0){
                this.notiService.showNotification("No existen facturas de chofer en este rango de fechas...",
                                 'Aceptar','mensaje',500);     
             } else {
@@ -177,6 +178,7 @@ initFormulario(){
                this.cfacstp = data;
              }); 
     }
+    
 armarconSubtotales(){
     // genera el array "cfacssubt" a partir de "cfacstp" insertando subtotales por chofer
        
@@ -267,7 +269,7 @@ armarconSubtotales(){
        
   }
 
-  armarconTotalesChofer(){
+  armarAgrupxChofer(){
     // genera el array "cfacssubt" a partir de "cfacstp" insertando totales de chofer al final       
     var totalneto  = 0;
     var totaliva   = 0;
@@ -392,8 +394,13 @@ desplegarDetallado(){
   subs = this.servicio.getFacsTPxFecha(this.dfec, this.hfec) // factura del chofer en el rengo de fechas
       .pipe(
          finalize(() => {
-            this.armarconTotales();
-            subs.unsubscribe();          
+           if (this.cfacstp==null||this.cfacstp==undefined||this.cfacstp.length==0){
+               this.notiService.showNotification("No existen facturas de chofer en este rango de fechas...",
+                                'Aceptar','mensaje',500);     
+            } else {
+               this.armarconTotales();
+               subs.unsubscribe();          
+            }
          }))
       .subscribe((data: any): void => {
                this.cfacstp = data;
@@ -404,7 +411,12 @@ desplegarResumenxChofer(){
   subs = this.servicio.getFacsAgrupxChof(this.dfec, this.hfec)  // informe agrupado x Chofer
       .pipe(
          finalize(() => {
-            //this.armarconTotales();
+           if (this.cfacstp==null||this.cfacstp==undefined||this.cfacstp.length==0){
+               this.notiService.showNotification("No existen facturas de chofer en este rango de fechas...",
+                                'Aceptar','mensaje',500);     
+            } else {
+              this.armarconTotalesChofer();
+            }
             subs.unsubscribe();          
          }))
       .subscribe((data: any): void => {
@@ -416,7 +428,12 @@ desplegarConSubtotales(){
   subs = this.servicio.getFacsTPxFecha(this.dfec, this.hfec) // factura del chofer en el rengo de fechas
       .pipe(
          finalize(() => {
-            this.armarconSubtotales();
+            if (this.cfacstp==null||this.cfacstp==undefined||this.cfacstp.length==0){
+               this.notiService.showNotification("No existen facturas de chofer en este rango de fechas...",
+                                'Aceptar','mensaje',500);     
+            } else {
+               this.armarconSubtotales();
+            }
             subs.unsubscribe();          
          }))
       .subscribe((data: any): void => {
@@ -428,7 +445,12 @@ desplegarChofer(nrochof : number){
   subs = this.servicio.getFacsTPxChoferYF(nrochof, this.dfec, this.hfec) // factura del chofer en el rengo de fechas
       .pipe(
          finalize(() => {
+            if (this.cfacstp==null||this.cfacstp==undefined||this.cfacstp.length==0){
+               this.notiService.showNotification("No existen facturas de chofer en este rango de fechas...",
+                                'Aceptar','mensaje',500);     
+            } else {
             this.armarconTotalesChofer();
+            }
             subs.unsubscribe();          
          }))
       .subscribe((data: any): void => {
@@ -437,7 +459,7 @@ desplegarChofer(nrochof : number){
 } 
 
 onSelectionChangeChofer(event:any){      
-    this.desplegarChofer(event.value);
+    this.chofSel = event.value;
 }
 onSelectionChangeInforme(event:any){
  // 'Tipo de Informe','Informe Detallado','Con Subtotales x Chofer' ,'Resumen x Chofer'
@@ -456,14 +478,17 @@ onSelectionChangeInforme(event:any){
                  break
                };
       case 3 : { this.borrarArreglos();
-                 this.desplegarResumenxChofer();
+                 this.desplegarChofer(this.chofSel);
                  this.isloading = false;  
                  this.cdr.detectChanges();           
                  break
                };
-     /* case 4 : { this.desplegarXMaquina();
-                 break
-               };               */
+      case 4 : {this.borrarArreglos();
+                this.desplegarAgrupxChofer();
+                this.isloading = false;  
+                this.cdr.detectChanges();           
+                break
+               };               
       default : {break};
       
     }

@@ -56,9 +56,9 @@ export class ItfactpComponent {
           
   }
 
-  ngAfterViewInit() {
+ /* ngAfterViewInit() {
       this.isloading = false; // refrescar la vista si no llego a renderizar  
-  }
+  }*/
 
  ngOnInit(){     
      this.initFormulario();        
@@ -84,6 +84,28 @@ export class ItfactpComponent {
                  this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores  //            
               } else {
                     this.notiService.showNotification("El chofer seleccionado no tiene viajes disponibles", "Cerrar", "error", 5000);
+                    var viaje : viajeDTO = {
+                        idViaje        : 0,
+                        fecha          : null,
+                        idChofer       : 0,
+                        nomchofer      : "",
+                        idCliente      : 0,
+                        nomcliente     : "",   
+                        idCamion       : 0,
+                        descrip        : "",
+                        origen         : "ORIGEN",
+                        destino        : "DESTINO",
+                        ctg            : "",
+                        cantkm         : 0,
+                        cargaton       : 0,
+                        tarifap        : 0,
+                        ltsgasoil      : 0,
+                        impneto        : 0,
+                        impviaje       : 0,
+                        fact           : 0,
+                        facc           : 0,
+                    }
+                    this.cviajes.push(viaje);
                     this.isloading = false;
                     this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores  //   
                  };
