@@ -151,7 +151,7 @@ export class ViajeComponent {
 
   }
   actualizarControles(){
-    // Actualiza controles para modificar
+    // Actualiza controles para modificar a partir del objeto viajee
                    
     this.formViaje.controls["nroviaje"].setValue(this.viajee.idViaje), 
     this.formViaje.controls["fecha"].setValue(this.viajee.fecha), 

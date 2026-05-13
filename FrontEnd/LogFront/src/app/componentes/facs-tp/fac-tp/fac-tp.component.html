@@ -65,8 +65,8 @@
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe Neto</mat-label>
-          <input matInput readonly="true" formControlName="impneto"
-                 [value]="formFactp.get('impneto')?.value | currency:'$':true"
+          <input matInput readonly="true"
+                 [value]="formFactp.get('impneto')?.value  | number : '1.2-2'"
                  style="text-align: right"
           />        
         </mat-form-field>
@@ -75,8 +75,8 @@
       <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe IVA</mat-label>
-          <input matInput readonly="true" formControlName="impiva"
-                 [value]="formFactp.get('impiva')?.value | currency:'$':true"
+          <input matInput readonly="true" 
+                 [value]="formFactp.get('impiva')?.value | number : '1.2-2'"
                  style="text-align: right"
           />        
         </mat-form-field>
@@ -87,8 +87,8 @@
        <div class="col-md-4">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Total Factura</mat-label>
-          <input matInput readonly="true" formControlName="totalfac"
-                 [value]="formFactp.get('totalfac')?.value | currency:'$':true"
+          <input matInput readonly="true" 
+                 [value]="formFactp.get('totalfac')?.value | number :'1.2-2'"
                  style="text-align: right"
           />        
         </mat-form-field>

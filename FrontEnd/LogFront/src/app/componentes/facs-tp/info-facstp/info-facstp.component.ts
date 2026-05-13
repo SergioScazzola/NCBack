@@ -270,33 +270,29 @@ armarconSubtotales(){
   }
 
   armarAgrupxChofer(){
-    // genera el array "cfacssubt" a partir de "cfacstp" insertando totales de chofer al final       
+    // Totaliza el informe agrupado x Chofer del array   resFacChof : AgChof[] = [];
     var totalneto  = 0;
     var totaliva   = 0;
-    var total      = 0;    
+    var total      = 0;   
+    var cfac       = 0; 
     var i          = 0;    
-    var nrochof    = this.cfacstp[0].idChofer;
-    var nomchof    = this.cfacstp[0].nomchofer;
-    while (i<this.cfacstp.length){
-      this.cfacssubt.push(this.cfacstp[i]);  
-      totalneto += this.cfacstp[i].impneto;          
-      totaliva  += this.cfacstp[i].impiva;          
-      total     += this.cfacstp[i].totalfac;          
+   
+    while (i<this.resFacChof.length){     
+      totalneto += this.resFacChof[i].impneto;          
+      totaliva  += this.resFacChof[i].impiva;          
+      total     += this.resFacChof[i].totalfac;          
+      cfac      += this.resFacChof[i].cuenta;          
       i++;
     }
-    var fact : factpDTO = {
-        idFactura    : 0,
-        fecha        : null,        
-        nrofactura   : "",
-        facndc       : "",
-        idChofer     : 0,
-        nomchofer    : "* TOTALES "+nomchof+"("+nrochof+") - Cant.: "+i+" *",
-        cantit       : 0,
-        impneto      : totalneto,
-        impiva       : totaliva,
-        totalfac     : total
+    var resu : AgChof = {
+      idChofer      : 0,
+      cuenta        : cfac,        
+      nomchofer     : "* TOTALES *",
+      impneto       : totalneto, 
+      impiva        : totaliva,
+      totalfac      : total,
       };   
-    this.cfacssubt.push(fact);
+    this.resFacChof.push(resu);
        
   }
 
@@ -390,6 +386,7 @@ generarPDF(nomchof : string):void{
 }
 
 desplegarDetallado(){
+  // informe total de facturas en el rango de fechas dado, sin subtotales ordenado por fecha
   var subs : Subscription;
   subs = this.servicio.getFacsTPxFecha(this.dfec, this.hfec) // factura del chofer en el rengo de fechas
       .pipe(
@@ -407,15 +404,16 @@ desplegarDetallado(){
              });
 }
 desplegarResumenxChofer(){
+  // Informe agrupado por chofer, en el rango de fechas dado
   var subs : Subscription;
   subs = this.servicio.getFacsAgrupxChof(this.dfec, this.hfec)  // informe agrupado x Chofer
       .pipe(
          finalize(() => {
-           if (this.cfacstp==null||this.cfacstp==undefined||this.cfacstp.length==0){
+           if (this.resFacChof==null||this.resFacChof==undefined||this.resFacChof.length==0){
                this.notiService.showNotification("No existen facturas de chofer en este rango de fechas...",
                                 'Aceptar','mensaje',500);     
             } else {
-              this.armarconTotalesChofer();
+              this.armarAgrupxChofer();
             }
             subs.unsubscribe();          
          }))
@@ -424,6 +422,7 @@ desplegarResumenxChofer(){
              });
 }
 desplegarConSubtotales(){
+  // informe total con subtotales por chofer, en el rango de fechas dado
   var subs : Subscription;
   subs = this.servicio.getFacsTPxFecha(this.dfec, this.hfec) // factura del chofer en el rengo de fechas
       .pipe(
@@ -441,6 +440,7 @@ desplegarConSubtotales(){
              });
 }
 desplegarChofer(nrochof : number){
+  // informe de facturas de un chofer determinado en el rango de fechas dado
   var subs : Subscription;
   subs = this.servicio.getFacsTPxChoferYF(nrochof, this.dfec, this.hfec) // factura del chofer en el rengo de fechas
       .pipe(
@@ -449,7 +449,7 @@ desplegarChofer(nrochof : number){
                this.notiService.showNotification("No existen facturas de chofer en este rango de fechas...",
                                 'Aceptar','mensaje',500);     
             } else {
-            this.armarconTotalesChofer();
+            this.armarconTotales();
             }
             subs.unsubscribe();          
          }))
@@ -484,7 +484,7 @@ onSelectionChangeInforme(event:any){
                  break
                };
       case 4 : {this.borrarArreglos();
-                this.desplegarAgrupxChofer();
+                this.desplegarResumenxChofer();
                 this.isloading = false;  
                 this.cdr.detectChanges();           
                 break

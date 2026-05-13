@@ -68,7 +68,7 @@
 .mat-mdc-row {
   height: auto;
   min-height: 40px;
-  font-size: 12px;
+  font-size: 14px;
   transition: background-color 0.2s ease;
 }
 
