@@ -119,7 +119,7 @@ export class FacsClientesComponent {
     }       
     const dialogConfig = new MatDialogConfig();
    
-    dialogConfig.width =  '900';         // ancho máximo de la ventana
+    dialogConfig.width =  '500';         // ancho máximo de la ventana
     dialogConfig.maxWidth = '95vw';      
     dialogConfig.height   = 'auto';        // altura se ajusta al contenido
     dialogConfig.panelClass = 'custom-dialog-container';

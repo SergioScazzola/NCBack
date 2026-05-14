@@ -13,11 +13,20 @@ h4 {
     margin-bottom: 5px;
     width: 100%
 }
+/* Pintar fondo de un campo de texto */
 
-::ng-deep .ltsgasoil .mat-mdc-form-field-flex {
-  background-color: #36b841 !important;
+::ng-deep .imptotal .mat-mdc-form-field-flex  {
+  background-color: lightblue!important;
+
+}
+::ng-deep .imptotal .mat-mdc-text-field-wrapper {
+  background-color: lightblue!important;
+
 }
 
+.imptotal {
+  font-weight: 600;
+}
 .menserror {
    color : red
 }

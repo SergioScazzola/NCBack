@@ -20,3 +20,16 @@ h4 {
     width: 100%
 }
 
+::ng-deep .imptotal .mat-mdc-form-field-flex  {
+  background-color: lightblue!important;
+
+}
+::ng-deep .imptotal .mat-mdc-text-field-wrapper {
+  background-color: lightblue!important;
+
+}
+
+.imptotal {
+  font-weight: 600;
+}
+

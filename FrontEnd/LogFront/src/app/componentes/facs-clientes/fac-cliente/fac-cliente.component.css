@@ -81,3 +81,15 @@ h4 {
   text-align: center !important;
   overflow: visible !important;
 }
+ ::ng-deep .imptotal .mat-mdc-form-field-flex  {
+  background-color: lightblue!important;
+
+}
+::ng-deep .imptotal .mat-mdc-text-field-wrapper {
+  background-color: lightblue!important;
+
+}
+
+.imptotal {
+  font-weight: 600;
+}

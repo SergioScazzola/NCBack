@@ -156,20 +156,21 @@
          </div>
         </div>
         <div class="row mt-1" >
-           <div class="col-md-4">
-            <mat-form-field class="w-100" appearance="fill">
-            <mat-label>Total Pago</mat-label>
-            <input matInput readonly="true" 
-               [value]="formPag.get('imptotal')?.value | currency:'$':true"            
-                 style="text-align:  right;">	
-            </mat-form-field>   
-           </div>
+          
            <div class="col-md-8">
             <mat-form-field class="w-100" appearance="fill">
             <mat-label>Nota</mat-label>
                <input matInput formControlName="observ"/>        
             </mat-form-field>
           </div>
+          <div class="col-md-4">
+            <mat-form-field class="w-100 imptotal" appearance="fill">
+            <mat-label>Total Pago</mat-label>
+            <input matInput readonly="true" 
+               [value]="formPag.get('imptotal')?.value | currency:'$':true"            
+                 style="text-align:  right;">	
+            </mat-form-field>   
+           </div>
         </div>
         <!-- Fila de botones  -->
         <div class="row">

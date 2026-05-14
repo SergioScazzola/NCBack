@@ -62,7 +62,7 @@
     </div>         
     <!-- Tercera fila -->
     <div class="row g-3 mb-1">      
-      <div class="col-md-4">
+      <div class="col-md-3">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe Neto</mat-label>
           <input matInput readonly="true"
@@ -72,7 +72,7 @@
         </mat-form-field>
       </div>
       
-      <div class="col-md-4">
+      <div class="col-md-3">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Importe IVA</mat-label>
           <input matInput readonly="true" 
@@ -84,7 +84,7 @@
       </div>
       <!-- Tercera fila -->
       <div class="row g-3 mb-1">      
-       <div class="col-md-4">
+       <div class="col-md-3">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Total Factura</mat-label>
           <input matInput readonly="true" 
@@ -94,7 +94,7 @@
         </mat-form-field>
       </div>
       
-      <div class="col-md-4">
+      <div class="col-md-3">
         <mat-form-field class="w-100" appearance="fill">
           <mat-label>Cant.Items</mat-label>
           <input matInput readonly="true" formControlName="cantit"
@@ -102,7 +102,7 @@
           />        
         </mat-form-field>
       </div>
-       <div class="col-md-4">
+       <div class="col-md-3">
           <button class="btn btn-sm btn-primary add-button" (click)="agItemFactp()"
              [disabled]="formFactp.invalid || data.accion != 'A'">
             <i class="bi bi-plus-circle me-1"></i>Agregar Item Factura

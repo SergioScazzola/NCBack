@@ -136,7 +136,7 @@
     <!-- Quinta fila -->
     <div class="row g-3 mb-3">      
       <div class="col-md-4">
-        <mat-form-field class="w-100 ltsgasoil" appearance="fill">
+        <mat-form-field class="w-100" appearance="fill">
           <mat-label>Litros Gasoil</mat-label>
           <input matInput appImporte formControlName="ltsgasoil"  
               style="text-align: right;"/>  
@@ -151,7 +151,7 @@
          </mat-form-field>   
       </div>
       <div class="col-md-4">
-        <mat-form-field class="w-100" appearance="fill">
+        <mat-form-field class="w-100 imptotal" appearance="fill">
           <mat-label>Importe del Viaje</mat-label>
           <input matInput [readonly]="true"                
               [value]="formViaje.get('impviaje')?.value | currency:'$ ':'symbol':'1.2-2'"

@@ -1,20 +1,20 @@
 
 <div class="faccl-container">
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-4">
        <div class="header">
          <h4>Facturas al Cliente</h4>
        </div>
     </div>  
-    <div class="col-md-4">
+    <div class="col-4">
        <input #filtroInput (keyup)="aplicarFiltro(filtroInput.value)" placeholder="Filtrar por cliente">
     </div>            
-    <div class="col-md-2">
+    <div class="col-2">
       <button class="btn btn-primary add-button" (click)="agFacCL()">
         <i class="bi bi-plus-circle me-1"></i>Agregar
       </button>
     </div>      
-     <div class="col-md-2 text-end">
+     <div class="col-2 text-end">
         <button class="btn btn-sm btn-secondary" (click)="volver()">
           <i class="bi bi-box-arrow-right me-1"></i>
           Menu Ppal
