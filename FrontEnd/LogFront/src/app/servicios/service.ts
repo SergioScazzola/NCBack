@@ -17,6 +17,7 @@ import { saldoChofDTO } from '../../entidades/saldoChofDTO';
 import { gastoDTO } from '../../entidades/gastoDTO';
 import { pagoDTO } from '../../entidades/pagoDTO';
 import { pagocliDTO } from '../../entidades/pagocliDTO';
+import { AfipCredentials } from '../../entidades/AfipCredentials';
 
 @Injectable({
   providedIn: 'root',
@@ -505,5 +506,11 @@ public getTiposGasto() {
     public elimGasto(nrogasto : number) {
     return this.http.delete( environment.apiUrl + `gasto/gasto?id=` + nrogasto);
   }
-   
+ 
+  // AFIP
+
+  public getCredenciales() {
+    return this.http.get<AfipCredentials>(this.apiUrl + `afip/auth`);
+  }
+
 }

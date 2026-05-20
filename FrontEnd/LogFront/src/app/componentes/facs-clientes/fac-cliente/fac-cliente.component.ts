@@ -21,6 +21,7 @@ import { facclDTO, intFacCl } from '../../../../entidades/facclDTO';
 import { intItFacCl, itfacclDTO } from '../../../../entidades/itfacclDTO';
 import { clienteDTO } from '../../../../entidades/clienteDTO';
 import { ItfacClienteComponent } from './itfac-cliente/itfac-cliente.component';
+import { AfipCredentials } from '../../../../entidades/AfipCredentials';
 
 export const DATE_FORMATS : MatDateFormats = {
   
@@ -431,7 +432,19 @@ mostrarHora() {
   }) 
   }
 
-
+AutenticarAfip(){
+  var credenciales : AfipCredentials;
+  this.servicio.getCredenciales()
+   .subscribe((data:any):void => {    
+      credenciales = data;                    
+       this.notiService.showNotification("Token : "+credenciales.token+
+                                         "Sign  : "+credenciales.sign+
+                                         "GenT  : "+credenciales.generationTime+
+                                         "ExpT  : "+credenciales.expirationTime,'Aceptar','mensaje',500);                                  
+                this.isloading = false;
+                this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores
+          })              
+}
 Anular(){
       this.dialogRef.close({ clicked : "Cancelar"})
      }
