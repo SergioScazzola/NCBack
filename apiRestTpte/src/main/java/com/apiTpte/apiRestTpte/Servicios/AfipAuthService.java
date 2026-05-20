@@ -1,5 +1,6 @@
 package com.apiTpte.apiRestTpte.Servicios;
 // @Service
+// Los parámetros de configuracion los toma del archivo : application.yml en la carpeta "resources"
 
 import java.util.Base64;
 

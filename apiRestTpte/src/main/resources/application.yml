@@ -27,7 +27,7 @@ afip:
     endfev: http://ar.gov.afip.dif.FEV1/
     endpoint: https://wsaa.afip.gov.ar/ws/services/LoginCms
     service: wsfe
-    keystore: C:/CERTIF/bulo24.p12
+    keystore: C:/CERTIF/compatible.p12
     ksigner: 1
     password: 1234
     isProduction: 1
