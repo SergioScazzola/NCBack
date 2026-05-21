@@ -28,6 +28,7 @@ import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.SaldoChof;
 import com.apiTpte.apiRestTpte.Entidades.SaldoCli;
 import com.apiTpte.apiRestTpte.Entidades.TGasto;
+import com.apiTpte.apiRestTpte.Entidades.Ticket;
 import com.apiTpte.apiRestTpte.Entidades.Unid;
 import com.apiTpte.apiRestTpte.Entidades.Usuario;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
@@ -1156,8 +1157,8 @@ public class JdbcTpteRepository implements TpteRepository {
 
     @Override
     public List<Marca> AllMarcas() {   
-      String selec = "SELECT * FROM marcas ORDER BY marca";
-      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Marca.class));
+      String selec = "SELECT * FROM marcas ORDER BY marca";     
+      return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Marca.class));            
     }
 
      @Override
@@ -1183,5 +1184,35 @@ public class JdbcTpteRepository implements TpteRepository {
       String selec = "SELECT * FROM  unidades ORDER BY idUnidad";
       return jdbcTemplate.query(selec, BeanPropertyRowMapper.newInstance(Unid.class));
     }
+
+    // AFIP
+
+    @Override
+    public Ticket selectTicket() {
+      String selec = "SELECT * FROM ticket WHERE nroreg=?";      
+      try {
+        Ticket ticket = jdbcTemplate.queryForObject(selec, BeanPropertyRowMapper.newInstance(Ticket.class),1);
+        return ticket;
+      } catch (IncorrectResultSizeDataAccessException e) {
+          return null;
+      }
+      
+    }
+
+    @Override
+    public int saveTicket(Ticket ticket){
+      int resu = 0;
+      try {                   
+          resu = jdbcTemplate.update("UPDATE ticket SET nroreg=?,fechasol=?,fechaexp=?,"+
+                                                        "token=?,sign=? WHERE nroreg=?",
+                    new Object[] { ticket.getNroreg(),ticket.getFechasol(),ticket.getFechaexp(),
+                                   ticket.getToken(),ticket.getSign(),ticket.getNroreg()
+                                });
+        } catch (IncorrectResultSizeDataAccessException e) {
+          return -3;
+      }
+      return resu; 
+   }      
+   
 
 }

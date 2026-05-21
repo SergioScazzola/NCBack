@@ -19,6 +19,7 @@ import com.apiTpte.apiRestTpte.Entidades.Pago;
 import com.apiTpte.apiRestTpte.Entidades.SaldoChof;
 import com.apiTpte.apiRestTpte.Entidades.SaldoCli;
 import com.apiTpte.apiRestTpte.Entidades.TGasto;
+import com.apiTpte.apiRestTpte.Entidades.Ticket;
 import com.apiTpte.apiRestTpte.Entidades.Unid;
 import com.apiTpte.apiRestTpte.Entidades.Usuario;
 import com.apiTpte.apiRestTpte.Entidades.Viaje;
@@ -152,5 +153,10 @@ public interface TpteRepository {
     List<MPago> AllMediosPagos();
     List<TGasto> AllTiposGasto();
     List<Unid> AllUnidades();
+
+    // AFIP
+
+    Ticket selectTicket();
+    int saveTicket(Ticket ticket);
 
 }
