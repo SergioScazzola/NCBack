@@ -17,7 +17,7 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatDateFormats, MatNativ
 import { intItFacTp, itfactpDTO } from '../../../../entidades/itfactpDTO';
 import {MatDatepickerModule,MatDatepickerInputEvent} from '@angular/material/datepicker';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
-import { facclDTO, intFacCl } from '../../../../entidades/facclDTO';
+import { facclDTO, intFacCl, Ticket } from '../../../../entidades/facclDTO';
 import { intItFacCl, itfacclDTO } from '../../../../entidades/itfacclDTO';
 import { clienteDTO } from '../../../../entidades/clienteDTO';
 import { ItfacClienteComponent } from './itfac-cliente/itfac-cliente.component';
@@ -433,14 +433,14 @@ mostrarHora() {
   }
 
 AutenticarAfip(){
-  var credenciales : AfipCredentials;
-  this.servicio.getCredenciales()
+  var ticket : Ticket;
+  this.servicio.getTicket()
    .subscribe((data:any):void => {    
-      credenciales = data;                    
-       this.notiService.showNotification("Token : "+credenciales.token+
-                                         "Sign  : "+credenciales.sign+
-                                         "GenT  : "+credenciales.generationTime+
-                                         "ExpT  : "+credenciales.expirationTime,'Aceptar','mensaje',500);                                  
+      ticket = data;                    
+       this.notiService.showNotification("Token : "+ticket.token+
+                                         "Sign  : "+ticket.sign+
+                                         "GenT  : "+ticket.fechaexp+
+                                         "ExpT  : "+ticket.fechasol,'Aceptar','mensaje',500);                                  
                 this.isloading = false;
                 this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores
           })              

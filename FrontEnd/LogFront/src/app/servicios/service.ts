@@ -10,7 +10,7 @@ import { marcaDTO, MPagoDTO, TGastoDTO, UnidadDTO } from '../../entidades/marcaD
 import { clienteDTO, saldoCliDTO } from '../../entidades/clienteDTO';
 import { viajeDTO } from '../../entidades/viajeDTO';
 import { AgChof, factpDTO} from '../../entidades/factpDTO';
-import { facclDTO } from '../../entidades/facclDTO';
+
 import { itfactpDTO } from '../../entidades/itfactpDTO';
 import { itfacclDTO } from '../../entidades/itfacclDTO';
 import { saldoChofDTO } from '../../entidades/saldoChofDTO';
@@ -18,6 +18,7 @@ import { gastoDTO } from '../../entidades/gastoDTO';
 import { pagoDTO } from '../../entidades/pagoDTO';
 import { pagocliDTO } from '../../entidades/pagocliDTO';
 import { AfipCredentials } from '../../entidades/AfipCredentials';
+import { facclDTO, Ticket } from '../../entidades/facclDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -512,5 +513,10 @@ public getTiposGasto() {
   public getCredenciales() {
     return this.http.get<AfipCredentials>(this.apiUrl + `afip/auth`);
   }
+  
+  public getTicket() {
+    return this.http.get<Ticket>(this.apiUrl + `afip/ticket`);
+  }
+
 
 }

@@ -16,7 +16,15 @@ export interface facclDTO {
 export interface intFacCl {
     idFactura    : number;
     nrofactura   : string;
-    accion       : string;
-   
+    accion       : string;   
 }
+
+export interface Ticket {
+    nroren       : number;
+    fechasol     : Date|null;
+    fechaexp     : Date|null;
+    token        : string;   
+    sign         : string    
+}
+
 
