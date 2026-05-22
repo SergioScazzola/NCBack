@@ -63,7 +63,7 @@ export class FacClienteComponent {
   cfacscl          : facclDTO[]=[];
   cdetfaccl        : itfacclDTO[]=[];
   cclientes        : clienteDTO[]=[];
-  
+  ticket           : Ticket;  
   operacion        : string;
   formFaccl        : FormGroup;
   idclienteSel     : number = 1;
@@ -128,11 +128,12 @@ export class FacClienteComponent {
           clientes: this.servicio.getClientes(),    
           factura: this.servicio.leerFacCL(this.data.idFactura),
           detalle: this.servicio.getItemsFacsCL(this.data.idFactura),
+          tickett: this.servicio.getTicket(),    
         }).subscribe(res2 => {
            this.cclientes  = res2.clientes;
            this.factpp     = res2.factura;
            this.cdetfaccl  = res2.detalle;
-
+           this.ticket     = res2.tickett;
              
            this.operacion = `Consulta Factura Nro. ${this.factpp.nrofactura}`;
            this.actualizarFormulario();
@@ -433,14 +434,15 @@ mostrarHora() {
   }
 
 AutenticarAfip(){
-  var ticket : Ticket;
-  this.servicio.getTicket()
-   .subscribe((data:any):void => {    
-      ticket = data;                    
-       this.notiService.showNotification("Token : "+ticket.token+
-                                         "Sign  : "+ticket.sign+
-                                         "GenT  : "+ticket.fechaexp+
-                                         "ExpT  : "+ticket.fechasol,'Aceptar','mensaje',500);                                  
+
+  var ultimocomp : Number = 0;
+  forkJoin({
+
+          ultimoComp: this.servicio.getUltComp("FACA"),          
+        }).subscribe(res2 => {
+           ultimocomp     = res2.ultimoComp;
+            
+           this.notiService.showNotification("Ultimo Comp FAC A : "+ultimocomp,'Aceptar','mensaje',500);                                  
                 this.isloading = false;
                 this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores
           })              
