@@ -1,13 +1,14 @@
 package com.apiTpte.apiRestTpte.Entidades;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 public class Ticket {
-     private int     nroreg;
-     private Date    fechasol;
-     private Date    fechaexp;
-     private String  token;
-     private String  sign;
+     private int              nroreg;
+     private String           fechasol;
+     private String           fechaexp;
+     private String           token;
+     private String           sign;
 
 
      public Ticket(){}
@@ -23,22 +24,22 @@ public class Ticket {
      }
 
 
-     public Date getFechasol() {
+     public String getFechasol() {
           return fechasol;
      }
 
 
-     public void setFechasol(Date fechasol) {
+     public void setFechasol(String fechasol) {
           this.fechasol = fechasol;
      }
 
 
-     public Date getFechaexp() {
+     public String getFechaexp() {
           return fechaexp;
      }
 
 
-     public void setFechaexp(Date fechaexp) {
+     public void setFechaexp(String fechaexp) {
           this.fechaexp = fechaexp;
      }
 
