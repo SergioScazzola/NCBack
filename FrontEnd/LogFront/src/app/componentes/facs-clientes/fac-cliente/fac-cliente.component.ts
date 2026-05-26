@@ -128,34 +128,41 @@ export class FacClienteComponent {
           clientes: this.servicio.getClientes(),    
           factura: this.servicio.leerFacCL(this.data.idFactura),
           detalle: this.servicio.getItemsFacsCL(this.data.idFactura),
-          tickett: this.servicio.getTicket(),    
+          tickett: this.servicio.getTicket(), 
+
         }).subscribe(res2 => {
            this.cclientes  = res2.clientes;
            this.factpp     = res2.factura;
            this.cdetfaccl  = res2.detalle;
            this.ticket     = res2.tickett;
-             
+           
+           
            this.operacion = `Consulta Factura Nro. ${this.factpp.nrofactura}`;
            this.actualizarFormulario();
            this.isloading = false;
-           this.cdr.markForCheck()// <--- Importante: fuerza la detección si sigue el error    
+           this.cdr.detectChanges()// <--- Importante: fuerza la detección si sigue el error    
           
         });
       }
-      if (this.data.accion === "A") { // data.accion = "A" -> Alta          
-          this.servicio.getClientes()
-            .subscribe((data3:any):void => {    
-                this.cclientes = data3;                    
-                this.mostrarHora();
-                //this.servicio.getCantFacsTP().subscribe(max => {           
-                this.nfaccpalta = this.data.idFactura;
-                
-                this.operacion = "Agregar Factura al Cliente Nro. " + this.nfaccpalta;
-                this.formFaccl.controls["idFactura"].setValue(this.nfaccpalta);                
-                var indcliente = this.cclientes.findIndex(p=>p.idCliente=this.idclienteSel);
-                this.factpp.nomcliente = this.cclientes[indcliente].nombre;                            
-                this.isloading = false;
-                this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores
+      if (this.data.accion === "A") { // data.accion = "A" -> Alta     
+          forkJoin({
+              clientes: this.servicio.getClientes(),              
+              tickett: this.servicio.getTicket(),      
+          }).subscribe(res2 => {
+           this.cclientes  = res2.clientes;           
+           this.ticket     = res2.tickett;//solicita ticket a la afip, si esta expirado se renueva
+          
+           
+           this.mostrarHora();
+           //this.servicio.getCantFacsTP().subscribe(max => {           
+           this.nfaccpalta = this.data.idFactura;
+           
+           this.operacion = "Agregar Factura al Cliente Nro. " + this.nfaccpalta;
+           this.formFaccl.controls["idFactura"].setValue(this.nfaccpalta);                
+           var indcliente = this.cclientes.findIndex(p=>p.idCliente=this.idclienteSel);
+           this.factpp.nomcliente = this.cclientes[indcliente].nombre;                            
+           this.isloading = false;
+           this.cdr.detectChanges(); // <--- Asegura que el nuevo valor se pinte sin errores
           })                       
       }                           
       //},100);
@@ -433,16 +440,16 @@ mostrarHora() {
   }) 
   }
 
-AutenticarAfip(){
-
+getUltCompAfip(){
+  
   var ultimocomp : Number = 0;
   forkJoin({
 
-          ultimoComp: this.servicio.getUltComp("FACA"),          
+          ultimoComp: this.servicio.getUltComp("NDDA"),          
         }).subscribe(res2 => {
            ultimocomp     = res2.ultimoComp;
             
-           this.notiService.showNotification("Ultimo Comp FAC A : "+ultimocomp,'Aceptar','mensaje',500);                                  
+          this.notiService.showNotification("Ultimo Comp FAC A : "+ultimocomp,'Aceptar','mensaje',500);                                  
                 this.isloading = false;
                 this.cdr.markForCheck(); // <--- Asegura que el nuevo valor se pinte sin errores
           })              

@@ -517,9 +517,7 @@ public getTiposGasto() {
   public getTicket() {
     return this.http.get<Ticket>(this.apiUrl + `afip/ticket`);
   }
-/*public getTicket() {
-    return this.http.get<Ticket>(this.apiUrl + `afip/ticket`);
-  }*/
+
   public getUltComp(tcomp : string) {
     return this.http.get<Number>(this.apiUrl + `afip/ultComp?tcomp=`+tcomp);
   }
